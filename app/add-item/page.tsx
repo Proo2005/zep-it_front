@@ -1,0 +1,182 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+export default function AddItem() {
+  const [form, setForm] = useState({
+    shopName: "",
+    shopGstId: "",
+    shopkeeperEmail: "",
+    category: "grocery_and_kitchen",
+    itemName: "",
+    quantity: 1,
+    amount: "",
+  });
+
+  // Autofill email for shop accounts
+  useEffect(() => {
+    const email = localStorage.getItem("email");
+    const type = localStorage.getItem("type");
+
+    if (type !== "shop") {
+      alert("Only shop accounts can add items");
+      return;
+    }
+
+    if (email) {
+      setForm((prev) => ({
+        ...prev,
+        shopkeeperEmail: email,
+      }));
+    }
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "quantity" ? Number(value) : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:5000/api/item/add", form, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      alert("Item added successfully");
+
+      setForm((prev) => ({
+        ...prev,
+        itemName: "",
+        quantity: 1,
+        amount: "",
+      }));
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Failed to add item");
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-black flex items-center justify-center">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-zinc-900 p-6 rounded-xl w-[420px] space-y-4"
+      >
+        <h2 className="text-white text-xl font-bold">Add Item</h2>
+
+        {/* Shop Name */}
+        <div>
+          <label className="text-sm text-gray-400">Shop Name</label>
+          <input
+            name="shopName"
+            value={form.shopName}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            placeholder="Shop Name"
+            required
+          />
+        </div>
+
+        {/* GST ID */}
+        <div>
+          <label className="text-sm text-gray-400">Shop GST ID</label>
+          <input
+            name="shopGstId"
+            value={form.shopGstId}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            placeholder="GST ID"
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="text-sm text-gray-400">Shopkeeper Email</label>
+          <input
+            value={form.shopkeeperEmail}
+            disabled
+            className="w-full px-3 py-2 rounded bg-zinc-800 text-gray-400 cursor-not-allowed"
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="text-sm text-gray-400">Item Category</label>
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+          >
+            <option value="grocery_and_kitchen">Grocery & Kitchen</option>
+            <option value="snacks_and_drinks">Snacks & Drinks</option>
+            <option value="beauty_and_personal_care">
+              Beauty & Personal Care
+            </option>
+            <option value="household_essential">
+              Household Essential
+            </option>
+          </select>
+        </div>
+
+        {/* Item Name + Quantity */}
+        <div>
+          <label className="text-sm text-gray-400">Item Name & Quantity</label>
+          <div className="flex gap-2">
+            <input
+              name="itemName"
+              value={form.itemName}
+              onChange={handleChange}
+              placeholder="Item name"
+              className="flex-1 px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+              required
+            />
+
+            <input
+              name="quantity"
+              type="number"
+              min={1}
+              value={form.quantity}
+              onChange={handleChange}
+              className="w-24 px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Amount */}
+        <div>
+          <label className="text-sm text-gray-400">Amount (₹)</label>
+          <input
+            name="amount"
+            type="number"
+            value={form.amount}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            placeholder="Amount"
+            required
+          />
+        </div>
+
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={!form.itemName}
+          className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 text-black py-2 rounded-lg font-semibold"
+        >
+          Add Item
+        </button>
+      </form>
+    </div>
+  );
+}
