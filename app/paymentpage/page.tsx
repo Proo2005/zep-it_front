@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 type CartItem = {
   itemId: string;
@@ -12,7 +13,7 @@ type CartItem = {
 export default function PaymentPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
-
+  const router = useRouter();
   const [paymentMethod, setPaymentMethod] = useState<"UPI" | "Card">("UPI");
   const [upiId, setUpiId] = useState("");
   const [cardNumber, setCardNumber] = useState("");
@@ -61,6 +62,7 @@ export default function PaymentPage() {
         localStorage.removeItem("cart");
         localStorage.removeItem("checkoutCart");
         localStorage.removeItem("checkoutTotal");
+        router.push("/");
       } else {
         alert("Payment failed: " + data.message);
       }

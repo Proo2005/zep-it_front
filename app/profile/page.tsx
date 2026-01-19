@@ -45,7 +45,8 @@ export default function ProfilePage() {
       {/* YOUR INFORMATION */}
       <Section title="Your Information">
         <ListItem text="Order History" onClick={() => router.push("/history")} />
-
+        <ListItem text="Stores Near Me" onClick={() => router.push("/store")} />
+        <ListItem text="Add item" onClick={() => router.push("/add-item")} />
         {user.type === "shop" && (
           <ListItem
             text="Shop Monthly Analysis"
