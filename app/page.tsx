@@ -89,7 +89,7 @@ export default function HomePage() {
   const toggleCategory = (key: string) =>
     setExpandedCategories((p) => ({ ...p, [key]: !p[key] }));
 
-  // FILTERED ITEMS LOGIC
+  // FILTERED ITEMS
   const filteredItems = items.filter((i) => {
     const matchesSearch = i.itemName.toLowerCase().includes(search.toLowerCase());
     const matchesCategory =
