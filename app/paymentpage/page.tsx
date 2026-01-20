@@ -20,14 +20,20 @@ export default function PaymentPage() {
   const [cvv, setCvv] = useState("");
   const [expiry, setExpiry] = useState("");
 
-  const userName = localStorage.getItem("name") || "Customer";
-  const email = localStorage.getItem("email") || "customer@example.com";
+  const [userName, setUserName] = useState("Customer");
+  const [email, setEmail] = useState("customer@example.com");
 
+  // Ensure this runs only on the client
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const storedCart = JSON.parse(localStorage.getItem("checkoutCart") || "[]");
     const storedTotal = Number(localStorage.getItem("checkoutTotal") || "0");
     setCart(storedCart);
     setTotal(storedTotal);
+
+    setUserName(localStorage.getItem("name") || "Customer");
+    setEmail(localStorage.getItem("email") || "customer@example.com");
   }, []);
 
   const handlePay = async () => {
