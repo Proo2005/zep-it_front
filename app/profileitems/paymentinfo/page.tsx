@@ -51,7 +51,7 @@ export default function PaymentsPage() {
     try {
       // Re-auth endpoint: backend should verify password for this user
       const authRes = await axios.post(
-        "http://localhost:5000/api/auth/verify-password",
+        "https://zep-it-back.onrender.com/api/auth/verify-password",
         { email: userEmail, password },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -60,7 +60,7 @@ export default function PaymentsPage() {
         setAuthenticated(true);
 
         // Fetch payments
-        const res = await axios.get("http://localhost:5000/api/payment", {
+        const res = await axios.get("https://zep-it-back.onrender.com/api/payment", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

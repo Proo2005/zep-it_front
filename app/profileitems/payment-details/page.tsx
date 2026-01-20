@@ -20,7 +20,7 @@ export default function AddPaymentPage() {
 
     try {
       await axios.post(
-        "http://localhost:5000/api/payment/add",
+        "https://zep-it-back.onrender.com/api/payment/add",
         {
           paymentMethod,
           upiNumber,

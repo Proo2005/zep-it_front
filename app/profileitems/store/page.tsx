@@ -26,7 +26,7 @@ export default function StoresPage() {
 
   const fetchStores = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/store");
+      const res = await axios.get("https://zep-it-back.onrender.com/api/store");
       if (res.data.success) {
         // Add dummy itemsCount for now
         const storesWithItems = res.data.stores.map((s: Store) => ({

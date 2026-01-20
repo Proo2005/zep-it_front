@@ -31,7 +31,7 @@ export default function ShopItemsPage() {
 
   const fetchShopItems = async (authToken: string, email: string) => {
     try {
-      const res = await axios.get<Item[]>("http://localhost:5000/api/item/all", {
+      const res = await axios.get<Item[]>("https://zep-it-back.onrender.com/api/item/all", {
         headers: { Authorization: `Bearer ${authToken}` },
       });
 
@@ -80,7 +80,7 @@ export default function ShopItemsPage() {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/item/update-quantity",
+        "https://zep-it-back.onrender.com/api/item/update-quantity",
         { itemId: item._id, quantityToAdd: addedQty },
         { headers: { Authorization: `Bearer ${token}` } }
       );

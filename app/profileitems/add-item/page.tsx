@@ -47,7 +47,7 @@ export default function AddItem() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:5000/api/item/add", form, {
+      await axios.post("https://zep-it-back.onrender.com/api/item/add", form, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

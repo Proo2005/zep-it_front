@@ -7,7 +7,7 @@ export default function ShopAnalysisPage() {
   const [data, setData] = useState<any>(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/shop-analysis", {
+    fetch("https://zep-it-back.onrender.com/api/shop-analysis", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },

@@ -23,7 +23,7 @@ export default function ContactMessagesPage() {
 
   const fetchMessages = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/contact/all");
+      const res = await axios.get("https://zep-it-back.onrender.com/api/contact/all");
       setMessages(res.data);
     } catch (err) {
       console.error("Failed to fetch contact messages", err);

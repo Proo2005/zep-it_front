@@ -52,7 +52,7 @@ export default function ContactPage() {
       );
 
       /* 2️⃣ SAVE TO DATABASE */
-      await axios.post("http://localhost:5000/api/contact/add", form);
+      await axios.post("https://zep-it-back.onrender.com/api/contact/add", form);
 
       setSuccess("Your message has been sent successfully.");
       setForm({

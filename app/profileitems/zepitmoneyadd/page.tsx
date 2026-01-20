@@ -18,7 +18,7 @@ export default function AddMoneyPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/wallet/add", {
+      const res = await fetch("https://zep-it-back.onrender.com/api/wallet/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

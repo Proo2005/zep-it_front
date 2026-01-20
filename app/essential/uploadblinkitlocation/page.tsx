@@ -30,7 +30,7 @@ export default function AddStorePage() {
         geo: { type: "Point", coordinates: [parseFloat(form.lng), parseFloat(form.lat)] },
       };
 
-      const res = await axios.post("http://localhost:5000/api/store/add", payload, {
+      const res = await axios.post("https://zep-it-back.onrender.com/api/store/add", payload, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

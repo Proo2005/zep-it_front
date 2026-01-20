@@ -15,7 +15,7 @@ export default function ZepitMoneyPage() {
     const token = localStorage.getItem("token");
     if (!token) return router.push("/login");
 
-    const res = await fetch("http://localhost:5000/api/wallet", {
+    const res = await fetch("https://zep-it-back.onrender.com/api/wallet", {
       headers: { Authorization: `Bearer ${token}` },
     });
 

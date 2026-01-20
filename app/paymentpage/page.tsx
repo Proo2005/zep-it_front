@@ -45,7 +45,7 @@ export default function PaymentPage() {
       return alert("Enter valid card details");
 
     try {
-      const res = await fetch("http://localhost:5000/api/payment/process", {
+      const res = await fetch("https://zep-it-back.onrender.com/api/payment/process", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

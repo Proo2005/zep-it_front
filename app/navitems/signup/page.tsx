@@ -32,7 +32,7 @@ export default function Signup() {
 
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/auth/signup", form);
+      await axios.post("https://zep-it-back.onrender.com/api/auth/signup", form);
       alert("Signup successful!");
       router.push("/navitems/login");
     } catch (err: any) {

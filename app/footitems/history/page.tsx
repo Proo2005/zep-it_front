@@ -35,7 +35,7 @@ export default function PaymentHistoryPage() {
       if (!token) return router.push("/login");
 
       const res = await fetch(
-        "http://localhost:5000/api/paymenthistory/history",
+        "https://zep-it-back.onrender.com/api/paymenthistory/history",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
