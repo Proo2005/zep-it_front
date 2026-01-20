@@ -16,6 +16,12 @@ export default function CartPage() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please log in first");
+      router.push("/navitems/login"); // redirect to login page
+      return;
+    }
     loadCart();
   }, []);
 
@@ -26,10 +32,7 @@ export default function CartPage() {
   };
 
   const calculateTotal = (items: CartItem[]) => {
-    const sum = items.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
+    const sum = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
     setTotal(sum);
   };
 
@@ -41,9 +44,7 @@ export default function CartPage() {
 
   const increaseQty = (id: string) => {
     const updated = cart.map(item =>
-      item.itemId === id
-        ? { ...item, quantity: item.quantity + 1 }
-        : item
+      item.itemId === id ? { ...item, quantity: item.quantity + 1 } : item
     );
     updateCart(updated);
   };
@@ -51,9 +52,7 @@ export default function CartPage() {
   const decreaseQty = (id: string) => {
     const updated = cart
       .map(item =>
-        item.itemId === id
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
+        item.itemId === id ? { ...item, quantity: item.quantity - 1 } : item
       )
       .filter(item => item.quantity > 0);
     updateCart(updated);
@@ -74,7 +73,6 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 pb-10">
       <div className="max-w-6xl mx-auto pt-8">
-
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
         {cart.length === 0 ? (
