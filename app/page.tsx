@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { CiFilter } from "react-icons/ci";
-import {Divider} from "@heroui/divider";
-import  Footer  from "./components/Footer";
+import { Divider } from "@heroui/divider";
+import Footer from "./components/Footer";
 
 
 type Item = {
@@ -44,9 +44,15 @@ export default function HomePage() {
   }, []);
 
   const fetchItems = async () => {
-    const res = await axios.get("https://zep-it-back.onrender.com/api/item/all");
-    setItems(res.data);
+    try {
+      const res = await axios.get("https://zep-it-back.onrender.com/api/item/all");
+      console.log("Fetched items:", res.data);
+      setItems(res.data);
+    } catch (err) {
+      console.error("Failed to fetch items:", err);
+    }
   };
+
 
   const fetchUserAddress = async () => {
     const token = localStorage.getItem("token");
@@ -101,7 +107,7 @@ export default function HomePage() {
           <div className="sticky top-32 bg-white rounded-2xl p-5 shadow-sm border">
             <h3 className="text-lg font-bold mb-4 text-black flex items-center gap-2">
               Filters
-              <CiFilter  className="text-gray-600" />
+              <CiFilter className="text-gray-600" />
             </h3>
 
             {/* Category Filter */}
@@ -128,7 +134,7 @@ export default function HomePage() {
                   />
                   {cat.label}
                 </label>
-                
+
               ))}
             </div>
             <Divider className="my-4" />
@@ -194,7 +200,7 @@ export default function HomePage() {
               <p className="opacity-90">Fresh stock • Best prices • Instant delivery</p>
             </div>
           </div>
-          
+
 
           {/* Product Categories */}
           {categories.map((cat) => {
@@ -270,12 +276,12 @@ export default function HomePage() {
                 </div>
                 <Divider className="my-4" />
               </section>
-              
+
             );
           })}
         </div>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 }
