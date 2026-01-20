@@ -162,14 +162,7 @@ export default function ProfilePage() {
 
             {/* Snippet input field */}
             <div className= "flex text-black">
-              <Snippet
-              value={appLink}
-              copyButton
-              copyButtonText="Copy Link"
-              onCopy={handleCopy}
-              className="mb-4 text-black"
-              variant="solid"
-            />
+              
             <a >{appLink}</a>
             </div>
 
