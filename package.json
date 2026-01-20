@@ -9,12 +9,23 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
+    "@heroui/divider": "^2.2.21",
+    "@heroui/modal": "^2.2.26",
+    "@heroui/select": "^2.4.30",
+    "@heroui/snippet": "^2.2.30",
+    "@heroui/system": "^2.4.25",
+    "@heroui/theme": "^2.4.25",
+    "@heroui/tooltip": "^2.2.26",
+    "@heroui/user": "^2.2.24",
     "@react-google-maps/api": "^2.20.8",
     "axios": "^1.13.2",
     "dotenv": "^17.2.3",
+    "framer-motion": "^12.27.3",
     "next": "16.1.3",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-icons": "^5.5.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
