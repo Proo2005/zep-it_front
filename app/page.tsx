@@ -44,7 +44,7 @@ export default function HomePage() {
   }, []);
 
   const fetchItems = async () => {
-    const res = await axios.get("http://localhost:5000/api/item/all");
+    const res = await axios.get("https://zep-it-back.onrender.com/api/item/all");
     setItems(res.data);
   };
 
@@ -52,7 +52,7 @@ export default function HomePage() {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const res = await axios.get("http://localhost:5000/api/user/profile", {
+    const res = await axios.get("https://zep-it-back.onrender.com/api/user/profile", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
