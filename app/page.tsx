@@ -91,7 +91,11 @@ export default function HomePage() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-    setToast(`${item.itemName} added to cart`);
+    setToast(null); // reset first
+    setTimeout(() => {
+      setToast(`${item.itemName} added to cart`);
+    }, 10);
+
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
@@ -247,9 +251,10 @@ export default function HomePage() {
                       <button
                         type="button"
                         onClick={() => addToCart(item)}
-                        className="mt-auto w-full py-2 rounded-xl font-extrabold   border border-[#0C831F] text-[#0C831F]  hover:bg-[#0C831F] hover:text-white transition">
+                        className="mt-auto w-full py-2 rounded-xl font-extraboldborder border-[#0C831F] text-[#0C831F]  hover:bg-[#0C831F] hover:text-white transition"  >
                         ADD
                       </button>
+
 
                     </div>
                   ))}
@@ -260,6 +265,13 @@ export default function HomePage() {
           })}
         </div>
         <FloatingCart />
+        {toast && (
+          <Toast
+            message={toast}
+            onClose={() => setToast(null)}
+          />
+        )}
+
       </div>
       <Footer />
     </div>
