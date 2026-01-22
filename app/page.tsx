@@ -70,27 +70,27 @@ export default function HomePage() {
   };
 
   const addToCart = (item: Item) => {
-    const selectedQty = cartQty[item._id] || 1;
-    if (selectedQty > item.quantity) return;
+  const selectedQty = cartQty[item._id] || 1;
+  if (selectedQty > item.quantity) return;
 
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+  const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
-    const existing = cart.find((c: any) => c.itemId === item._id);
+  const existing = cart.find((c: any) => c.itemId === item._id);
 
-    if (existing) {
-      existing.quantity += selectedQty;
-    } else {
-      cart.push({
-        itemId: item._id,
-        name: item.itemName,
-        price: item.amount,
-        quantity: selectedQty,
-      });
-    }
+  if (existing) {
+    existing.quantity += selectedQty;
+  } else {
+    cart.push({
+      itemId: item._id,
+      name: item.itemName,
+      price: item.amount,
+      quantity: selectedQty,
+    });
+  }
 
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cartUpdated"));
-  };
+  localStorage.setItem("cart", JSON.stringify(cart));
+  window.dispatchEvent(new Event("cartUpdated"));
+};
 
 
   const toggleCategory = (key: string) =>
@@ -201,7 +201,7 @@ export default function HomePage() {
                   Scroll to explore more items →
                 </p>
 
-                <div className="grid grid-cols-2 sm:grid-2 cols-4 md:grid-3 cols-4 gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
                   {visible.map((item) => (
                     <div
                       key={item._id}
