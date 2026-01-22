@@ -64,7 +64,7 @@ export default function Login() {
       if (user.type === "customer") {
         router.push("/");
       } else {
-        router.push("/shop-items");
+        router.push("/essential/shop-items");
       }
     } catch (err: any) {
       alert(err.response?.data?.message || "Invalid email or password");
