@@ -130,7 +130,7 @@ export default function CartPage() {
     router.push("/paymentpage");
   };
 
-  /* ---------------- UI ---------------- */
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pb-16 -mt-24 text-black">
       <div className="max-w-6xl mx-auto pt-32">

@@ -135,6 +135,11 @@ export default function ProfilePage() {
             text="Wallet"
             onClick={() => router.push("/profileitems/wallet")}
           />
+          <ListItem
+            icon={<FiDollarSign />}
+            text="Split with friends"
+            onClick={() => router.push("/profileitems/split")}
+          />
           <DropdownItem title="Payment Settings" icon={<FiCreditCard />}>
             <DropdownOption
               text="Add Payment Method"
