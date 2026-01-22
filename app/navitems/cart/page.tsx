@@ -145,20 +145,18 @@ export default function CartPage() {
                   "https://zep-it-back.onrender.com/api/cart/create",
                   {
                     method: "POST",
-                    headers: {
-                      Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                   }
                 );
-
                 const data = await res.json();
-                router.push(`/essential/joincart/${data.cartCode}`);
+                router.push(`/navitems/cart/${data.cartCode}`); // Adjust path according to folder
               }}
               className="mb-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
             >
               Create Shared Cart
             </button>
           )}
+
 
         </div>
 
