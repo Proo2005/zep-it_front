@@ -46,7 +46,7 @@ export default function SharedCartPage() {
   return (
     <div className="min-h-screen pt-32 px-4 bg-white text-black">
       <h1 className="text-3xl font-bold mb-6">Shared Cart #{cartCode}</h1>
-
+      <a href="/essential/joincart">join cart</a>
       {cart.length === 0 ? (
         <p>No items yet</p>
       ) : (
@@ -71,7 +71,7 @@ export default function SharedCartPage() {
           <div className="mt-6 font-bold text-lg">
             Total: ₹{total}
           </div>
-          <a href="/essential/joincart">join cart</a>
+          
         </>
       )}
     </div>
