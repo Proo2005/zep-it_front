@@ -6,6 +6,7 @@ import { CiFilter } from "react-icons/ci";
 import { Divider } from "@heroui/divider";
 import Footer from "./components/Footer";
 import FloatingCart from "./components/FloatingCart";
+import Toast from "./components/Toast";
 
 type Item = {
   _id: string;

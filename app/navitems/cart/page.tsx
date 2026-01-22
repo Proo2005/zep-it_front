@@ -23,6 +23,11 @@ export default function CartPage() {
       return;
     }
     loadCart();
+    window.addEventListener("cartUpdated", loadCart);
+
+    return () => {
+      window.removeEventListener("cartUpdated", loadCart);
+    };
   }, []);
 
   const loadCart = () => {
