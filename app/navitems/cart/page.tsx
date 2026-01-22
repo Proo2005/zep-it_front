@@ -29,7 +29,6 @@ export default function CartPage() {
       router.push("/navitems/login");
       return;
     }
-
     loadCart();
   }, []);
 
@@ -51,7 +50,6 @@ export default function CartPage() {
         },
       }
     );
-
     const data = await res.json();
     setCart(data.items || []);
     calculateTotal(data.items || []);
@@ -69,7 +67,7 @@ export default function CartPage() {
   /* ---------------- QUANTITY HANDLERS ---------------- */
   const increaseQty = async (itemId: string) => {
     if (!cartCode) {
-      const updated = cart.map(i =>
+      const updated = cart.map((i) =>
         i.itemId === itemId ? { ...i, quantity: i.quantity + 1 } : i
       );
       setCart(updated);
@@ -78,14 +76,11 @@ export default function CartPage() {
       return;
     }
 
-    await fetch(
-      `https://zep-it-back.onrender.com/api/cart/add/${cartCode}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ itemId, quantity: 1 }),
-      }
-    );
+    await fetch(`https://zep-it-back.onrender.com/api/cart/add/${cartCode}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId, quantity: 1 }),
+    });
 
     loadCart();
   };
@@ -93,25 +88,21 @@ export default function CartPage() {
   const decreaseQty = async (itemId: string) => {
     if (!cartCode) {
       const updated = cart
-        .map(i =>
+        .map((i) =>
           i.itemId === itemId ? { ...i, quantity: i.quantity - 1 } : i
         )
-        .filter(i => i.quantity > 0);
-
+        .filter((i) => i.quantity > 0);
       setCart(updated);
       localStorage.setItem("cart", JSON.stringify(updated));
       calculateTotal(updated);
       return;
     }
 
-    await fetch(
-      `https://zep-it-back.onrender.com/api/cart/remove/${cartCode}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ itemId, quantity: 1 }),
-      }
-    );
+    await fetch(`https://zep-it-back.onrender.com/api/cart/remove/${cartCode}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ itemId, quantity: 1 }),
+    });
 
     loadCart();
   };
@@ -121,7 +112,7 @@ export default function CartPage() {
     if (!cart.length) return alert("Cart is empty");
 
     if (cartCode) {
-      router.push(`/cart/${cartCode}/checkout`);
+      router.push(`/navitems/cart/${cartCode}/checkout`);
       return;
     }
 
@@ -130,6 +121,28 @@ export default function CartPage() {
     router.push("/paymentpage");
   };
 
+  /* ---------------- CREATE SHARED CART ---------------- */
+  const createSharedCart = async () => {
+    const res = await fetch("https://zep-it-back.onrender.com/api/cart/create", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+    const data = await res.json();
+
+    // copy cart code to clipboard
+    if (data.cartCode) {
+      navigator.clipboard.writeText(data.cartCode);
+      alert(`Shared Cart Created! Code copied to clipboard: ${data.cartCode}`);
+      router.push(`/navitems/cart/${data.cartCode}`);
+    }
+  };
+
+  /* ---------------- JOIN CART ---------------- */
+  const joinCart = () => {
+    const code = prompt("Enter cart code to join:");
+    if (!code) return;
+    router.push(`/navitems/cart/${code}`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pb-16 -mt-24 text-black">
@@ -139,25 +152,21 @@ export default function CartPage() {
           <h1 className="text-3xl font-bold">Shopping Cart</h1>
 
           {!cartCode && (
-            <button
-              onClick={async () => {
-                const res = await fetch(
-                  "https://zep-it-back.onrender.com/api/cart/create",
-                  {
-                    method: "POST",
-                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-                  }
-                );
-                const data = await res.json();
-                router.push(`/navitems/cart/${data.cartCode}`); // Adjust path according to folder
-              }}
-              className="mb-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
-            >
-              Create Shared Cart
-            </button>
+            <div className="flex gap-4">
+              <button
+                onClick={createSharedCart}
+                className="mb-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
+              >
+                Create Shared Cart
+              </button>
+              <button
+                onClick={joinCart}
+                className="mb-6 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+              >
+                Join Shared Cart
+              </button>
+            </div>
           )}
-
-
         </div>
 
         {cart.length === 0 ? (
