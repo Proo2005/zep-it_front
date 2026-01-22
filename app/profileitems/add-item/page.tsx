@@ -68,23 +68,23 @@ export default function AddItem() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] flex items-center justify-center text-black">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] flex items-center justify-center text-black -mt-24">
 
 
       <form
         onSubmit={handleSubmit}
-        className="bg-zinc-900 p-6 rounded-xl w-[420px] space-y-4"
+        className=" p-6 rounded-xl w-[420px] space-y-4"
       >
-        <h2 className="text-white text-xl font-bold">Add Item</h2>
+        <h2 className=" text-xl font-bold">Add Item</h2>
 
         {/* Shop Name */}
         <div>
-          <label className="text-sm text-gray-400">Shop Name</label>
+          <label className="text-sm text-gray-600">Shop Name</label>
           <input
             name="shopName"
             value={form.shopName}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            className="w-full px-3 py-2 rounded  outline-black"
             placeholder="Shop Name"
             required
           />
@@ -92,12 +92,12 @@ export default function AddItem() {
 
         {/* GST ID */}
         <div>
-          <label className="text-sm text-gray-400">Shop GST ID</label>
+          <label className="text-sm text-gray-600">Shop GST ID</label>
           <input
             name="shopGstId"
             value={form.shopGstId}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            className="w-full px-3 py-2 rounded outline-black"
             placeholder="GST ID"
             required
           />
@@ -105,22 +105,22 @@ export default function AddItem() {
 
         {/* Email */}
         <div>
-          <label className="text-sm text-gray-400">Shopkeeper Email</label>
+          <label className="text-sm text-gray-600">Shopkeeper Email</label>
           <input
             value={form.shopkeeperEmail}
             disabled
-            className="w-full px-3 py-2 rounded bg-zinc-800 text-gray-400 cursor-not-allowed"
+            className="w-full px-3 py-2 rounded  cursor-not-allowed"
           />
         </div>
 
         {/* Category */}
         <div>
-          <label className="text-sm text-gray-400">Item Category</label>
+          <label className="text-sm text-gray-600">Item Category</label>
           <select
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            className="w-full px-3 py-2 rounded outline-black"
           >
             <option value="grocery_and_kitchen">Grocery & Kitchen</option>
             <option value="snacks_and_drinks">Snacks & Drinks</option>
@@ -135,14 +135,14 @@ export default function AddItem() {
 
         {/* Item Name + Quantity */}
         <div>
-          <label className="text-sm text-gray-400">Item Name & Quantity</label>
+          <label className="text-sm text-gray-800">Item Name & Quantity</label>
           <div className="flex gap-2">
             <input
               name="itemName"
               value={form.itemName}
               onChange={handleChange}
               placeholder="Item name"
-              className="flex-1 px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+              className="flex-1 px-3 py-2 rounded outline-black"
               required
             />
 
@@ -152,20 +152,20 @@ export default function AddItem() {
               min={1}
               value={form.quantity}
               onChange={handleChange}
-              className="w-24 px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+              className="w-24 px-3 py-2 rounded outline-black"
             />
           </div>
         </div>
 
         {/* Amount */}
         <div>
-          <label className="text-sm text-gray-400">Amount (₹)</label>
+          <label className="text-sm text-gray-600">Amount (₹)</label>
           <input
             name="amount"
             type="number"
             value={form.amount}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded bg-zinc-800 text-white outline-none"
+            className="w-full px-3 py-2 rounded outline-black"
             placeholder="Amount"
             required
           />
