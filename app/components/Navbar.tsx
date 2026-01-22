@@ -68,15 +68,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Search Bar */}
-        <div className="hidden md:flex flex-1 mx-6 items-center bg-green-50 border border-green-200 rounded-full px-4 py-1 shadow-sm hover:shadow-md transition">
-          <IoSearchOutline className="text-green-600 text-xl mr-2" />
-          <input
-            type="text"
-            placeholder="Search for products..."
-            className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
-          />
-        </div>
+        
 
         {/* Right Items */}
         <div className="flex items-center gap-4">
@@ -85,7 +77,7 @@ export default function Navbar() {
             <Link href="/navitems/deals" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
               Deals
             </Link>
-            <Link href="/navitems/orders" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+            <Link href="/profileitems/history" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
               Orders
             </Link>
           </div>
