@@ -26,20 +26,38 @@ export default function SharedCartPage() {
       return;
     }
 
-    fetch(`https://zep-it-back.onrender.com/api/cart/${cartCode}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setCart(data.items || []);
-        setTotal(
-          (data.items || []).reduce(
-            (acc, item) => acc + item.price * item.quantity,
-            0
-          )
+    if (!cartCode) return;
+
+    const fetchCart = async () => {
+      try {
+        const res = await fetch(
+          `https://zep-it-back.onrender.com/api/cart/${cartCode}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
-      });
+
+        if (!res.ok) throw new Error("Failed to fetch cart");
+
+        const data: { items?: CartItem[] } = await res.json();
+
+        const items = data.items || [];
+        setCart(items);
+
+        const sum = items.reduce(
+          (acc, item) => acc + (item.price || 0) * (item.quantity || 0),
+          0
+        );
+        setTotal(sum);
+      } catch (err: any) {
+        console.error("Error fetching cart:", err.message);
+        alert("Failed to load cart");
+      }
+    };
+
+    fetchCart();
   }, [cartCode, router]);
+
 
   const handleSplit = () => {
     router.push(`/navitems/cart/${cartCode}/split`);
