@@ -3,8 +3,13 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { IoPersonCircleOutline, IoCartOutline, IoSearchOutline, IoMenu, IoClose } from "react-icons/io5";
-import { Tooltip } from "@heroui/tooltip";
+
 import { AcmeLogo } from "./Logo";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function Navbar() {
   const [open, setOpen] = useState(false); // Profile dropdown
@@ -68,7 +73,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-     
+
 
         {/* Right Side (Desktop + Mobile) */}
         <div className="flex items-center gap-3">
@@ -77,9 +82,13 @@ export default function Navbar() {
             href="/navitems/cart"
             className="relative flex items-center gap-2 px-4 py-2 rounded-xl bg-green-50 text-green-700 hover:bg-green-100 transition shadow-md"
           >
-            <Tooltip content="Proceed to Cart" className="text-gray-600">
-              <IoCartOutline size={20} />
+            <Tooltip>
+              <TooltipTrigger><IoCartOutline size={20} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Proceed to Cart</p>
+              </TooltipContent>
             </Tooltip>
+
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 min-w-[20px] h-[20px] px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
                 {cartCount}
@@ -103,21 +112,21 @@ export default function Navbar() {
               <div className="absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-md border border-green-200 rounded-xl shadow-lg overflow-hidden text-black">
                 {!userName ? (
                   <>
-                    <Link href="/navitems/login" className="block px-4 py-3 text-sm hover:bg-green-50 transition"  onClick={() => setOpen(false)}>
+                    <Link href="/navitems/login" className="block px-4 py-3 text-sm hover:bg-green-50 transition" onClick={() => setOpen(false)}>
                       Login
                     </Link>
-                    <Link href="/navitems/signup" className="block px-4 py-3 text-sm hover:bg-green-50 transition"  onClick={() => setOpen(false)}>
+                    <Link href="/navitems/signup" className="block px-4 py-3 text-sm hover:bg-green-50 transition" onClick={() => setOpen(false)}>
                       Signup
                     </Link>
                   </>
                 ) : (
                   <>
-                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-green-50 transition"  onClick={() => setOpen(false)}>
+                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-green-50 transition" onClick={() => setOpen(false)}>
                       Profile
                     </Link>
                     <button
-                      onClick={logout} 
-                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition " 
+                      onClick={logout}
+                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition "
                     >
                       Sign out
                     </button>
@@ -152,16 +161,16 @@ export default function Navbar() {
           {/* Profile Links */}
           {!userName ? (
             <>
-              <Link href="/navitems/login"   className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition"  onClick={() => setOpen(false)}>
+              <Link href="/navitems/login" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
                 Login
               </Link>
-              <Link href="/navitems/signup"   className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
+              <Link href="/navitems/signup" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
                 Signup
               </Link>
             </>
           ) : (
             <>
-              <Link href="/navitems/profile"  className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition"  onClick={() => setOpen(false)}>
+              <Link href="/navitems/profile" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
                 Profile
               </Link>
               <button
