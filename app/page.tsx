@@ -16,7 +16,7 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import ItemCardSkeleton from "./components/ItemCardSkeleton";
-
+import { toast } from "sonner";
 type Item = {
   _id: string;
   itemName: string;
@@ -50,10 +50,11 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    toast.success(`Welcome back`);
     fetchItems();
     fetchUserAddress();
   }, []);
-
+  
   const fetchItems = async () => {
     try {
       setLoading(true);
