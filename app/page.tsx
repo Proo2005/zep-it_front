@@ -6,6 +6,15 @@ import { CiFilter } from "react-icons/ci";
 import { Divider } from "@heroui/divider";
 import Footer from "./components/Footer";
 import FloatingCart from "./components/FloatingCart";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldTitle,
+} from "@/components/ui/field";
 
 type Item = {
   _id: string;
@@ -112,47 +121,70 @@ export default function HomePage() {
         {/* FILTER PANEL */}
         <div className="hidden lg:block">
           <div className="sticky top-32 bg-white rounded-2xl p-5 shadow-sm border">
-            <h3 className="text-lg font-bold mb-4 text-black flex items-center gap-2">
+
+            <h3 className="text-lg font-bold mb-5 text-black flex items-center gap-2">
               Filters <CiFilter />
             </h3>
 
-            <div className="mb-6">
-              <p className="font-semibold mb-3 text-sm text-gray-700">Categories</p>
+            {/* ================= CATEGORIES ================= */}
+            <FieldGroup className="space-y-3 mb-6">
+              <p className="font-semibold text-sm text-gray-700 mb-2">
+                Categories
+              </p>
+
               {categories.map((cat) => (
-                <label key={cat.key} className="flex items-center gap-2 mb-2 text-sm text-gray-600">
-                  <input
-                    type="checkbox"
+                <Field orientation="horizontal" key={cat.key}>
+                  <Checkbox
+                    id={cat.key}
                     checked={selectedCategories.includes(cat.key)}
-                    onChange={(e) =>
-                      setSelectedCategories((p) =>
-                        e.target.checked ? [...p, cat.key] : p.filter((c) => c !== cat.key)
+                    onCheckedChange={(checked) =>
+                      setSelectedCategories((prev) =>
+                        checked
+                          ? [...prev, cat.key]
+                          : prev.filter((c) => c !== cat.key)
                       )
                     }
-                    className="accent-[#0C831F]"
                   />
-                  {cat.label}
-                </label>
+
+                  <FieldContent>
+                    <FieldLabel htmlFor={cat.key}>
+                      {cat.label}
+                    </FieldLabel>
+                    <FieldDescription>
+                      Show items from {cat.label}
+                    </FieldDescription>
+                  </FieldContent>
+                </Field>
               ))}
+            </FieldGroup>
+
+            <Divider className="my-5" />
+
+            {/* ================= PRICE RANGE ================= */}
+            <div>
+              <FieldTitle className="mb-2">
+                Max Price: ₹{priceRange}
+              </FieldTitle>
+
+              <input
+                type="range"
+                min={50}
+                max={2000}
+                step={50}
+                value={priceRange}
+                onChange={(e) => setPriceRange(Number(e.target.value))}
+                className="w-full accent-[#0C831F]"
+              />
+
+              <p className="text-xs text-gray-500 mt-2">
+                Items priced under ₹{priceRange}
+              </p>
             </div>
 
-            <Divider className="my-4" />
-
-            <p className="font-semibold mb-3 text-sm text-gray-700">
-              Max Price: ₹{priceRange}
-            </p>
-            <input
-              type="range"
-              min={50}
-              max={2000}
-              step={50}
-              value={priceRange}
-              onChange={(e) => setPriceRange(Number(e.target.value))}
-              className="w-full accent-[#0C831F]"
-            />
           </div>
-          
         </div>
-        
+
+
 
         {/* MAIN CONTENT */}
         <div>
