@@ -71,19 +71,27 @@ export default function HomePage() {
 
   const addToCart = (item: Item) => {
     const selectedQty = cartQty[item._id] || 1;
-    if (selectedQty > item.quantity) return alert("Quantity exceeds stock");
+    if (selectedQty > item.quantity) return;
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    cart.push({
-      itemId: item._id,
-      name: item.itemName,
-      price: item.amount,
-      quantity: selectedQty,
-    });
+
+    const existing = cart.find((c: any) => c.itemId === item._id);
+
+    if (existing) {
+      existing.quantity += selectedQty;
+    } else {
+      cart.push({
+        itemId: item._id,
+        name: item.itemName,
+        price: item.amount,
+        quantity: selectedQty,
+      });
+    }
+
     localStorage.setItem("cart", JSON.stringify(cart));
-    alert("Added to cart");
     window.dispatchEvent(new Event("cartUpdated"));
   };
+
 
   const toggleCategory = (key: string) =>
     setExpandedCategories((p) => ({ ...p, [key]: !p[key] }));

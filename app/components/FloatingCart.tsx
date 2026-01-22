@@ -15,6 +15,8 @@ export default function FloatingCart() {
   const [total, setTotal] = useState(0);
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(false);
+  const [pulse, setPulse] = useState(false);
+
 
   useEffect(() => {
     const loadCart = () => {
@@ -26,7 +28,8 @@ export default function FloatingCart() {
         0
       );
       setTotal(sum);
-
+      setPulse(true);
+      setTimeout(() => setPulse(false), 300);
       setIsVisible(stored.length > 0);
     };
 
@@ -53,13 +56,15 @@ export default function FloatingCart() {
               w-[95%] max-w-4xl z-50
               transition-all duration-300 ease-out
               ${isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-6 pointer-events-none"
-              }`}>
-      <div className="bg-zinc-900 border border-zinc-800 
-                      rounded-2xl px-6 py-4 
-                      flex items-center justify-between 
-                      shadow-2xl backdrop-blur">
+        ? "opacity-100 translate-y-0"
+        : "opacity-0 translate-y-6 pointer-events-none"
+      }`}>
+      <div className={`bg-zinc-900 border border-zinc-800 
+              rounded-2xl px-6 py-4 
+              flex items-center justify-between 
+              shadow-2xl backdrop-blur
+              transition-transform
+              ${pulse ? "scale-[1.03]" : "scale-100"}`}>
 
         {/* LEFT INFO */}
         <div>
