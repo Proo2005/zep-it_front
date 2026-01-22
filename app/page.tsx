@@ -158,9 +158,9 @@ export default function HomePage() {
               <p className="font-semibold text-[#0C831F]">
                 Delivering to {userAddress.city}, {userAddress.state}
               </p>
-              <p className="text-sm text-gray-600 truncate">{userAddress.fullAddress}</p>
+              <p className="text-sm text-red truncate">{userAddress.fullAddress}</p>
             </div>
-          )}
+          )} 
 
           <Divider className="my-4" />
 
@@ -168,7 +168,7 @@ export default function HomePage() {
             placeholder="Search for groceries, snacks, essentials…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-6"
+            className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-6 text-black"
           />
 
           <div className="h-52 rounded-3xl bg-gradient-to-r from-[#0C831F] to-[#14B8A6] text-white flex flex-col justify-center px-8 mb-10">
@@ -186,7 +186,7 @@ export default function HomePage() {
             return (
               <section key={cat.key} className="mb-14">
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold">{cat.label}</h2>
+                  <h2 className="text-2xl font-bold text-black">{cat.label}</h2>
                   {categoryItems.length > 8 && (
                     <button
                       onClick={() => toggleCategory(cat.key)}
@@ -197,7 +197,7 @@ export default function HomePage() {
                   )}
                 </div>
 
-                <p className="block sm:hidden text-xs text-gray-500 mb-3">
+                <p className="block sm:hidden text-xs text-black-500 mb-3 ">
                   Scroll to explore more items →
                 </p>
 
@@ -216,21 +216,21 @@ export default function HomePage() {
                         Popular
                       </span>
 
-                      <div className="h-36 sm:h-32 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden flex items-center justify-center">
+                      <div className="h-36 sm:h-25 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden flex items-center justify-center">
                         <img
                           src={`https://loremflickr.com/320/320/${encodeURIComponent(item.itemName)}?random=${idx}`}
                           alt={item.itemName}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover "
                         />
                       </div>
 
-                      <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2">
+                      <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2 text-black">
                         {item.itemName}
                       </h3>
 
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
-                        <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-[#0C831F] text-grey px-2 py-0.5 rounded-full">
                           {item.quantity} left
                         </span>
                       </div>
@@ -243,7 +243,7 @@ export default function HomePage() {
                         onChange={(e) =>
                           handleQtyChange(item._id, Number(e.target.value), item.quantity)
                         }
-                        className="mb-3 px-2 py-1 border rounded-lg text-sm"
+                        className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
                       />
 
                       <button
