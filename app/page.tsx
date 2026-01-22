@@ -233,11 +233,12 @@ export default function HomePage() {
                       />
 
                       <button
+                        type="button"
                         onClick={() => addToCart(item)}
-                        className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
-                      >
+                        className="mt-auto w-full py-2 rounded-xl font-extrabold   border border-[#0C831F] text-[#0C831F]  hover:bg-[#0C831F] hover:text-white transition">
                         ADD
                       </button>
+
                     </div>
                   ))}
                 </div>
@@ -246,7 +247,7 @@ export default function HomePage() {
             );
           })}
         </div>
-        <FloatingCart/>
+        <FloatingCart />
       </div>
       <Footer />
     </div>
