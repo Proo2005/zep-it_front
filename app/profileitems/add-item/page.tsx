@@ -73,7 +73,7 @@ export default function AddItem() {
 
       <form
         onSubmit={handleSubmit}
-        className=" p-6 rounded-xl w-[420px] space-y-4"
+        className=" p-6 rounded-xl w-[420px] space-y-4 outline-black"
       >
         <h2 className=" text-xl font-bold">Add Item</h2>
 
