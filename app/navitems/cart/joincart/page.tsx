@@ -9,7 +9,7 @@ export default function JoinCartPage() {
 
   const handleJoin = () => {
     if (!code) return alert("Enter a cart code");
-    router.push(`/cart/${code}`);
+    router.push(`/navitems/cart/${code}`);
   };
 
   return (
