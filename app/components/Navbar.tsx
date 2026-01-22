@@ -113,21 +113,21 @@ export default function Navbar() {
               <div className="absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-md border border-green-200 rounded-xl shadow-lg overflow-hidden text-black">
                 {!userName ? (
                   <>
-                    <Link href="/navitems/login" className="block px-4 py-3 text-sm hover:bg-green-50 transition">
+                    <Link href="/navitems/login" className="block px-4 py-3 text-sm hover:bg-green-50 transition"  onClick={() => setOpen(false)}>
                       Login
                     </Link>
-                    <Link href="/navitems/signup" className="block px-4 py-3 text-sm hover:bg-green-50 transition">
+                    <Link href="/navitems/signup" className="block px-4 py-3 text-sm hover:bg-green-50 transition"  onClick={() => setOpen(false)}>
                       Signup
                     </Link>
                   </>
                 ) : (
                   <>
-                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-green-50 transition">
+                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-green-50 transition"  onClick={() => setOpen(false)}>
                       Profile
                     </Link>
                     <button
-                      onClick={logout}
-                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition"
+                      onClick={logout} 
+                      className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition " 
                     >
                       Sign out
                     </button>
@@ -162,16 +162,16 @@ export default function Navbar() {
           {/* Profile Links */}
           {!userName ? (
             <>
-              <Link href="/navitems/login" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              <Link href="/navitems/login"   onClick={() => setOpen(false)} className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
                 Login
               </Link>
-              <Link href="/navitems/signup" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              <Link href="/navitems/signup"   onClick={() => setOpen(false)} className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
                 Signup
               </Link>
             </>
           ) : (
             <>
-              <Link href="/navitems/profile" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              <Link href="/navitems/profile"  onClick={() => setOpen(false)} className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
                 Profile
               </Link>
               <button
