@@ -3,9 +3,8 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { IoPersonCircleOutline } from "react-icons/io5";
-import {Tooltip} from "@heroui/tooltip";
+import { Tooltip } from "@heroui/tooltip";
 import { AcmeLogo } from "./Logo";
-
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
@@ -14,12 +13,12 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Load user
+    // Update user name
     const loadUser = () => setUserName(localStorage.getItem("name"));
     loadUser();
     window.addEventListener("authChanged", loadUser);
 
-    // Load cart count
+    // Update cart count
     const loadCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const totalQty = cart.reduce((sum: number, item: any) => sum + item.quantity, 0);
@@ -28,7 +27,7 @@ export default function Navbar() {
     loadCartCount();
     window.addEventListener("cartUpdated", loadCartCount);
 
-    // Click outside to close dropdown
+    // Close dropdown on outside click
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setOpen(false);
@@ -45,7 +44,8 @@ export default function Navbar() {
 
   const logout = () => {
     localStorage.clear();
-    window.dispatchEvent(new Event("authChanged"));
+    window.dispatchEvent(new Event("authChanged")); // Notify all listeners
+    window.dispatchEvent(new Event("cartUpdated")); // Reset cart count
     window.location.href = "/navitems/login";
   };
 
@@ -57,7 +57,6 @@ export default function Navbar() {
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#0C831F] to-[#2ECC71] flex items-center justify-center shadow-lg">
             <span className="text-white font-extrabold text-lg"><AcmeLogo /></span>
           </div>
-          
           <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-[#0C831F] to-[#2ECC71] bg-clip-text text-transparent group-hover:opacity-90 transition">
             zep-it
           </span>
@@ -70,7 +69,7 @@ export default function Navbar() {
             href="/navitems/cart"
             className="relative px-5 py-2 rounded-xl font-semibold text-sm bg-white/60 backdrop-blur border border-white/40 shadow-md hover:shadow-lg hover:bg-white/80 transition text-black"
           >
-           <Tooltip  className=" text-gray-600"content="Proceed to Cart">Cart</Tooltip>
+            <Tooltip className="text-gray-600" content="Proceed to Cart">Cart</Tooltip>
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
                 {cartCount}
@@ -103,7 +102,7 @@ export default function Navbar() {
                   </>
                 ) : (
                   <>
-                    <Link href="/navitems//profile" className="block px-4 py-3 text-sm hover:bg-white/80 transition">
+                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-white/80 transition">
                       Profile
                     </Link>
                     <button
