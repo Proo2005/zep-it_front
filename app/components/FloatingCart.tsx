@@ -38,7 +38,7 @@ export default function FloatingCart() {
     window.addEventListener("storage", loadCart);
 
     return () => {
-      window.removeEventListener("cartUpdated", loadCart);
+      
       window.removeEventListener("storage", loadCart);
     };
   }, []);
