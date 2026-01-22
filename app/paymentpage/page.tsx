@@ -79,68 +79,70 @@ export default function PaymentPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white px-6 py-8 flex flex-col items-center">
-      <h1 className="text-3xl font-bold mb-6">Payment</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-6xl mx-auto  pt-32 ">
+        <h1 className="text-3xl font-bold mb-6">Payment</h1>
 
-      <div className="w-full max-w-md bg-zinc-900 p-6 rounded-xl space-y-4">
-        <div className="text-lg font-semibold">Total Amount: ₹{total}</div>
+        <div className="w-full max-w-md bg-gray-500 p-6 rounded-xl space-y-4">
+          <div className="text-lg font-semibold">Total Amount: ₹{total}</div>
 
-        <div className="flex flex-col space-y-2">
-          <label className="font-semibold">Payment Method</label>
-          <select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value as "UPI" | "Card")}
-            className="p-2 rounded bg-zinc-800 text-white outline-none"
+          <div className="flex flex-col space-y-2">
+            <label className="font-semibold">Payment Method</label>
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value as "UPI" | "Card")}
+              className="p-2 rounded bg-gray-300 text-white outline-none"
+            >
+              <option value="UPI">UPI</option>
+              <option value="Card">Debit/Credit Card</option>
+            </select>
+          </div>
+
+          {paymentMethod === "UPI" && (
+            <input
+              type="text"
+              placeholder="Enter UPI ID"
+              value={upiId}
+              onChange={(e) => setUpiId(e.target.value)}
+              className="w-full p-2 rounded bg-gray-300 text-white outline-none"
+            />
+          )}
+
+          {paymentMethod === "Card" && (
+            <>
+              <input
+                type="text"
+                placeholder="Card Number (14 digits)"
+                maxLength={14}
+                value={cardNumber}
+                onChange={(e) => setCardNumber(e.target.value)}
+                className="w-full p-2 rounded bg-gray-300 text-white outline-none"
+              />
+              <input
+                type="text"
+                placeholder="CVV (3 digits)"
+                maxLength={3}
+                value={cvv}
+                onChange={(e) => setCvv(e.target.value)}
+                className="w-full p-2 rounded bg-gray-300 text-white outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Expiry (MM/YY)"
+                value={expiry}
+                onChange={(e) => setExpiry(e.target.value)}
+                className="w-full p-2 rounded bg-gray-300 text-white outline-none"
+              />
+            </>
+          )}
+
+          <button
+            onClick={handlePay}
+            className="w-full bg-green-600 hover:bg-green-500 text-black py-2 rounded font-bold mt-4"
           >
-            <option value="UPI">UPI</option>
-            <option value="Card">Debit/Credit Card</option>
-          </select>
+            Pay ₹{total}
+          </button>
         </div>
-
-        {paymentMethod === "UPI" && (
-          <input
-            type="text"
-            placeholder="Enter UPI ID"
-            value={upiId}
-            onChange={(e) => setUpiId(e.target.value)}
-            className="w-full p-2 rounded bg-zinc-800 text-white outline-none"
-          />
-        )}
-
-        {paymentMethod === "Card" && (
-          <>
-            <input
-              type="text"
-              placeholder="Card Number (14 digits)"
-              maxLength={14}
-              value={cardNumber}
-              onChange={(e) => setCardNumber(e.target.value)}
-              className="w-full p-2 rounded bg-zinc-800 text-white outline-none"
-            />
-            <input
-              type="text"
-              placeholder="CVV (3 digits)"
-              maxLength={3}
-              value={cvv}
-              onChange={(e) => setCvv(e.target.value)}
-              className="w-full p-2 rounded bg-zinc-800 text-white outline-none"
-            />
-            <input
-              type="text"
-              placeholder="Expiry (MM/YY)"
-              value={expiry}
-              onChange={(e) => setExpiry(e.target.value)}
-              className="w-full p-2 rounded bg-zinc-800 text-white outline-none"
-            />
-          </>
-        )}
-
-        <button
-          onClick={handlePay}
-          className="w-full bg-green-600 hover:bg-green-500 text-black py-2 rounded font-bold mt-4"
-        >
-          Pay ₹{total}
-        </button>
       </div>
     </div>
   );
