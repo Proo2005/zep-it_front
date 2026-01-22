@@ -70,72 +70,75 @@ export default function AccountPrivacyPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB] text-[#1C1C1C] px-6 py-8  mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Account Privacy</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24">
 
-      {/* Account Info */}
-      <Section title="Account Information" icon={<FiLock />}>
-        <ListItem label="Name" value={user.name} />
-        <ListItem label="Email" value={user.email} />
-        <ListItem label="Phone" value={user.phone} />
-      </Section>
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32 ">
+        <h1 className="text-3xl font-bold mb-6">Account Privacy</h1>
 
-      {/* Security Settings */}
-      <Section title="Security Settings" icon={<FiShield />}>
-        <ToggleItem
-          label="Two-Factor Authentication"
-          value={twoFA}
-          onChange={handleTwoFAChange}
-        />
-        <ToggleItem
-          label="Allow Tracking & Analytics"
-          value={tracking}
-          onChange={handleTrackingChange}
-        />
-      </Section>
+        {/* Account Info */}
+        <Section title="Account Information" icon={<FiLock />}>
+          <ListItem label="Name" value={user.name} />
+          <ListItem label="Email" value={user.email} />
+          <ListItem label="Phone" value={user.phone} />
+        </Section>
 
-      {/* Connected Devices */}
-      <Section title="Connected Devices" icon={<FiSmartphone />}>
-        <p className="p-4 text-gray-600">Devices currently logged in:</p>
-        <ul className="divide-y divide-gray-200">
-          <li className="px-4 py-3 flex justify-between items-center">
-            <span>Chrome on Windows 10</span>
-            <button className="text-red-500 hover:underline">Logout</button>
-          </li>
-          
-        </ul>
-      </Section>
+        {/* Security Settings */}
+        <Section title="Security Settings" icon={<FiShield />}>
+          <ToggleItem
+            label="Two-Factor Authentication"
+            value={twoFA}
+            onChange={handleTwoFAChange}
+          />
+          <ToggleItem
+            label="Allow Tracking & Analytics"
+            value={tracking}
+            onChange={handleTrackingChange}
+          />
+        </Section>
 
-      {/* Privacy Options */}
-      <Section title="Privacy Preferences" icon={<FiEyeOff />}>
-        <ToggleItem
-          label="Hide Profile from Public"
-          value={false}
-          onChange={() => alert("Feature coming soon")}
-        />
-        <ToggleItem
-          label="Limit Ads Personalization"
-          value={true}
-          onChange={() => alert("Feature coming soon")}
-        />
-      </Section>
+        {/* Connected Devices */}
+        <Section title="Connected Devices" icon={<FiSmartphone />}>
+          <p className="p-4 text-gray-600">Devices currently logged in:</p>
+          <ul className="divide-y divide-gray-200">
+            <li className="px-4 py-3 flex justify-between items-center">
+              <span>Chrome on Windows 10</span>
+              <button className="text-red-500 hover:underline">Logout</button>
+            </li>
 
-      {/* Danger Zone */}
-      <Section title="Danger Zone" icon={<FiTrash2 />}>
-        <button
-          onClick={logout}
-          className="w-full py-2 px-4 mb-3 rounded-lg bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition"
-        >
-          Logout
-        </button>
-        <button
-          onClick={deleteAccount}
-          className="w-full py-2 px-4 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 transition"
-        >
-          Delete Account
-        </button>
-      </Section>
-      <Footer/>
+          </ul>
+        </Section>
+
+        {/* Privacy Options */}
+        <Section title="Privacy Preferences" icon={<FiEyeOff />}>
+          <ToggleItem
+            label="Hide Profile from Public"
+            value={false}
+            onChange={() => alert("Feature coming soon")}
+          />
+          <ToggleItem
+            label="Limit Ads Personalization"
+            value={true}
+            onChange={() => alert("Feature coming soon")}
+          />
+        </Section>
+
+        {/* Danger Zone */}
+        <Section title="Danger Zone" icon={<FiTrash2 />}>
+          <button
+            onClick={logout}
+            className="w-full py-2 px-4 mb-3 rounded-lg bg-red-50 text-red-600 font-semibold hover:bg-red-100 transition"
+          >
+            Logout
+          </button>
+          <button
+            onClick={deleteAccount}
+            className="w-full py-2 px-4 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 transition"
+          >
+            Delete Account
+          </button>
+        </Section>
+        <Footer />
+      </div>
     </div>
   );
 }
