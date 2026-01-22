@@ -127,8 +127,8 @@ export default function HomePage() {
             </h3>
 
             {/* ================= CATEGORIES ================= */}
-            <FieldGroup className="space-y-3 mb-6">
-              <p className="font-semibold text-sm text-gray-700 mb-2">
+            <FieldGroup className="space-y-3 mb-6 text-black">
+              <p className="font-semibold text-sm text-black mb-2">
                 Categories
               </p>
 
@@ -151,7 +151,7 @@ export default function HomePage() {
                       {cat.label}
                     </FieldLabel>
                     <FieldDescription>
-                      Show items from {cat.label}
+                      {cat.label}
                     </FieldDescription>
                   </FieldContent>
                 </Field>
