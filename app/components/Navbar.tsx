@@ -47,7 +47,6 @@ export default function Navbar() {
   }, []);
 
   const logout = () => {
-    localStorage.clear();
     window.dispatchEvent(new Event("authChanged"));
     window.dispatchEvent(new Event("cartUpdated"));
     window.location.href = "/navitems/login";

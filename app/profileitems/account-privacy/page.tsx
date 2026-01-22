@@ -40,7 +40,7 @@ export default function AccountPrivacyPage() {
   };
 
   const logout = () => {
-    localStorage.clear();
+    
     router.push("/navitems/login");
   };
 
