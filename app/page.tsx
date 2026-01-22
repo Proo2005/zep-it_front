@@ -201,7 +201,7 @@ export default function HomePage() {
                   Scroll to explore more items →
                 </p>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 sm:grid-2 cols-4 md:grid-3 cols-4 gap-4 sm:gap-6">
                   {visible.map((item) => (
                     <div
                       key={item._id}
