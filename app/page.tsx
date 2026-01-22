@@ -224,14 +224,14 @@ export default function HomePage() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2  sm:grid-cols-3  md:grid-cols-4 gap-4  sm:gap-6">
                   {visible.map((item) => (
                     <div
                       key={item._id}
-                      className="bg-white rounded-2xl p-4 shadow-sm hover:shadow-lg transition flex flex-col"
+                      className=" bg-white rounded-2xl  p-4  sm:p-4 shadow-sm  hover:shadow-lg  transition  flex  flex-col min-h-[320px]"
                     >
                       {/* Image */}
-                      <div className="h-32 rounded-xl bg-[#F1F5F9] mb-3 overflow-hidden">
+                      <div className="h-36 sm:h-32  rounded-xl  bg-[#F1F5F9]  mb-3  overflow-hidden">
                         <img
                           src={`https://loremflickr.com/320/240/${item.itemName}`}
                           alt={item.itemName}
@@ -240,7 +240,7 @@ export default function HomePage() {
                       </div>
 
                       {/* Name */}
-                      <h3 className="font-semibold text-sm mb-1 truncate text-black">
+                      <h3 className="font-semibold  text-[13px]  sm:text-sm  mb-1 line-clamp-2  text-black">
                         {item.itemName}
                       </h3>
 
