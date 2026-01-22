@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/field";
 import ItemCardSkeleton from "./components/ItemCardSkeleton";
 
-
 type Item = {
   _id: string;
   itemName: string;
@@ -50,7 +49,6 @@ export default function HomePage() {
   const [priceRange, setPriceRange] = useState<number>(2000);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     fetchItems();
     fetchUserAddress();
@@ -68,14 +66,14 @@ export default function HomePage() {
     }
   };
 
-
   const fetchUserAddress = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const res = await axios.get("https://zep-it-back.onrender.com/api/user/profile", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await axios.get(
+      "https://zep-it-back.onrender.com/api/user/profile",
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
     if (res.data.user?.address) setUserAddress(res.data.user.address);
   };
@@ -91,7 +89,6 @@ export default function HomePage() {
     if (selectedQty > item.quantity) return;
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-
     const existing = cart.find((c: any) => c.itemId === item._id);
 
     if (existing) {
@@ -109,7 +106,6 @@ export default function HomePage() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
-
   const toggleCategory = (key: string) =>
     setExpandedCategories((p) => ({ ...p, [key]: !p[key] }));
 
@@ -123,22 +119,17 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24">
-
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32 ">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32">
 
         {/* FILTER PANEL */}
         <div className="hidden lg:block">
           <div className="sticky top-32 bg-white rounded-2xl p-5 shadow-sm border">
-
             <h3 className="text-lg font-bold mb-5 text-black flex items-center gap-2">
               Filters <CiFilter />
             </h3>
 
-            {/* ================= CATEGORIES ================= */}
             <FieldGroup className="space-y-3 mb-6 text-black">
-              <p className="font-semibold text-sm text-black mb-2">
-                Categories
-              </p>
+              <p className="font-semibold text-sm mb-2">Categories</p>
 
               {categories.map((cat) => (
                 <Field orientation="horizontal" key={cat.key}>
@@ -153,14 +144,9 @@ export default function HomePage() {
                       )
                     }
                   />
-
                   <FieldContent>
-                    <FieldLabel htmlFor={cat.key}>
-                      {cat.label}
-                    </FieldLabel>
-                    <FieldDescription>
-                      {cat.label}
-                    </FieldDescription>
+                    <FieldLabel htmlFor={cat.key}>{cat.label}</FieldLabel>
+                    <FieldDescription>{cat.label}</FieldDescription>
                   </FieldContent>
                 </Field>
               ))}
@@ -168,12 +154,8 @@ export default function HomePage() {
 
             <Divider className="my-5" />
 
-            {/* ================= PRICE RANGE ================= */}
             <div>
-              <FieldTitle className="mb-2">
-                Max Price: ₹{priceRange}
-              </FieldTitle>
-
+              <FieldTitle className="mb-2">Max Price: ₹{priceRange}</FieldTitle>
               <input
                 type="range"
                 min={50}
@@ -183,16 +165,12 @@ export default function HomePage() {
                 onChange={(e) => setPriceRange(Number(e.target.value))}
                 className="w-full accent-[#0C831F]"
               />
-
               <p className="text-xs text-gray-500 mt-2">
                 Items priced under ₹{priceRange}
               </p>
             </div>
-
           </div>
         </div>
-
-
 
         {/* MAIN CONTENT */}
         <div>
@@ -201,7 +179,9 @@ export default function HomePage() {
               <p className="font-semibold text-[#0C831F]">
                 Delivering to {userAddress.city}, {userAddress.state}
               </p>
-              <p className="text-sm text-orange-800 truncate">{userAddress.fullAddress}</p>
+              <p className="text-sm text-orange-800 truncate">
+                {userAddress.fullAddress}
+              </p>
             </div>
           )}
 
@@ -215,47 +195,62 @@ export default function HomePage() {
           />
 
           <div className="h-52 rounded-3xl bg-gradient-to-r from-[#0C831F] to-[#14B8A6] text-white flex flex-col justify-center px-8 mb-10">
-            <h1 className="text-3xl font-extrabold">Daily Needs, Delivered Fast</h1>
-            <p className="opacity-90">Fresh stock • Best prices • Instant delivery</p>
+            <h1 className="text-3xl font-extrabold">
+              Daily Needs, Delivered Fast
+            </h1>
+            <p className="opacity-90">
+              Fresh stock • Best prices • Instant delivery
+            </p>
           </div>
 
-          {categories.map((cat) => {
-            const categoryItems = filteredItems.filter((i) => i.category === cat.key);
-            const expanded = expandedCategories[cat.key];
-            const visible = expanded ? categoryItems : categoryItems.slice(0, 8);
+          {/* ===== SKELETON BEFORE DATA LOADS ===== */}
+          {loading && (
+            <section className="mb-14">
+              <div className="grid gap-4 sm:gap-6
+                grid-cols-3 md:grid-cols-3 lg:grid-cols-3
+                sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3">
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <ItemCardSkeleton key={i} />
+                ))}
+              </div>
+            </section>
+          )}
 
-            if (!categoryItems.length) return null;
+          {/* ===== REAL DATA AFTER LOAD ===== */}
+          {!loading &&
+            categories.map((cat) => {
+              const categoryItems = filteredItems.filter(
+                (i) => i.category === cat.key
+              );
 
-            return (
-              <section key={cat.key} className="mb-14">
-                <div className="flex justify-between items-center mb-4">
-                  <h2 className="text-2xl font-bold text-black">{cat.label}</h2>
-                  {categoryItems.length > 8 && (
-                    <button
-                      onClick={() => toggleCategory(cat.key)}
-                      className="text-sm font-semibold text-[#0C831F]"
-                    >
-                      {expanded ? "Show Less" : "View All"}
-                    </button>
-                  )}
-                </div>
+              const expanded = expandedCategories[cat.key];
+              const visible = expanded
+                ? categoryItems
+                : categoryItems.slice(0, 8);
 
-                <p className="block sm:hidden text-xs text-black-500 mb-3 ">
-                  Scroll to explore more items →
-                </p>
+              if (!categoryItems.length) return null;
 
-                <div
-                  className={`grid gap-4 sm:gap-6
-    grid-cols-3 md:grid-cols-3 lg:grid-cols-3
-    sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3
-  `}
-                >
-                  {loading ? (
-                    Array.from({ length: 8 }).map((_, i) => (
-                      <ItemCardSkeleton key={i} />
-                    ))
-                  ) : (
-                    visible.map((item, idx) => (
+              return (
+                <section key={cat.key} className="mb-14">
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-2xl font-bold text-black">
+                      {cat.label}
+                    </h2>
+
+                    {categoryItems.length > 8 && (
+                      <button
+                        onClick={() => toggleCategory(cat.key)}
+                        className="text-sm font-semibold text-[#0C831F]"
+                      >
+                        {expanded ? "Show Less" : "View All"}
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="grid gap-4 sm:gap-6
+                    grid-cols-3 md:grid-cols-3 lg:grid-cols-3
+                    sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3">
+                    {visible.map((item, idx) => (
                       <div
                         key={item._id}
                         className="relative bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]"
@@ -264,20 +259,24 @@ export default function HomePage() {
                           Popular
                         </span>
 
-                        <div className="h-36 sm:h-25 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden flex items-center justify-center">
+                        <div className="h-36 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden">
                           <img
-                            src={`https://loremflickr.com/320/320/${encodeURIComponent(item.itemName)}?random=${idx}`}
+                            src={`https://loremflickr.com/320/320/${encodeURIComponent(
+                              item.itemName
+                            )}?random=${idx}`}
                             alt={item.itemName}
                             className="w-full h-full object-cover"
                           />
                         </div>
 
-                        <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2 text-black">
+                        <h3 className="font-semibold text-sm mb-1 line-clamp-2 text-black">
                           {item.itemName}
                         </h3>
 
                         <div className="flex justify-between items-center mb-2">
-                          <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
+                          <span className="font-bold text-[#0C831F]">
+                            ₹{item.amount}
+                          </span>
                           <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
                             {item.quantity} left
                           </span>
@@ -289,31 +288,34 @@ export default function HomePage() {
                           max={item.quantity}
                           value={cartQty[item._id] || 1}
                           onChange={(e) =>
-                            handleQtyChange(item._id, Number(e.target.value), item.quantity)
+                            handleQtyChange(
+                              item._id,
+                              Number(e.target.value),
+                              item.quantity
+                            )
                           }
                           className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
                         />
 
                         <button
-                          type="button"
                           onClick={() => addToCart(item)}
                           className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
                         >
                           ADD
                         </button>
                       </div>
-                    ))
-                  )}
+                    ))}
+                  </div>
 
-                </div>
-                <Divider className="my-6" />
-
-              </section>
-            );
-          })}
+                  <Divider className="my-6" />
+                </section>
+              );
+            })}
         </div>
+
         <FloatingCart />
       </div>
+
       <Footer />
     </div>
   );
