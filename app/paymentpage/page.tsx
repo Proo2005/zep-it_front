@@ -80,7 +80,7 @@ export default function PaymentPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
-      <div className="max-w-6xl mx-auto  pt-32 ">
+      <div className="  pt-32 ">
         <h1 className="text-3xl font-bold mb-6">Payment</h1>
 
         <div className="w-full max-w-md bg-gray-500 p-6 rounded-xl space-y-4">
@@ -104,7 +104,7 @@ export default function PaymentPage() {
               placeholder="Enter UPI ID"
               value={upiId}
               onChange={(e) => setUpiId(e.target.value)}
-              className="w-full p-2 rounded bg-gray-300 text-white outline-none"
+              className="w-full p-2 rounded bg-gray-300 text-black outline-none"
             />
           )}
 
@@ -116,7 +116,7 @@ export default function PaymentPage() {
                 maxLength={14}
                 value={cardNumber}
                 onChange={(e) => setCardNumber(e.target.value)}
-                className="w-full p-2 rounded bg-gray-300 text-white outline-none"
+                className="w-full p-2 rounded bg-gray-300 text-black outline-none"
               />
               <input
                 type="text"

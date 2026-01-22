@@ -88,18 +88,18 @@ export default function CartPage() {
               {cart.map(item => (
                 <div
                   key={item.itemId}
-                  className="bg-gray-500 border border-zinc-800 
+                  className=" border border-zinc-800 
                              rounded-2xl p-5 flex justify-between items-center"
                 >
                   <div>
                     <h2 className="text-lg font-semibold">{item.name}</h2>
                     <p className="text-green-400 mt-1 font-medium">
-                      ₹{item.price} each
+                      ₹{item.price} /- each
                     </p>
                   </div>
 
                   <div className="flex items-center gap-4 text-white">
-                    <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-3 py-1">
+                    <div className="flex items-center gap-2 bg-gray-500 rounded-xl px-3 py-1">
                       <button
                         onClick={() => decreaseQty(item.itemId)}
                         className="text-xl px-2 hover:text-red-400"
@@ -131,7 +131,7 @@ export default function CartPage() {
             </div>
 
             {/* ORDER SUMMARY */}
-            <div className="bg-gray-500 border border-zinc-800 
+            <div className=" border border-zinc-800 
                             rounded-2xl p-6 h-fit">
               <h2 className="text-xl font-semibold mb-6">
                 Order Summary

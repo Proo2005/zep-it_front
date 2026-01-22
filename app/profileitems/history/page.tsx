@@ -75,22 +75,23 @@ export default function PaymentHistoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 py-10">
-      <div className="max-w-6xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-6xl mx-auto  pt-32 ">
+      
 
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold">
             Payment History
           </h1>
-          <p className="text-zinc-400 mt-1">
+          <p className=" mt-1">
             View your past orders and quickly reorder items
           </p>
         </div>
 
         {/* Empty State */}
         {history.length === 0 ? (
-          <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-10 text-center">
+          <div className=" border-zinc-800 rounded-2xl p-10 text-center">
             <p className="text-zinc-400 text-lg">
               No payment history available yet.
             </p>
@@ -108,11 +109,11 @@ export default function PaymentHistoryPage() {
                     <div className="text-2xl font-bold text-green-400">
                       ₹{h.totalAmount}
                     </div>
-                    <div className="text-sm text-zinc-400 mt-1">
+                    <div className="text-sm mt-1">
                       {h.paymentMethod} •{" "}
                       {new Date(h.createdAt).toLocaleString()}
                     </div>
-                    <div className="text-xs text-zinc-500 mt-1">
+                    <div className="text-xs mt-1">
                       {h.items.length} item(s)
                     </div>
                   </div>
@@ -138,15 +139,15 @@ export default function PaymentHistoryPage() {
                       className="flex justify-between items-center py-3 text-sm"
                     >
                       <div>
-                        <p className="font-medium text-zinc-200">
+                        <p className="font-medium">
                           {item.name}
                         </p>
-                        <p className="text-xs text-zinc-400">
+                        <p className="text-xs">
                           Quantity: {item.quantity}
                         </p>
                       </div>
 
-                      <div className="font-semibold text-zinc-300">
+                      <div className="font-semibold">
                         ₹{item.amount * item.quantity}
                       </div>
                     </div>
