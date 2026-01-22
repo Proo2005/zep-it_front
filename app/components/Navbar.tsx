@@ -68,15 +68,6 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-4 flex-1 mx-6">
-          {/* Search Bar */}
-          <div className="flex flex-1 items-center bg-green-50 border border-green-200 rounded-full px-4 py-1 shadow-sm hover:shadow-md transition">
-            <IoSearchOutline className="text-green-600 text-xl mr-2" />
-            <input
-              type="text"
-              placeholder="Search for products..."
-              className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
-            />
-          </div>
 
           {/* Quick Links */}
           <div className="flex gap-3 ml-6">
@@ -159,15 +150,6 @@ export default function Navbar() {
       {/* Mobile Menu */}
       {mobileMenu && (
         <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-green-200 shadow-md rounded-b-2xl px-6 py-4 space-y-3">
-          {/* Search */}
-          <div className="flex items-center bg-green-50 border border-green-200 rounded-full px-3 py-1">
-            <IoSearchOutline className="text-green-600 text-xl mr-2" />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
-            />
-          </div>
 
           {/* Quick Links */}
           <Link href="/navitems/deals" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
