@@ -71,13 +71,13 @@ export default function CartPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
       <div className="max-w-6xl mx-auto  pt-32 ">
 
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
         {cart.length === 0 ? (
-          <div className="text-center text-zinc-400 text-lg mt-20">
+          <div className="text-center text-lg mt-20">
             Your cart is empty
           </div>
         ) : (
@@ -88,7 +88,7 @@ export default function CartPage() {
               {cart.map(item => (
                 <div
                   key={item.itemId}
-                  className="bg-zinc-900 border border-zinc-800 
+                  className="bg-gray-500 border border-zinc-800 
                              rounded-2xl p-5 flex justify-between items-center"
                 >
                   <div>
@@ -98,8 +98,8 @@ export default function CartPage() {
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 bg-zinc-800 rounded-xl px-3 py-1">
+                  <div className="flex items-center gap-4 text-white">
+                    <div className="flex items-center gap-2 bg-gray-800 rounded-xl px-3 py-1">
                       <button
                         onClick={() => decreaseQty(item.itemId)}
                         className="text-xl px-2 hover:text-red-400"
@@ -131,18 +131,18 @@ export default function CartPage() {
             </div>
 
             {/* ORDER SUMMARY */}
-            <div className="bg-zinc-900 border border-zinc-800 
+            <div className="bg-gray-500 border border-zinc-800 
                             rounded-2xl p-6 h-fit">
               <h2 className="text-xl font-semibold mb-6">
                 Order Summary
               </h2>
 
-              <div className="flex justify-between mb-3 text-zinc-400">
+              <div className="flex justify-between mb-3">
                 <span>Items</span>
                 <span>{cart.length}</span>
               </div>
 
-              <div className="flex justify-between mb-3 text-zinc-400">
+              <div className="flex justify-between mb-3">
                 <span>Delivery</span>
                 <span className="text-green-400">Free</span>
               </div>
