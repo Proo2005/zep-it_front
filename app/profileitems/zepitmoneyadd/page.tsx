@@ -13,7 +13,7 @@ export default function AddMoneyPage() {
     if (!amount || !upiId) return alert("Fill all fields");
 
     const token = localStorage.getItem("token");
-    if (!token) return router.push("/login");
+    if (!token) return router.push("/navitems/login");
 
     setLoading(true);
 
@@ -31,7 +31,7 @@ export default function AddMoneyPage() {
 
       if (data.success) {
         alert("Money added successfully");
-        router.push("/profile");
+        router.push("/navitems/profile");
       } else {
         alert(data.message);
       }
