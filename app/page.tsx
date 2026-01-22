@@ -250,54 +250,61 @@ export default function HomePage() {
     sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3
   `}
                 >
-                  {visible.map((item, idx) => (
-                    <div
-                      key={item._id}
-                      className="relative bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]"
-                    >
-                      <span className="absolute top-3 right-3 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded-full">
-                        Popular
-                      </span>
-
-                      <div className="h-36 sm:h-25 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden flex items-center justify-center">
-                        <img
-                          src={`https://loremflickr.com/320/320/${encodeURIComponent(item.itemName)}?random=${idx}`}
-                          alt={item.itemName}
-                          className="w-full h-full object-cover "
-                        />
-                      </div>
-
-                      <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2 text-black">
-                        {item.itemName}
-                      </h3>
-
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
-                        <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
-                          {item.quantity} left
-                        </span>
-                      </div>
-
-                      <input
-                        type="number"
-                        min={1}
-                        max={item.quantity}
-                        value={cartQty[item._id] || 1}
-                        onChange={(e) =>
-                          handleQtyChange(item._id, Number(e.target.value), item.quantity)
-                        }
-                        className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
-                      />
-
-                      <button
-                        type="button"
-                        onClick={() => addToCart(item)}
-                        className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
+                  {loading ? (
+                    Array.from({ length: 8 }).map((_, i) => (
+                      <ItemCardSkeleton key={i} />
+                    ))
+                  ) : (
+                    visible.map((item, idx) => (
+                      <div
+                        key={item._id}
+                        className="relative bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]"
                       >
-                        ADD
-                      </button>
-                    </div>
-                  ))}
+                        <span className="absolute top-3 right-3 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded-full">
+                          Popular
+                        </span>
+
+                        <div className="h-36 sm:h-25 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden flex items-center justify-center">
+                          <img
+                            src={`https://loremflickr.com/320/320/${encodeURIComponent(item.itemName)}?random=${idx}`}
+                            alt={item.itemName}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+
+                        <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2 text-black">
+                          {item.itemName}
+                        </h3>
+
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
+                          <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
+                            {item.quantity} left
+                          </span>
+                        </div>
+
+                        <input
+                          type="number"
+                          min={1}
+                          max={item.quantity}
+                          value={cartQty[item._id] || 1}
+                          onChange={(e) =>
+                            handleQtyChange(item._id, Number(e.target.value), item.quantity)
+                          }
+                          className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => addToCart(item)}
+                          className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
+                        >
+                          ADD
+                        </button>
+                      </div>
+                    ))
+                  )}
+
                 </div>
                 <Divider className="my-6" />
 
