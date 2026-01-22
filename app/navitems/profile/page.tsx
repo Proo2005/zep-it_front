@@ -31,7 +31,7 @@ export default function ProfilePage() {
     email: "",
     phone: "",
     type: "customer",
-    fullAddress:" ",
+    fullAddress:"",
   });
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function ProfilePage() {
       email: localStorage.getItem("email") || "user@email.com",
       phone: localStorage.getItem("phone") || "+91 XXXXX XXXXX",
       type: localStorage.getItem("type") || "customer",
-      fullAddress: localStorage.getItem("Address")|| "address",
+      fullAddress: localStorage.getItem("fullAddress")|| "address",
     });
   }, []);
 
