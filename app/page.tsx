@@ -150,7 +150,47 @@ export default function HomePage() {
               className="w-full accent-[#0C831F]"
             />
           </div>
+          <div className="sticky top-32 bg-white rounded-2xl p-5 shadow-sm border">
+            <h3 className="text-lg font-bold mb-4 text-black flex items-center gap-2">
+              Filters <CiFilter />
+            </h3>
+
+            <div className="mb-6">
+              <p className="font-semibold mb-3 text-sm text-gray-700">Categories</p>
+              {categories.map((cat) => (
+                <label key={cat.key} className="flex items-center gap-2 mb-2 text-sm text-gray-600">
+                  <input
+                    type="checkbox"
+                    checked={selectedCategories.includes(cat.key)}
+                    onChange={(e) =>
+                      setSelectedCategories((p) =>
+                        e.target.checked ? [...p, cat.key] : p.filter((c) => c !== cat.key)
+                      )
+                    }
+                    className="accent-[#0C831F]"
+                  />
+                  {cat.label}
+                </label>
+              ))}
+            </div>
+
+            <Divider className="my-4" />
+
+            <p className="font-semibold mb-3 text-sm text-gray-700">
+              Max Price: ₹{priceRange}
+            </p>
+            <input
+              type="range"
+              min={50}
+              max={2000}
+              step={50}
+              value={priceRange}
+              onChange={(e) => setPriceRange(Number(e.target.value))}
+              className="w-full accent-[#0C831F]"
+            />
+          </div>
         </div>
+        
 
         {/* MAIN CONTENT */}
         <div>
