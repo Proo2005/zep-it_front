@@ -53,7 +53,7 @@ export default function FloatingCart() {
 
   return (
     <div className={`fixed bottom-5 left-1/2 -translate-x-1/2 
-              w-[95%] max-w-4xl z-50
+              w-[55%] max-w-4xl z-50
               transition-all duration-300 ease-out
               ${isVisible
         ? "opacity-100 translate-y-0"
@@ -84,7 +84,7 @@ export default function FloatingCart() {
           </p>
 
           <button
-            onClick={() => router.push("/cart")}
+            onClick={() => router.push("/navitems/cart")}
             className="bg-green-600 hover:bg-green-500 
                        text-black px-6 py-2.5 
                        rounded-xl font-bold transition"
