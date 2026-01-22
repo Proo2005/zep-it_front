@@ -14,6 +14,7 @@ export default function FloatingCart() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
   const router = useRouter();
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const loadCart = () => {
@@ -25,13 +26,16 @@ export default function FloatingCart() {
         0
       );
       setTotal(sum);
+
+      setIsVisible(stored.length > 0);
     };
+
 
     loadCart();
     window.addEventListener("cartUpdated", loadCart);
     window.addEventListener("storage", loadCart);
-    
-    return () => 
+
+    return () =>
       window.removeEventListener("storage", loadCart);
   }, []);
 
@@ -45,8 +49,13 @@ export default function FloatingCart() {
   const lastItem = cart[cart.length - 1];
 
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 
-                    w-[95%] max-w-4xl z-50">
+    <div className={`fixed bottom-5 left-1/2 -translate-x-1/2 
+              w-[95%] max-w-4xl z-50
+              transition-all duration-300 ease-out
+              ${isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-6 pointer-events-none"
+              }`}>
       <div className="bg-zinc-900 border border-zinc-800 
                       rounded-2xl px-6 py-4 
                       flex items-center justify-between 
