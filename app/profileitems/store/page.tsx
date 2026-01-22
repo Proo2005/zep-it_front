@@ -49,7 +49,9 @@ export default function StoresPage() {
   if (stores.length === 0) return <p className="text-center mt-20 text-gray-500">No stores found</p>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] p-6">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24">
+
+      <div className=" pt-32 ">
       <h1 className="text-3xl font-extrabold mb-8 text-center text-[#0C831F]">All Stores</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -100,6 +102,7 @@ export default function StoresPage() {
             </button>
           </div>
         ))}
+      </div>
       </div>
     </div>
   );

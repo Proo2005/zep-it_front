@@ -159,7 +159,7 @@ export default function HomePage() {
               <p className="font-semibold text-[#0C831F]">
                 Delivering to {userAddress.city}, {userAddress.state}
               </p>
-              <p className="text-sm text-red truncate">{userAddress.fullAddress}</p>
+              <p className="text-sm text-orange-800 truncate">{userAddress.fullAddress}</p>
             </div>
           )}
 
