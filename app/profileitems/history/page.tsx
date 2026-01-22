@@ -101,7 +101,7 @@ export default function PaymentHistoryPage() {
             {history.map((h) => (
               <div
                 key={h._id}
-                className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6"
+                className=" border border-zinc-800 rounded-2xl p-6"
               >
                 {/* Order Header */}
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
