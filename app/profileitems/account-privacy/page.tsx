@@ -4,6 +4,17 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { FiLock, FiShield, FiSmartphone, FiEyeOff, FiTrash2 } from "react-icons/fi";
 import Footer from "@/app/components/Footer";
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
 
 
 export default function AccountPrivacyPage() {
@@ -130,12 +141,37 @@ export default function AccountPrivacyPage() {
           >
             Logout
           </button>
-          <button
-            onClick={deleteAccount}
-            className="w-full py-2 px-4 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 transition"
-          >
-            Delete Account
-          </button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <button
+                className="w-full py-2 px-4 rounded-lg bg-red-600 text-white font-semibold hover:bg-red-500 transition"
+              >
+                Delete Account
+              </button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete your account
+                  from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+
+                <AlertDialogAction
+                  onClick={deleteAccount}
+                  className="bg-red-600 hover:bg-red-500 text-white"
+                >
+                  Continue
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
         </Section>
         <Footer />
       </div>
