@@ -3,7 +3,11 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { IoCartOutline } from "react-icons/io5";
-import { Tooltip } from "@heroui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type CartItem = {
   itemId: string;
@@ -89,8 +93,11 @@ export default function FloatingCart() {
                        rounded-lg font-bold
                        text-sm transition"
           >
-           <Tooltip content="Proceed to Cart" className="text-gray-600">
-              <IoCartOutline size={20} />
+            <Tooltip>
+              <TooltipTrigger><IoCartOutline size={20} /></TooltipTrigger>
+              <TooltipContent>
+                <p>Proceed to Cart</p>
+              </TooltipContent>
             </Tooltip>
           </button>
         </div>
