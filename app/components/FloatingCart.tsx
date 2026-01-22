@@ -28,8 +28,10 @@ export default function FloatingCart() {
       );
       setTotal(sum);
 
+      // Trigger pop animation
       setPulse(true);
-      setTimeout(() => setPulse(false), 250);
+      setTimeout(() => setPulse(false), 300);
+
       setIsVisible(stored.length > 0);
     };
 
@@ -50,19 +52,14 @@ export default function FloatingCart() {
 
   return (
     <div
-      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50
+      className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[90%] sm:w-[70%] md:w-[40%] lg:w-[25%]
       transition-all duration-300
       ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}
-      
-      w-[90%] sm:w-[70%] md:w-[40%] lg:w-[25%]`}
+      ${pulse ? "animate-pop" : ""}`}
     >
       <div
-        className={`bg-white border border-zinc-200
-        rounded-2xl px-5 py-4
-        flex items-center justify-between
-        shadow-xl
-        transition-transform
-        ${pulse ? "scale-[1.02]" : "scale-100"}`}
+        className="bg-white border border-zinc-200 rounded-2xl px-5 py-4
+                   flex items-center justify-between shadow-xl"
       >
         {/* LEFT */}
         <div className="min-w-0">
@@ -76,21 +73,35 @@ export default function FloatingCart() {
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          <p className="text-lg font-bold text-zinc-900">
-            ₹{total}
-          </p>
+          <p className="text-lg font-bold text-zinc-900">₹{total}</p>
 
           <button
             onClick={() => router.push("/navitems/cart")}
-            className="bg-green-600 hover:bg-green-500
-                       text-black px-4 py-2
-                       rounded-lg font-bold
-                       text-sm transition"
+            className="bg-green-600 hover:bg-green-500 text-black px-4 py-2
+                       rounded-lg font-bold text-sm transition"
           >
             View →
           </button>
         </div>
       </div>
+
+      {/* Add Tailwind keyframe animation */}
+      <style jsx>{`
+        @keyframes pop {
+          0% {
+            transform: scale(0);
+          }
+          50% {
+            transform: scale(1.05);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+        .animate-pop {
+          animation: pop 0.3s ease-out forwards;
+        }
+      `}</style>
     </div>
   );
 }
