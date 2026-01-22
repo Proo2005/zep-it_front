@@ -66,7 +66,7 @@ export default function ProfilePage() {
           <div>
             <h1 className="text-2xl font-bold">{user.name}</h1>
             <p className="text-gray-600 text-sm">{user.email}</p>
-            <p className="text-gray-600 text-sm">{user.phone}</p>
+            <p className="text-gray-600 text-sm">{user.fullAddress}</p>
           </div>
         </div>
         <button
