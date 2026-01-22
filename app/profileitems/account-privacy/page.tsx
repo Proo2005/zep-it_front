@@ -70,9 +70,9 @@ export default function AccountPrivacyPage() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32 ">
+      <div className="max-w-7xl mx-auto  gap-8 pt-32 ">
         <h1 className="text-3xl font-bold mb-6">Account Privacy</h1>
 
         {/* Account Info */}
