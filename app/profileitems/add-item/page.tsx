@@ -67,7 +67,10 @@ export default function AddItem() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center">
+
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] flex items-center justify-center text-black">
+
+
       <form
         onSubmit={handleSubmit}
         className="bg-zinc-900 p-6 rounded-xl w-[420px] space-y-4"

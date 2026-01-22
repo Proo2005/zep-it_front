@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { IoCartOutline } from "react-icons/io5";
+import { Tooltip } from "@heroui/tooltip";
 
 type CartItem = {
   itemId: string;
@@ -87,7 +89,9 @@ export default function FloatingCart() {
                        rounded-lg font-bold
                        text-sm transition"
           >
-            View →
+           <Tooltip content="Proceed to Cart" className="text-gray-600">
+              <IoCartOutline size={20} />
+            </Tooltip>
           </button>
         </div>
       </div>

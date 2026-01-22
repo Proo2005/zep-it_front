@@ -68,19 +68,7 @@ export default function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center gap-4 flex-1 mx-6">
-
-          {/* Quick Links */}
-          <div className="flex gap-3 ml-6">
-            <Link href="/navitems/deals" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
-              Deals
-            </Link>
-            <Link href="/profileitems/history" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
-              Orders
-            </Link>
-          </div>
-        </div>
+     
 
         {/* Right Side (Desktop + Mobile) */}
         <div className="flex items-center gap-3">
