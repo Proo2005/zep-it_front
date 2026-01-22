@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Login() {
   const router = useRouter();
@@ -59,7 +60,9 @@ export default function Login() {
 
       // Notify Navbar / Guards
       window.dispatchEvent(new Event("authChanged"));
+      
 
+      toast.success(`Welcome back, ${user.name}!`);
       // Redirect based on role
       if (user.type === "customer") {
         router.push("/");
