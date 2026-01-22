@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { IoPersonCircleOutline } from "react-icons/io5";
+import { IoPersonCircleOutline, IoCartOutline, IoSearchOutline } from "react-icons/io5";
 import { Tooltip } from "@heroui/tooltip";
 import { AcmeLogo } from "./Logo";
 
@@ -13,19 +13,23 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Update user name
     const loadUser = () => setUserName(localStorage.getItem("name"));
     loadUser();
     window.addEventListener("authChanged", loadUser);
 
-    // Update cart count
-    const loadCartCount = () => {
+    const updateCartCount = () => {
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
       const totalQty = cart.reduce((sum: number, item: any) => sum + item.quantity, 0);
       setCartCount(totalQty);
     };
-    loadCartCount();
-    window.addEventListener("cartUpdated", loadCartCount);
+    updateCartCount();
+    window.addEventListener("cartUpdated", updateCartCount);
+
+    // Detect cart changes in other tabs/components
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === "cart") updateCartCount();
+    };
+    window.addEventListener("storage", handleStorage);
 
     // Close dropdown on outside click
     const handleClickOutside = (e: MouseEvent) => {
@@ -37,72 +41,96 @@ export default function Navbar() {
 
     return () => {
       window.removeEventListener("authChanged", loadUser);
-      window.removeEventListener("cartUpdated", loadCartCount);
+      window.removeEventListener("cartUpdated", updateCartCount);
+      window.removeEventListener("storage", handleStorage);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   const logout = () => {
     localStorage.clear();
-    window.dispatchEvent(new Event("authChanged")); // Notify all listeners
-    window.dispatchEvent(new Event("cartUpdated")); // Reset cart count
+    window.dispatchEvent(new Event("authChanged"));
+    window.dispatchEvent(new Event("cartUpdated"));
     window.location.href = "/navitems/login";
   };
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-7xl z-50">
-      <div className="backdrop-blur-xl bg-white/55 border border-white/30 rounded-2xl px-6 py-3 flex justify-between items-center">
-        {/* APP NAME */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#0C831F] to-[#2ECC71] flex items-center justify-center shadow-lg">
-            <span className="text-white font-extrabold text-lg"><AcmeLogo /></span>
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-7xl z-50 shadow-lg rounded-2xl bg-white/90 backdrop-blur-md border border-green-200">
+      <div className="flex items-center justify-between px-6 py-3">
+        
+        {/* Logo & Brand */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-600 to-green-400 flex items-center justify-center shadow-lg">
+            <AcmeLogo />
           </div>
-          <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-[#0C831F] to-[#2ECC71] bg-clip-text text-transparent group-hover:opacity-90 transition">
+          <span className="text-2xl font-extrabold bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent tracking-tight group-hover:opacity-90 transition">
             zep-it
           </span>
         </Link>
 
-        {/* RIGHT SIDE */}
+        {/* Search Bar */}
+        <div className="hidden md:flex flex-1 mx-6 items-center bg-green-50 border border-green-200 rounded-full px-4 py-1 shadow-sm hover:shadow-md transition">
+          <IoSearchOutline className="text-green-600 text-xl mr-2" />
+          <input
+            type="text"
+            placeholder="Search for products..."
+            className="flex-1 bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400"
+          />
+        </div>
+
+        {/* Right Items */}
         <div className="flex items-center gap-4">
-          {/* CART */}
+          {/* Quick Links */}
+          <div className="hidden md:flex gap-3">
+            <Link href="/navitems/deals" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              Deals
+            </Link>
+            <Link href="/navitems/orders" className="px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              Orders
+            </Link>
+          </div>
+
+          {/* Cart */}
           <Link
             href="/navitems/cart"
-            className="relative px-5 py-2 rounded-xl font-semibold text-sm bg-white/60 backdrop-blur border border-white/40 shadow-md hover:shadow-lg hover:bg-white/80 transition text-black"
+            className="relative flex items-center gap-2 px-4 py-2 rounded-xl bg-green-50 text-green-700 hover:bg-green-100 transition shadow-md"
           >
-            <Tooltip className="text-gray-600" content="Proceed to Cart">Cart</Tooltip>
+            <Tooltip content="Proceed to Cart" className="text-gray-600">
+              <IoCartOutline size={20} />
+            </Tooltip>
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
+              <span className="absolute -top-2 -right-2 min-w-[20px] h-[20px] px-1 rounded-full bg-red-500 text-white text-xs font-bold flex items-center justify-center shadow">
                 {cartCount}
               </span>
             )}
           </Link>
 
-          {/* PROFILE DROPDOWN */}
+          {/* Profile Dropdown */}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setOpen(!open)}
-              className="flex items-center gap-3 px-4 py-2 rounded-xl bg-white/60 backdrop-blur border border-white/40 shadow-md hover:bg-white/80 transition"
+              className="flex items-center gap-3 px-4 py-2 rounded-xl bg-green-50 text-green-700 hover:bg-green-100 transition shadow-md"
             >
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#0C831F] to-[#2ECC71] text-white font-bold flex items-center justify-center shadow">
-                {userName ? userName[0].toUpperCase() : <IoPersonCircleOutline />}
+              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-600 to-green-400 text-white font-bold flex items-center justify-center shadow">
+                {userName ? userName[0].toUpperCase() : <IoPersonCircleOutline size={20} />}
               </div>
-              <span className="text-sm font-medium text-[#1C1C1C]">{userName || "Profile"}</span>
+              <span className="text-sm font-medium">{userName || "Profile"}</span>
             </button>
 
             {open && (
-              <div className="absolute right-0 mt-3 w-48 bg-white/70 backdrop-blur-xl border border-white/40 rounded-xl shadow-[0_15px_35px_rgba(0,0,0,0.15)] overflow-hidden text-black">
+              <div className="absolute right-0 mt-3 w-48 bg-white/95 backdrop-blur-md border border-green-200 rounded-xl shadow-lg overflow-hidden text-black">
                 {!userName ? (
                   <>
-                    <Link href="/navitems/login" className="block px-4 py-3 text-sm hover:bg-white/80 transition">
+                    <Link href="/navitems/login" className="block px-4 py-3 text-sm hover:bg-green-50 transition">
                       Login
                     </Link>
-                    <Link href="/navitems/signup" className="block px-4 py-3 text-sm hover:bg-white/80 transition">
+                    <Link href="/navitems/signup" className="block px-4 py-3 text-sm hover:bg-green-50 transition">
                       Signup
                     </Link>
                   </>
                 ) : (
                   <>
-                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-white/80 transition">
+                    <Link href="/navitems/profile" className="block px-4 py-3 text-sm hover:bg-green-50 transition">
                       Profile
                     </Link>
                     <button
