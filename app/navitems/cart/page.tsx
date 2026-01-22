@@ -152,7 +152,7 @@ export default function CartPage() {
                 );
 
                 const data = await res.json();
-                router.push(`/cart/${data.cartCode}`);
+                router.push(`/essential/joincart/${data.cartCode}`);
               }}
               className="mb-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
             >
