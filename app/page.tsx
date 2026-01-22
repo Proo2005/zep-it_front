@@ -30,6 +30,7 @@ const categories = [
 ];
 
 export default function HomePage() {
+  const [toast, setToast] = useState<string | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [search, setSearch] = useState("");
   const [cartQty, setCartQty] = useState<{ [key: string]: number }>({});
@@ -89,6 +90,7 @@ export default function HomePage() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+    setToast(`${item.itemName} added to cart`);
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
