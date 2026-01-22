@@ -102,10 +102,7 @@ export default function AccountPrivacyPage() {
             <span>Chrome on Windows 10</span>
             <button className="text-red-500 hover:underline">Logout</button>
           </li>
-          <li className="px-4 py-3 flex justify-between items-center">
-            <span>iPhone 14</span>
-            <button className="text-red-500 hover:underline">Logout</button>
-          </li>
+          
         </ul>
       </Section>
 

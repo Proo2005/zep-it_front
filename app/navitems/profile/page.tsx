@@ -44,7 +44,7 @@ export default function ProfilePage() {
 
   const logout = () => {
     localStorage.clear();
-    router.push("/login");
+    router.push("/navitems/login");
   };
 
   const handleCopy = () => {
