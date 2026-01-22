@@ -5,7 +5,7 @@ import axios from "axios";
 import { CiFilter } from "react-icons/ci";
 import { Divider } from "@heroui/divider";
 import Footer from "./components/Footer";
-
+import FloatingCart from "./components/FloatingCart";
 
 type Item = {
   _id: string;
@@ -280,6 +280,7 @@ export default function HomePage() {
             );
           })}
         </div>
+        <FloatingCart/>
       </div>
       <Footer />
     </div>
