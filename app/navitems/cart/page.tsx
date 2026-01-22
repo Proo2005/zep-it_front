@@ -138,18 +138,28 @@ export default function CartPage() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Shopping Cart</h1>
 
-          {cartCode && (
+          {!cartCode && (
             <button
-              onClick={() =>
-                navigator.clipboard.writeText(
-                  `${window.location.origin}/cart/${cartCode}`
-                )
-              }
-              className="text-sm text-green-600 underline"
+              onClick={async () => {
+                const res = await fetch(
+                  "https://zep-it-back.onrender.com/api/cart/create",
+                  {
+                    method: "POST",
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  }
+                );
+
+                const data = await res.json();
+                router.push(`/cart/${data.cartCode}`);
+              }}
+              className="mb-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
             >
-              Copy Cart Link
+              Create Shared Cart
             </button>
           )}
+
         </div>
 
         {cart.length === 0 ? (
