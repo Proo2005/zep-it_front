@@ -217,7 +217,7 @@ export default function HomePage() {
 
                           <div className="flex justify-between mb-2">
                             <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
-                            <span className="text-xs bg-[#0C831F] px-2 rounded-full">
+                            <span className="text-xs bg-[#0C831F] px-2 rounded-full text-white">
                               {item.quantity} left
                             </span>
                           </div>
