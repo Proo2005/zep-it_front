@@ -71,6 +71,7 @@ export default function SharedCartPage() {
           <div className="mt-6 font-bold text-lg">
             Total: ₹{total}
           </div>
+          <a href="/essential/joincart">join cart</a>
         </>
       )}
     </div>
