@@ -82,6 +82,7 @@ export default function HomePage() {
     });
     localStorage.setItem("cart", JSON.stringify(cart));
     alert("Added to cart");
+    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const toggleCategory = (key: string) =>

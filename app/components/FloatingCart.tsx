@@ -28,9 +28,11 @@ export default function FloatingCart() {
     };
 
     loadCart();
+    window.addEventListener("cartUpdated", loadCart);
     window.addEventListener("storage", loadCart);
-
-    return () => window.removeEventListener("storage", loadCart);
+    
+    return () => 
+      window.removeEventListener("storage", loadCart);
   }, []);
 
   if (cart.length === 0) return null;
