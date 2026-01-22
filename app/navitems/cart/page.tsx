@@ -123,13 +123,14 @@ export default function CartPage() {
 
   /* ---------------- CREATE SHARED CART ---------------- */
   const createSharedCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) return alert("Please login first");
+
     const res = await fetch("https://zep-it-back.onrender.com/api/cart/create", {
       method: "POST",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      headers: { Authorization: `Bearer ${token}` },
     });
     const data = await res.json();
-
-    // copy cart code to clipboard
     if (data.cartCode) {
       navigator.clipboard.writeText(data.cartCode);
       alert(`Shared Cart Created! Code copied to clipboard: ${data.cartCode}`);
