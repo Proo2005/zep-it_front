@@ -19,7 +19,7 @@ export default function JoinCart() {
         />
 
         <button
-          onClick={() => router.push(`/cart/${code}`)}
+          onClick={() => router.push(`/joincart/${code}`)}
           className="w-full bg-green-600 text-black py-2 rounded font-bold"
         >
           Join Cart
