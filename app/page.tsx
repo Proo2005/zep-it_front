@@ -160,7 +160,7 @@ export default function HomePage() {
               </p>
               <p className="text-sm text-red truncate">{userAddress.fullAddress}</p>
             </div>
-          )} 
+          )}
 
           <Divider className="my-4" />
 
@@ -230,7 +230,7 @@ export default function HomePage() {
 
                       <div className="flex justify-between items-center mb-2">
                         <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
-                        <span className="text-xs bg-[#0C831F] text-grey px-2 py-0.5 rounded-full">
+                        <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
                           {item.quantity} left
                         </span>
                       </div>
