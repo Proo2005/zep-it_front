@@ -73,7 +73,7 @@ export default function AddItem() {
 
       <form
         onSubmit={handleSubmit}
-        className=" p-6 rounded-xl w-[420px] space-y-4 outline-black"
+        className=" p-6 rounded-xl w-[420px] space-y-4 outline-black border-black"
       >
         <h2 className=" text-xl font-bold">Add Item</h2>
 
@@ -84,7 +84,7 @@ export default function AddItem() {
             name="shopName"
             value={form.shopName}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded  outline-black"
+            className="w-full px-3 py-2 rounded  outline-black  border-black"
             placeholder="Shop Name"
             required
           />
@@ -97,7 +97,7 @@ export default function AddItem() {
             name="shopGstId"
             value={form.shopGstId}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded outline-black"
+            className="w-full px-3 py-2 rounded outline-black  border-black"
             placeholder="GST ID"
             required
           />
@@ -120,7 +120,7 @@ export default function AddItem() {
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded outline-black"
+            className="w-full px-3 py-2 rounded outline-black  border-black"
           >
             <option value="grocery_and_kitchen">Grocery & Kitchen</option>
             <option value="snacks_and_drinks">Snacks & Drinks</option>
@@ -142,7 +142,7 @@ export default function AddItem() {
               value={form.itemName}
               onChange={handleChange}
               placeholder="Item name"
-              className="flex-1 px-3 py-2 rounded outline-black"
+              className="flex-1 px-3 py-2 rounded outline-black  border-black"
               required
             />
 
@@ -165,7 +165,7 @@ export default function AddItem() {
             type="number"
             value={form.amount}
             onChange={handleChange}
-            className="w-full px-3 py-2 rounded outline-black"
+            className="w-full px-3 py-2 rounded outline-black  border-black"
             placeholder="Amount"
             required
           />
