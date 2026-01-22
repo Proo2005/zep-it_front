@@ -116,7 +116,7 @@ export default function HomePage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 -mt-24">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 -mt-24 text-black">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32">
 
         {/* FILTERS */}
@@ -170,7 +170,7 @@ export default function HomePage() {
               <p className="font-semibold text-[#0C831F]">
                 Delivering to {userAddress.city}, {userAddress.state}
               </p>
-              <p className="text-sm truncate">{userAddress.fullAddress}</p>
+              <p className="text-sm truncate text-orange-800">{userAddress.fullAddress}</p>
             </div>
           )}
 
@@ -217,7 +217,7 @@ export default function HomePage() {
 
                           <div className="flex justify-between mb-2">
                             <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
-                            <span className="text-xs bg-[#0C831F] text-white px-2 rounded-full">
+                            <span className="text-xs bg-[#0C831F] px-2 rounded-full">
                               {item.quantity} left
                             </span>
                           </div>
