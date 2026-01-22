@@ -177,7 +177,7 @@ export default function AddItem() {
           disabled={!form.itemName}
           className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 text-black py-2 rounded-lg font-semibold"
         >
-          Add Item
+          Add Item to Database
         </button>
       </form>
     </div>
