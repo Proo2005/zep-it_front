@@ -22,7 +22,7 @@ import {Divider} from "@heroui/divider";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const appLink = "https://zep-it.app";
+  const appLink = "https://zep-it-front.vercel.app/p";
 
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -31,6 +31,7 @@ export default function ProfilePage() {
     email: "",
     phone: "",
     type: "customer",
+    fullAddress:" ",
   });
 
   useEffect(() => {
@@ -39,6 +40,7 @@ export default function ProfilePage() {
       email: localStorage.getItem("email") || "user@email.com",
       phone: localStorage.getItem("phone") || "+91 XXXXX XXXXX",
       type: localStorage.getItem("type") || "customer",
+      fullAddress: localStorage.getItem("Address")|| "address",
     });
   }, []);
 

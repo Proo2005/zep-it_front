@@ -50,7 +50,7 @@ export default function Login() {
 
       if (user.city) localStorage.setItem("city", user.city);
       if (user.state) localStorage.setItem("state", user.state);
-
+      if (user.fullAddress) localStorage.setItem("Address", user.fullAddress);
       /* ===============================
          ✅ AUTH FLAGS
       =============================== */
