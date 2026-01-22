@@ -6,7 +6,6 @@ import { CiFilter } from "react-icons/ci";
 import { Divider } from "@heroui/divider";
 import Footer from "./components/Footer";
 import FloatingCart from "./components/FloatingCart";
-import Toast from "./components/Toast";
 
 type Item = {
   _id: string;
@@ -31,7 +30,6 @@ const categories = [
 ];
 
 export default function HomePage() {
-  const [toast, setToast] = useState<string | null>(null);
   const [items, setItems] = useState<Item[]>([]);
   const [search, setSearch] = useState("");
   const [cartQty, setCartQty] = useState<{ [key: string]: number }>({});
@@ -76,6 +74,7 @@ export default function HomePage() {
     if (selectedQty > item.quantity) return;
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
     const existing = cart.find((c: any) => c.itemId === item._id);
 
     if (existing) {
@@ -90,14 +89,9 @@ export default function HomePage() {
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    setToast(null);
-    setTimeout(() => {
-      setToast(`${item.itemName} added to cart`);
-    }, 10);
-
     window.dispatchEvent(new Event("cartUpdated"));
   };
+
 
   const toggleCategory = (key: string) =>
     setExpandedCategories((p) => ({ ...p, [key]: !p[key] }));
@@ -114,6 +108,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pt-28 pb-16 px-4">
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
 
+        {/* FILTER PANEL */}
         <div className="hidden lg:block">
           <div className="sticky top-32 bg-white rounded-2xl p-5 shadow-sm border">
             <h3 className="text-lg font-bold mb-4 text-black flex items-center gap-2">
@@ -156,6 +151,7 @@ export default function HomePage() {
           </div>
         </div>
 
+        {/* MAIN CONTENT */}
         <div>
           {userAddress && (
             <div className="mb-4 bg-white/70 backdrop-blur-md border rounded-xl px-5 py-3">
@@ -189,33 +185,79 @@ export default function HomePage() {
 
             return (
               <section key={cat.key} className="mb-14">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold">{cat.label}</h2>
+                  {categoryItems.length > 8 && (
+                    <button
+                      onClick={() => toggleCategory(cat.key)}
+                      className="text-sm font-semibold text-[#0C831F]"
+                    >
+                      {expanded ? "Show Less" : "View All"}
+                    </button>
+                  )}
+                </div>
+
+                <p className="block sm:hidden text-xs text-gray-500 mb-3">
+                  Scroll to explore more items →
+                </p>
+
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-6">
                   {visible.map((item) => (
-                    <div key={item._id} className="relative bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]">
+                    <div
+                      key={item._id}
+                      className="relative bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]"
+                    >
+                      <span className="absolute top-3 right-3 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded-full">
+                        Popular
+                      </span>
 
-                      <h3 className="font-semibold text-sm mb-2">{item.itemName}</h3>
+                      <div className="h-36 sm:h-32 bg-[#F1F5F9] rounded-xl mb-3 overflow-hidden">
+                        <img
+                          src={`https://loremflickr.com/320/240/${item.itemName}`}
+                          alt={item.itemName}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2">
+                        {item.itemName}
+                      </h3>
+
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
+                        <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
+                          {item.quantity} left
+                        </span>
+                      </div>
+
+                      <input
+                        type="number"
+                        min={1}
+                        max={item.quantity}
+                        value={cartQty[item._id] || 1}
+                        onChange={(e) =>
+                          handleQtyChange(item._id, Number(e.target.value), item.quantity)
+                        }
+                        className="mb-3 px-2 py-1 border rounded-lg text-sm"
+                      />
 
                       <button
                         type="button"
                         onClick={() => addToCart(item)}
-                        className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
-                      >
+                        className="mt-auto w-full py-2 rounded-xl font-extrabold   border border-[#0C831F] text-[#0C831F]  hover:bg-[#0C831F] hover:text-white transition">
                         ADD
                       </button>
 
                     </div>
                   ))}
                 </div>
+                <Divider className="my-6" />
               </section>
             );
           })}
         </div>
-
         <FloatingCart />
-
-        {toast && <Toast message={toast} onClose={() => setToast(null)} />}
       </div>
-
       <Footer />
     </div>
   );
