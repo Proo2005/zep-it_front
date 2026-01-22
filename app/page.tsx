@@ -17,12 +17,14 @@ import {
 } from "@/components/ui/field";
 import ItemCardSkeleton from "./components/ItemCardSkeleton";
 
+
 type Item = {
   _id: string;
   itemName: string;
   category: string;
   amount: number;
   quantity: number;
+  image?: string;
 };
 
 type UserAddress = {
@@ -41,12 +43,13 @@ const categories = [
 export default function HomePage() {
   const [items, setItems] = useState<Item[]>([]);
   const [search, setSearch] = useState("");
-  const [cartQty, setCartQty] = useState<Record<string, number>>({});
+  const [cartQty, setCartQty] = useState<{ [key: string]: number }>({});
   const [userAddress, setUserAddress] = useState<UserAddress | null>(null);
-  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
+  const [expandedCategories, setExpandedCategories] = useState<{ [key: string]: boolean }>({});
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [priceRange, setPriceRange] = useState(2000);
+  const [priceRange, setPriceRange] = useState<number>(2000);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     fetchItems();
@@ -65,41 +68,40 @@ export default function HomePage() {
     }
   };
 
+
   const fetchUserAddress = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
 
-    const res = await axios.get(
-      "https://zep-it-back.onrender.com/api/user/profile",
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+    const res = await axios.get("https://zep-it-back.onrender.com/api/user/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
 
-    if (res.data.user?.address) {
-      setUserAddress(res.data.user.address);
-    }
+    if (res.data.user?.address) setUserAddress(res.data.user.address);
   };
 
   const handleQtyChange = (id: string, value: number, max: number) => {
     if (value < 1) value = 1;
     if (value > max) return;
-    setCartQty((p) => ({ ...p, [id]: value }));
+    setCartQty((prev) => ({ ...prev, [id]: value }));
   };
 
   const addToCart = (item: Item) => {
-    const qty = cartQty[item._id] || 1;
-    if (qty > item.quantity) return;
+    const selectedQty = cartQty[item._id] || 1;
+    if (selectedQty > item.quantity) return;
 
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
     const existing = cart.find((c: any) => c.itemId === item._id);
 
     if (existing) {
-      existing.quantity += qty;
+      existing.quantity += selectedQty;
     } else {
       cart.push({
         itemId: item._id,
         name: item.itemName,
         price: item.amount,
-        quantity: qty,
+        quantity: selectedQty,
       });
     }
 
@@ -107,27 +109,36 @@ export default function HomePage() {
     window.dispatchEvent(new Event("cartUpdated"));
   };
 
+
+  const toggleCategory = (key: string) =>
+    setExpandedCategories((p) => ({ ...p, [key]: !p[key] }));
+
   const filteredItems = items.filter((i) => {
-    const matchSearch = i.itemName.toLowerCase().includes(search.toLowerCase());
-    const matchCategory =
+    const matchesSearch = i.itemName.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory =
       selectedCategories.length === 0 || selectedCategories.includes(i.category);
-    const matchPrice = i.amount <= priceRange;
-    return matchSearch && matchCategory && matchPrice;
+    const matchesPrice = i.amount <= priceRange;
+    return matchesSearch && matchesCategory && matchesPrice;
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 -mt-24 text-black">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24">
 
-        {/* FILTERS */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32 ">
+
+        {/* FILTER PANEL */}
         <div className="hidden lg:block">
           <div className="sticky top-32 bg-white rounded-2xl p-5 shadow-sm border">
-            <h3 className="text-lg font-bold mb-5 flex items-center gap-2">
+
+            <h3 className="text-lg font-bold mb-5 text-black flex items-center gap-2">
               Filters <CiFilter />
             </h3>
 
-            <FieldGroup className="space-y-3 mb-6">
-              <p className="font-semibold text-sm mb-2">Categories</p>
+            {/* ================= CATEGORIES ================= */}
+            <FieldGroup className="space-y-3 mb-6 text-black">
+              <p className="font-semibold text-sm text-black mb-2">
+                Categories
+              </p>
 
               {categories.map((cat) => (
                 <Field orientation="horizontal" key={cat.key}>
@@ -135,14 +146,21 @@ export default function HomePage() {
                     id={cat.key}
                     checked={selectedCategories.includes(cat.key)}
                     onCheckedChange={(checked) =>
-                      setSelectedCategories((p) =>
-                        checked ? [...p, cat.key] : p.filter((c) => c !== cat.key)
+                      setSelectedCategories((prev) =>
+                        checked
+                          ? [...prev, cat.key]
+                          : prev.filter((c) => c !== cat.key)
                       )
                     }
                   />
+
                   <FieldContent>
-                    <FieldLabel htmlFor={cat.key}>{cat.label}</FieldLabel>
-                    <FieldDescription>{cat.label}</FieldDescription>
+                    <FieldLabel htmlFor={cat.key}>
+                      {cat.label}
+                    </FieldLabel>
+                    <FieldDescription>
+                      {cat.label}
+                    </FieldDescription>
                   </FieldContent>
                 </Field>
               ))}
@@ -150,108 +168,145 @@ export default function HomePage() {
 
             <Divider className="my-5" />
 
-            <FieldTitle>Max Price: ₹{priceRange}</FieldTitle>
-            <input
-              type="range"
-              min={50}
-              max={2000}
-              step={50}
-              value={priceRange}
-              onChange={(e) => setPriceRange(Number(e.target.value))}
-              className="w-full accent-[#0C831F]"
-            />
+            {/* ================= PRICE RANGE ================= */}
+            <div>
+              <FieldTitle className="mb-2">
+                Max Price: ₹{priceRange}
+              </FieldTitle>
+
+              <input
+                type="range"
+                min={50}
+                max={2000}
+                step={50}
+                value={priceRange}
+                onChange={(e) => setPriceRange(Number(e.target.value))}
+                className="w-full accent-[#0C831F]"
+              />
+
+              <p className="text-xs text-gray-500 mt-2">
+                Items priced under ₹{priceRange}
+              </p>
+            </div>
+
           </div>
         </div>
 
-        {/* MAIN */}
+
+
+        {/* MAIN CONTENT */}
         <div>
           {userAddress && (
-            <div className="mb-4 bg-white/70 border rounded-xl px-5 py-3">
+            <div className="mb-4 bg-white/70 backdrop-blur-md border rounded-xl px-5 py-3">
               <p className="font-semibold text-[#0C831F]">
                 Delivering to {userAddress.city}, {userAddress.state}
               </p>
-              <p className="text-sm truncate text-orange-800">{userAddress.fullAddress}</p>
+              <p className="text-sm text-orange-800 truncate">{userAddress.fullAddress}</p>
             </div>
           )}
+
+          <Divider className="my-4" />
 
           <input
             placeholder="Search for groceries, snacks, essentials…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-8"
+            className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-6 text-black"
           />
+
+          <div className="h-52 rounded-3xl bg-gradient-to-r from-[#0C831F] to-[#14B8A6] text-white flex flex-col justify-center px-8 mb-10">
+            <h1 className="text-3xl font-extrabold">Daily Needs, Delivered Fast</h1>
+            <p className="opacity-90">Fresh stock • Best prices • Instant delivery</p>
+          </div>
 
           {categories.map((cat) => {
             const categoryItems = filteredItems.filter((i) => i.category === cat.key);
             const expanded = expandedCategories[cat.key];
             const visible = expanded ? categoryItems : categoryItems.slice(0, 8);
 
-            if (!loading && categoryItems.length === 0) return null;
+            if (!categoryItems.length) return null;
 
             return (
               <section key={cat.key} className="mb-14">
-                <h2 className="text-2xl font-bold mb-4">{cat.label}</h2>
-
-                <div className="grid gap-6 grid-cols-3 md:grid-cols-4 lg:grid-cols-3">
-                  {loading
-                    ? Array.from({ length: 8 }).map((_, i) => (
-                        <ItemCardSkeleton key={i} />
-                      ))
-                    : visible.map((item, idx) => (
-                        <div
-                          key={item._id}
-                          className="bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]"
-                        >
-                          <div className="h-36 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden">
-                            <img
-                              src={`https://loremflickr.com/320/320/${encodeURIComponent(
-                                item.itemName
-                              )}?random=${idx}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-
-                          <h3 className="font-semibold text-sm mb-1 line-clamp-2">
-                            {item.itemName}
-                          </h3>
-
-                          <div className="flex justify-between mb-2">
-                            <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
-                            <span className="text-xs bg-[#0C831F] px-2 rounded-full text-white">
-                              {item.quantity} left
-                            </span>
-                          </div>
-
-                          <input
-                            type="number"
-                            min={1}
-                            max={item.quantity}
-                            value={cartQty[item._id] || 1}
-                            onChange={(e) =>
-                              handleQtyChange(item._id, Number(e.target.value), item.quantity)
-                            }
-                            className="mb-3 px-2 py-1 border rounded-lg text-sm"
-                          />
-
-                          <button
-                            onClick={() => addToCart(item)}
-                            className="mt-auto w-full py-2 rounded-xl font-bold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white"
-                          >
-                            ADD
-                          </button>
-                        </div>
-                      ))}
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="text-2xl font-bold text-black">{cat.label}</h2>
+                  {categoryItems.length > 8 && (
+                    <button
+                      onClick={() => toggleCategory(cat.key)}
+                      className="text-sm font-semibold text-[#0C831F]"
+                    >
+                      {expanded ? "Show Less" : "View All"}
+                    </button>
+                  )}
                 </div>
 
+                <p className="block sm:hidden text-xs text-black-500 mb-3 ">
+                  Scroll to explore more items →
+                </p>
+
+                <div
+                  className={`grid gap-4 sm:gap-6
+    grid-cols-3 md:grid-cols-3 lg:grid-cols-3
+    sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-3
+  `}
+                >
+                  {visible.map((item, idx) => (
+                    <div
+                      key={item._id}
+                      className="relative bg-white rounded-2xl p-4 shadow-sm flex flex-col min-h-[320px]"
+                    >
+                      <span className="absolute top-3 right-3 text-[10px] bg-black/80 text-white px-2 py-0.5 rounded-full">
+                        Popular
+                      </span>
+
+                      <div className="h-36 sm:h-25 bg-[#F1F5F9] rounded-full mb-3 overflow-hidden flex items-center justify-center">
+                        <img
+                          src={`https://loremflickr.com/320/320/${encodeURIComponent(item.itemName)}?random=${idx}`}
+                          alt={item.itemName}
+                          className="w-full h-full object-cover "
+                        />
+                      </div>
+
+                      <h3 className="font-semibold text-[13px] sm:text-sm mb-1 line-clamp-2 text-black">
+                        {item.itemName}
+                      </h3>
+
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="font-bold text-[#0C831F]">₹{item.amount}</span>
+                        <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
+                          {item.quantity} left
+                        </span>
+                      </div>
+
+                      <input
+                        type="number"
+                        min={1}
+                        max={item.quantity}
+                        value={cartQty[item._id] || 1}
+                        onChange={(e) =>
+                          handleQtyChange(item._id, Number(e.target.value), item.quantity)
+                        }
+                        className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
+                      />
+
+                      <button
+                        type="button"
+                        onClick={() => addToCart(item)}
+                        className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
+                      >
+                        ADD
+                      </button>
+                    </div>
+                  ))}
+                </div>
                 <Divider className="my-6" />
+
               </section>
             );
           })}
         </div>
-
         <FloatingCart />
       </div>
-
       <Footer />
     </div>
   );
