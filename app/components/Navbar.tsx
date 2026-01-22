@@ -152,26 +152,26 @@ export default function Navbar() {
         <div className="md:hidden bg-white/95 backdrop-blur-md border-t border-green-200 shadow-md rounded-b-2xl px-6 py-4 space-y-3">
 
           {/* Quick Links */}
-          <Link href="/navitems/deals" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+          <Link href="/navitems/deals" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
             Deals
           </Link>
-          <Link href="/profileitems/history" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+          <Link href="/profileitems/history" className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
             Orders
           </Link>
 
           {/* Profile Links */}
           {!userName ? (
             <>
-              <Link href="/navitems/login"   onClick={() => setOpen(false)} className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              <Link href="/navitems/login"   className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition"  onClick={() => setOpen(false)}>
                 Login
               </Link>
-              <Link href="/navitems/signup"   onClick={() => setOpen(false)} className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              <Link href="/navitems/signup"   className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition" onClick={() => setOpen(false)}>
                 Signup
               </Link>
             </>
           ) : (
             <>
-              <Link href="/navitems/profile"  onClick={() => setOpen(false)} className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition">
+              <Link href="/navitems/profile"  className="block px-4 py-2 rounded-full text-sm font-medium text-green-700 hover:bg-green-100 transition"  onClick={() => setOpen(false)}>
                 Profile
               </Link>
               <button
