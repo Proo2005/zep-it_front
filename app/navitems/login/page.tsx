@@ -8,6 +8,11 @@ import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   const router = useRouter();
+  const [alertData, setAlertData] = useState<{
+    type: "success" | "error";
+    title: string;
+    description: string;
+  } | null>(null);
 
   const [form, setForm] = useState({
     email: "",
@@ -67,10 +72,22 @@ export default function Login() {
 
       window.dispatchEvent(new Event("authChanged"));
 
-      alert(`Welcome ${user.name}`);
-      router.push("/");
+      setAlertData({
+        type: "success",
+        title: "Login successful",
+        description: `Welcome ${user.name}!`,
+      });
+      setTimeout(() => {
+        router.push("/");
+      }, 1200
+      );
+
     } catch {
-      alert("Google signup failed");
+      setAlertData({
+      type: "error",
+      title: "Google login failed",
+      description: "Something went wrong. Please try again.",
+    });
     }
   };
 
