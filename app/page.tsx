@@ -301,11 +301,11 @@ export default function HomePage() {
                           className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
                         />
 
-                        <button
+                        <Button
                           onClick={() => {
                             addToCart(item); // your original add-to-cart logic
                             toast("Item added to cart", {
-                              description: `${item.itemName} has been added to your cart.`,
+                              description: `$Item has been added to your cart.`,
                               action: {
                                 label: "Undo",
                                 onClick: () => console.log("Undo"),
@@ -315,7 +315,7 @@ export default function HomePage() {
                           className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
                         >
                           ADD
-                        </button>
+                        </Button>
                       </div>
                     ))}
                   </div>
