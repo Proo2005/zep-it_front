@@ -46,7 +46,7 @@ export default function Signup() {
     <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6"
+        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6 mt-24"
       >
         <h2 className="text-2xl font-bold text-[#0C831F] text-center mb-4">Create Account</h2>
 
