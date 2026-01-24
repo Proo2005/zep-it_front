@@ -78,10 +78,10 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0C831F]/20 to-[#2ECC71]/20 px-4 text-black">
+    <div className="min-h-screen flex items-center justify-center bg-white text-black">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 space-y-6"
+        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6"
       >
         <h2 className="text-3xl font-bold text-[#0C831F] text-center">
           Welcome Back
