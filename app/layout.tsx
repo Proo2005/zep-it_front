@@ -33,7 +33,7 @@ export default function RootLayout({
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
-          <Navbar /> <DarkModeToggle />
+          <Navbar /> 
           <div className="pt-24">{children}</div>
         </GoogleOAuthProvider>
       </body>
