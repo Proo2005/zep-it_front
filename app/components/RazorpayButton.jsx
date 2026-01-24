@@ -11,7 +11,7 @@ export default function RazorpayButton() {
     const order = await res.json()
 
     const options = {
-      key: "rzp_test_xxxxxxxx", // same key id
+      key: "rzp_test_S7hU7z0jJ1lRFZ", // same key id
       amount: order.amount,
       currency: order.currency,
       name: "Demo Store",

@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 
-export default function ZepitMoneyPage() {
-  const [balance, setBalance] = useState<number>(0);
-  const router = useRouter();
+export default function WalletPage() {
+  const [balance, setBalance] = useState(0);
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     fetchWallet();
@@ -13,38 +12,92 @@ export default function ZepitMoneyPage() {
 
   const fetchWallet = async () => {
     const token = localStorage.getItem("token");
-    if (!token) return router.push("/navitems/login");
 
-    const res = await fetch("https://zep-it-back.onrender.com/api/wallet", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(
+      "https://zep-it-back.onrender.com/api/wallet",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     const data = await res.json();
-    if (data.success) setBalance(data.balance);
+    setBalance(data?.balance || 0);
+  };
+
+  const addMoney = async () => {
+    const token = localStorage.getItem("token");
+
+    const orderRes = await fetch(
+      "https://zep-it-back.onrender.com/api/wallet/create-order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ amount: Number(amount) }),
+      }
+    );
+
+    const order = await orderRes.json();
+
+    const options = {
+      key:"rzp_test_S7hU7z0jJ1lRFZ" ,
+      amount: order.amount,
+      currency: "INR",
+      order_id: order.id,
+      handler: async function (response: any) {
+        await fetch(
+          "https://zep-it-back.onrender.com/api/wallet/verify",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              razorpay_payment_id: response.razorpay_payment_id,
+              amount: Number(amount),
+            }),
+          }
+        );
+
+        fetchWallet();
+        setAmount("");
+      },
+    };
+
+    // @ts-ignore
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-950 to-zinc-900 text-white flex items-center justify-center px-4">
-      <div className="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gray-100 px-4 pt-28">
+      <div className="max-w-md mx-auto bg-white rounded-2xl p-6 shadow">
+        <h1 className="text-2xl font-bold mb-4">My Wallet</h1>
 
-        <h1 className="text-2xl font-bold mb-6 text-center">
-          ZepitMoney Wallet
-        </h1>
-
-        <div className="bg-black rounded-2xl p-6 text-center mb-6">
-          <p className="text-zinc-400 text-sm">Available Balance</p>
-          <p className="text-4xl font-extrabold text-green-400 mt-2">
+        <div className="text-center mb-6">
+          <p className="text-sm text-gray-500">Available Balance</p>
+          <p className="text-3xl font-bold text-green-600">
             ₹{balance}
           </p>
         </div>
 
-        <button
-          onClick={() => router.push("/profileitems/zepitmoneyadd")}
-          className="w-full py-3 rounded-xl bg-green-600 hover:bg-green-500 text-black font-bold transition"
-        >
-          + Add Money
-        </button>
+        <input
+          type="number"
+          placeholder="Enter amount"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          className="w-full border rounded-lg px-4 py-2 mb-4"
+        />
 
+        <button
+          onClick={addMoney}
+          className="w-full bg-green-600 text-white py-2 rounded-lg font-semibold hover:bg-green-500"
+        >
+          Add Money
+        </button>
       </div>
     </div>
   );
