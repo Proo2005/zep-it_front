@@ -16,7 +16,10 @@ import {
   FieldTitle,
 } from "@/components/ui/field";
 import ItemCardSkeleton from "./components/ItemCardSkeleton";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+
+
 type Item = {
   _id: string;
   itemName: string;
@@ -54,7 +57,7 @@ export default function HomePage() {
     fetchItems();
     fetchUserAddress();
   }, []);
-  
+
   const fetchItems = async () => {
     try {
       setLoading(true);
@@ -299,7 +302,16 @@ export default function HomePage() {
                         />
 
                         <button
-                          onClick={() => addToCart(item)}
+                          onClick={() => {
+                            addToCart(item); // your original add-to-cart logic
+                            toast("Item added to cart", {
+                              description: `${item.itemName} has been added to your cart.`,
+                              action: {
+                                label: "Undo",
+                                onClick: () => console.log("Undo"),
+                              },
+                            });
+                          }}
                           className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
                         >
                           ADD
