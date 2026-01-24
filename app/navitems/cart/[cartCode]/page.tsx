@@ -153,7 +153,7 @@ export default function CartPage() {
 
         localStorage.removeItem("cart");
         alert("Payment successful ✅");
-        router.push("/");
+        router.push(`/navitems/cart/${cartCode}/split`)
       },
       theme: { color: "#0C831F" },
     };
