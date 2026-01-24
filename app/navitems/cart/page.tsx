@@ -47,14 +47,9 @@ export default function CartPage() {
     }
 
     const token = localStorage.getItem("token");
-    const res = await fetch(
-      `https://zep-it-back.onrender.com/api/cart/${cartCode}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+    const res = await fetch(`https://zep-it-back.onrender.com/api/cart/${cartCode}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await res.json();
     setCart(data.items || []);
     calculateTotal(data.items || []);
@@ -69,22 +64,16 @@ export default function CartPage() {
     if (!cart.length) return alert("Cart is empty");
 
     const token = localStorage.getItem("token");
-    const res = await fetch(
-      "https://zep-it-back.onrender.com/api/cart/create",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ items: cart }),
-      }
-    );
+    const res = await fetch("https://zep-it-back.onrender.com/api/cart/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ items: cart }),
+    });
     const data = await res.json();
 
     if (data.success) {
       alert(`Cart created! Code: ${data.code}`);
-      router.replace(`/navitems/cart/${data.code}`); // corrected dynamic route
+      router.replace(`/navitems/cart/${data.code}`);
     } else {
       alert("Failed to create cart");
     }
@@ -94,41 +83,44 @@ export default function CartPage() {
     if (!cartCodeInput) return alert("Enter cart code");
 
     const token = localStorage.getItem("token");
-    const res = await fetch(
-      "https://zep-it-back.onrender.com/api/cart/join",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ code: cartCodeInput }),
-      }
-    );
+    const res = await fetch("https://zep-it-back.onrender.com/api/cart/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ code: cartCodeInput }),
+    });
     const data = await res.json();
 
     if (data.success) {
       setCartCodeInput("");
-      router.replace(`/navitems/cart/${cartCodeInput}`); // corrected dynamic route
+      router.replace(`/navitems/cart/${cartCodeInput}`);
     } else {
       alert("Cart not found");
     }
   };
 
   /* ---------------- UPDATE ITEM QUANTITY ---------------- */
-  const updateQuantity = async (itemId: string, newQty: number) => {
+  const updateQuantity = async (item: CartItem, delta: number) => {
+    const newQty = item.quantity + delta;
     if (newQty < 1) return;
 
-    const token = localStorage.getItem("token");
-    await fetch("https://zep-it-back.onrender.com/api/cart/update-quantity", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ cartCode, itemId, quantity: newQty }),
-    });
-    loadCart();
+    if (!cartCode) {
+      // Update local cart
+      const updatedCart = cart.map((i) =>
+        i.itemId === item.itemId ? { ...i, quantity: newQty } : i
+      );
+      setCart(updatedCart);
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      calculateTotal(updatedCart);
+    } else {
+      // Update server cart
+      const token = localStorage.getItem("token");
+      await fetch("https://zep-it-back.onrender.com/api/cart/update-quantity", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ cartCode, itemId: item.itemId, quantity: newQty }),
+      });
+      loadCart();
+    }
   };
 
   /* ---------------- RAZORPAY PAYMENT ---------------- */
@@ -137,22 +129,13 @@ export default function CartPage() {
 
     const token = localStorage.getItem("token");
 
-    // 1️⃣ CREATE ORDER
-    const orderRes = await fetch(
-      "https://zep-it-back.onrender.com/api/payment/create-order",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ amount: total }),
-      }
-    );
-
+    const orderRes = await fetch("https://zep-it-back.onrender.com/api/payment/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ amount: total }),
+    });
     const order = await orderRes.json();
 
-    // 2️⃣ RAZORPAY OPTIONS
     const options = {
       key: "rzp_test_S7hU7z0jJ1lRFZ",
       amount: order.amount,
@@ -160,40 +143,25 @@ export default function CartPage() {
       name: "ZepIt Store",
       description: "Order Payment",
       order_id: order.id,
-
       handler: async (response: any) => {
-        try {
-          const verifyRes = await fetch(
-            "https://zep-it-back.onrender.com/api/payment/verify",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                cart,
-                amount: total,
-                cartCode: cartCode || null,
-              }),
-            }
-          );
-
-          const verifyData = await verifyRes.json();
-          if (!verifyData.success) return alert("Payment verification failed");
-
-          localStorage.removeItem("cart");
-          alert("Payment successful ✅");
-          router.push("/");
-        } catch (err) {
-          console.error(err);
-          alert("Payment failed");
-        }
+        const verifyRes = await fetch("https://zep-it-back.onrender.com/api/payment/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+          body: JSON.stringify({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature,
+            cart,
+            amount: total,
+            cartCode: cartCode || null,
+          }),
+        });
+        const verifyData = await verifyRes.json();
+        if (!verifyData.success) return alert("Payment verification failed");
+        localStorage.removeItem("cart");
+        alert("Payment successful ✅");
+        router.push("/");
       },
-
       theme: { color: "#0C831F" },
     };
 
@@ -204,10 +172,8 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pb-16 -mt-24 text-black">
       <div className="max-w-6xl mx-auto pt-32">
-
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
-        {/* ---------------- CREATE / JOIN CART BUTTONS ---------------- */}
         {!cartCode && (
           <div className="flex flex-wrap gap-4 mb-8">
             <button
@@ -233,12 +199,9 @@ export default function CartPage() {
         )}
 
         {cart.length === 0 ? (
-          <div className="text-center text-lg mt-20">
-            Your cart is empty
-          </div>
+          <div className="text-center text-lg mt-20">Your cart is empty</div>
         ) : (
           <div className="grid lg:grid-cols-3 gap-8">
-
             {/* ITEMS */}
             <div className="lg:col-span-2 space-y-4">
               {cart.map((item) => (
@@ -248,26 +211,21 @@ export default function CartPage() {
                 >
                   <div>
                     <h2 className="text-lg font-semibold">{item.name}</h2>
-                    <p className="text-green-600 font-medium">
-                      ₹{item.price} each
-                    </p>
-                    {item.addedBy && (
-                      <p className="text-sm">Added by: {item.addedBy.name}</p>
-                    )}
+                    <p className="text-green-600 font-medium">₹{item.price} each</p>
+                    {item.addedBy && <p className="text-sm">Added by: {item.addedBy.name}</p>}
                   </div>
 
                   {/* QUANTITY ADJUST */}
                   <div className="flex items-center gap-3">
                     <button
-                      onClick={() => updateQuantity(item.itemId, item.quantity - 1)}
+                      onClick={() => updateQuantity(item, -1)}
                       className="px-2 py-1 bg-gray-200 rounded"
-                      disabled={item.quantity <= 1}
                     >
                       -
                     </button>
                     <span className="font-bold">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.itemId, item.quantity + 1)}
+                      onClick={() => updateQuantity(item, 1)}
                       className="px-2 py-1 bg-gray-200 rounded"
                     >
                       +
@@ -280,12 +238,10 @@ export default function CartPage() {
             {/* SUMMARY */}
             <div className="bg-white rounded-2xl p-6 shadow-sm h-fit space-y-4">
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-
               <div className="flex justify-between mb-4 text-lg font-bold">
                 <span>Total</span>
                 <span className="text-green-600">₹{total}</span>
               </div>
-
               <button
                 onClick={handleRazorpayPayment}
                 className="w-full bg-green-600 hover:bg-green-500 text-black py-3 rounded-xl font-bold"
@@ -293,7 +249,6 @@ export default function CartPage() {
                 Pay ₹{total} with Razorpay
               </button>
 
-              {/* SPLIT PAGE */}
               {cartCode && (
                 <button
                   onClick={() => router.push(`/cart/${cartCode}/split`)}
@@ -303,7 +258,6 @@ export default function CartPage() {
                 </button>
               )}
             </div>
-
           </div>
         )}
       </div>
