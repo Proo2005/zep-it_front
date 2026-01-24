@@ -140,7 +140,8 @@ export default function ProfilePage() {
             text="Split with friends"
             onClick={() => router.push("/profileitems/split")}
           />
-          <DropdownItem title="Payment Settings" icon={<FiCreditCard />}>
+          
+          {/*<DropdownItem title="Payment Settings" icon={<FiCreditCard />}>
             <DropdownOption
               text="Add Payment Method"
               onClick={() => router.push("/profileitems/payment-details")}
@@ -149,7 +150,8 @@ export default function ProfilePage() {
               text="Payment Info"
               onClick={() => router.push("/profileitems/paymentinfo")}
             />
-          </DropdownItem>
+          </DropdownItem>*/}
+
         </Section>
         <Divider className="my-4 text-gray-200" />
 
