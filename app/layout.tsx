@@ -29,11 +29,11 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-black text-white`}
-      >  <DarkModeToggle />
+      >  
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
-          <Navbar />
+          <Navbar /> <DarkModeToggle />
           <div className="pt-24">{children}</div>
         </GoogleOAuthProvider>
       </body>
