@@ -51,15 +51,25 @@ export default function Login() {
   const handleGoogleLogin = async (credential: string) => {
     try {
       const res = await axios.post(
-        "https://zep-it-back.onrender.com/api/auth/google",
-        { token: credential }
+        "https://zep-it-back.onrender.com/api/auth/google-login",
+        { credential }
       );
 
-      handleAuthSuccess(res.data);
-    } catch (err) {
-      toast.error("Google login failed");
+      const { token, user } = res.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("isAuthenticated", "true");
+
+      window.dispatchEvent(new Event("authChanged"));
+
+      alert(`Welcome ${user.name}`);
+      router.push("/");
+    } catch {
+      alert("Google signup failed");
     }
   };
+
 
   /* ===============================
       SHARED AUTH STORAGE

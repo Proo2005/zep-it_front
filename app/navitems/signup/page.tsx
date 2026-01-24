@@ -50,13 +50,21 @@ export default function Signup() {
         { credential }
       );
 
-      localStorage.setItem("token", res.data.token);
-      alert("Logged in with Google ✅");
+      const { token, user } = res.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("isAuthenticated", "true");
+
+      window.dispatchEvent(new Event("authChanged"));
+
+      alert(`Welcome ${user.name}`);
       router.push("/");
-    } catch (err: any) {
-      alert("Google login failed");
+    } catch {
+      alert("Google signup failed");
     }
   };
+
 
 
   return (
