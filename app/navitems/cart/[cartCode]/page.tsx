@@ -29,9 +29,16 @@ export default function CartPage() {
     document.body.appendChild(script);
   }, []);
 
+  /* ---------------- LOAD CART ---------------- */
   useEffect(() => {
     if (!token) router.push("/navitems/login");
+
     if (cartCode) loadCart();
+    else {
+      const stored = JSON.parse(localStorage.getItem("cart") || "[]");
+      setCart(stored);
+      calculateTotal(stored);
+    }
   }, [cartCode]);
 
   const loadCart = async () => {
@@ -49,6 +56,7 @@ export default function CartPage() {
 
   /* ---------------- CREATE / JOIN CART ---------------- */
   const createCart = async () => {
+    if (!cart.length) return alert("Cart is empty");
     const res = await fetch(`https://zep-it-back.onrender.com/api/cart/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
@@ -56,7 +64,7 @@ export default function CartPage() {
     });
     const data = await res.json();
     alert(`Cart created! Code: ${data.code}`);
-    router.push(`/cart/${data.code}`);
+    router.push(`/navitems/cart/${data.code}`);
   };
 
   const joinCart = async () => {
@@ -67,19 +75,27 @@ export default function CartPage() {
       body: JSON.stringify({ code: cartCodeInput }),
     });
     const data = await res.json();
-    if (data.success) router.push(`/cart/${cartCodeInput}`);
+    if (data.success) router.push(`/navitems/cart/${cartCodeInput}`);
     else alert("Cart not found");
   };
 
   /* ---------------- UPDATE ITEM QUANTITY ---------------- */
   const updateQuantity = async (itemId: string, qty: number) => {
     if (qty < 1) return;
-    await fetch(`https://zep-it-back.onrender.com/api/cart/update-quantity`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ cartCode, itemId, quantity: qty }),
-    });
-    loadCart();
+
+    if (cartCode) {
+      await fetch(`https://zep-it-back.onrender.com/api/cart/update-quantity`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ cartCode, itemId, quantity: qty }),
+      });
+      loadCart();
+    } else {
+      const updated = cart.map((i) => (i.itemId === itemId ? { ...i, quantity: qty } : i));
+      setCart(updated);
+      localStorage.setItem("cart", JSON.stringify(updated));
+      calculateTotal(updated);
+    }
   };
 
   /* ---------------- RAZORPAY PAYMENT ---------------- */
@@ -104,18 +120,19 @@ export default function CartPage() {
         const verifyRes = await fetch(`https://zep-it-back.onrender.com/api/payment/verify`, {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-          body: JSON.stringify({ 
+          body: JSON.stringify({
             razorpay_order_id: response.razorpay_order_id,
             razorpay_payment_id: response.razorpay_payment_id,
             razorpay_signature: response.razorpay_signature,
             cart,
             amount: total,
-            cartCode: cartCode || null
+            cartCode: cartCode || null,
           }),
         });
         const verifyData = await verifyRes.json();
         if (!verifyData.success) return alert("Payment verification failed");
         alert("Payment successful ✅");
+        localStorage.removeItem("cart");
         router.push("/");
       },
       theme: { color: "#0C831F" },
@@ -126,14 +143,24 @@ export default function CartPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 pt-32">
+    <div className="min-h-screen bg-gray-50 px-4 pt-32 text-black">
       <h1 className="text-3xl font-bold mb-4">Shopping Cart</h1>
 
       {!cartCode && (
         <div className="mb-6 flex gap-4">
-          <button onClick={createCart} className="px-4 py-2 bg-green-600 text-white rounded">Create Cart</button>
-          <input type="text" placeholder="Enter cart code" value={cartCodeInput} onChange={e => setCartCodeInput(e.target.value)} className="border px-2 rounded"/>
-          <button onClick={joinCart} className="px-4 py-2 bg-blue-600 text-white rounded">Join Cart</button>
+          <button onClick={createCart} className="px-4 py-2 bg-green-600 text-white rounded">
+            Create Cart
+          </button>
+          <input
+            type="text"
+            placeholder="Enter cart code"
+            value={cartCodeInput}
+            onChange={(e) => setCartCodeInput(e.target.value)}
+            className="border px-2 rounded"
+          />
+          <button onClick={joinCart} className="px-4 py-2 bg-blue-600 text-white rounded">
+            Join Cart
+          </button>
         </div>
       )}
 
@@ -141,7 +168,7 @@ export default function CartPage() {
         <p className="text-center mt-10">Your cart is empty</p>
       ) : (
         <div className="space-y-4">
-          {cart.map(item => (
+          {cart.map((item) => (
             <div key={item.itemId} className="flex justify-between items-center bg-white p-4 rounded shadow">
               <div>
                 <p className="font-semibold">{item.name}</p>
@@ -149,9 +176,20 @@ export default function CartPage() {
                 {item.addedBy && <p className="text-sm">Added by: {item.addedBy.name}</p>}
               </div>
               <div className="flex items-center gap-2">
-                <button onClick={() => updateQuantity(item.itemId, item.quantity - 1)} disabled={item.quantity <= 1} className="px-2 bg-gray-200 rounded">-</button>
+                <button
+                  onClick={() => updateQuantity(item.itemId, item.quantity - 1)}
+                  disabled={item.quantity <= 1}
+                  className="px-2 bg-gray-200 rounded"
+                >
+                  -
+                </button>
                 <span>{item.quantity}</span>
-                <button onClick={() => updateQuantity(item.itemId, item.quantity + 1)} className="px-2 bg-gray-200 rounded">+</button>
+                <button
+                  onClick={() => updateQuantity(item.itemId, item.quantity + 1)}
+                  className="px-2 bg-gray-200 rounded"
+                >
+                  +
+                </button>
               </div>
             </div>
           ))}
@@ -159,8 +197,20 @@ export default function CartPage() {
             <span>Total:</span>
             <span>₹{total}</span>
           </div>
-          <button onClick={handleRazorpayPayment} className="w-full py-3 mt-4 bg-green-600 text-white rounded">Pay ₹{total} with Razorpay</button>
-          <button onClick={() => router.push(`/cart/${cartCode}/split`)} className="w-full py-2 mt-2 bg-gray-800 text-white rounded">View Split Details</button>
+          <button
+            onClick={handleRazorpayPayment}
+            className="w-full py-3 mt-4 bg-green-600 text-white rounded"
+          >
+            Pay ₹{total} with Razorpay
+          </button>
+          {cartCode && (
+            <button
+              onClick={() => router.push(`/navitems/cart/${cartCode}/split`)}
+              className="w-full py-2 mt-2 bg-gray-800 text-white rounded"
+            >
+              View Split Details
+            </button>
+          )}
         </div>
       )}
     </div>
