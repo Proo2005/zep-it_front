@@ -300,9 +300,24 @@ export default function HomePage() {
                           }
                           className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
                         />
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            toast("Event has been created", {
+                              description: "Sunday, December 03, 2023 at 9:00 AM",
+                              action: {
+                                label: "Undo",
+                                onClick: () => console.log("Undo"),
+                              },
+                            })
+                          }
+                        >
+                          Show Toast
+                        </Button>
 
                         <Button
                           onClick={() => {
+
                             addToCart(item); // your original add-to-cart logic
                             toast("Item added to cart", {
                               description: `$Item has been added to your cart.`,
