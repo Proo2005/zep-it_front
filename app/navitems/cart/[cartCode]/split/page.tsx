@@ -19,9 +19,10 @@ type SplitUser = {
 export default function SplitPage() {
   const [splits, setSplits] = useState<SplitUser[]>([]);
   const [total, setTotal] = useState(0);
+
   const params = useParams();
   const cartCode = params?.cartCode as string | undefined;
-  const token = localStorage.getItem("token");
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   useEffect(() => {
     if (!token || !cartCode) return;
@@ -45,7 +46,7 @@ export default function SplitPage() {
   }, [cartCode]);
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 pt-32 max-w-3xl mx-auto text-black">
+    <div className="min-h-screen bg-gray-50 px-4 pt-32 max-w-3xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Split Details</h1>
 
       {splits.length === 0 ? (

@@ -296,7 +296,7 @@ export default function CartPage() {
               {/* SPLIT PAGE */}
               {cartCode && (
                 <button
-                  onClick={() => router.push(`/cart/${cartCode}/split`)}
+                  onClick={() => router.push(`/navitems/cart/${cartCode}/split`)}
                   className="w-full mt-2 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold"
                 >
                   View Split Details

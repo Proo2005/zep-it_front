@@ -11,6 +11,13 @@ type CartItem = {
   addedBy?: { name: string; email: string };
 };
 
+type LocalCartItem = {
+  itemId: string;
+  name: string;
+  price: number;
+  quantity: number;
+};
+
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -20,43 +27,37 @@ export default function CartPage() {
   const router = useRouter();
   const params = useParams();
   const cartCode = params?.cartCode as string | undefined;
- 
-  type LocalCartItem = {
-  itemId: string;
-  name: string;
-  price: number;
-  quantity: number;
-};
-
-  /* ---------------- CLIENT USER LOADING ---------------- */
-  useEffect(() => {
-    const userStr = localStorage.getItem("user");
-    if (userStr) setCurrentUser(JSON.parse(userStr));
-    else router.push("/navitems/login"); // redirect if no user
-  }, []);
 
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
+  /* ---------------- LOAD USER ---------------- */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const userStr = localStorage.getItem("user");
+    if (userStr) setCurrentUser(JSON.parse(userStr));
+    else router.push("/navitems/login");
+  }, []);
+
   /* ---------------- LOAD RAZORPAY SCRIPT ---------------- */
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      document.body.appendChild(script);
-    }
+    if (typeof window === "undefined") return;
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
   }, []);
 
   /* ---------------- LOAD CART ---------------- */
   useEffect(() => {
     if (!cartCode) {
-      const stored = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("cart") || "[]") : [];
-      setCart(stored);
-      calculateTotal(stored);
+      const stored: LocalCartItem[] = typeof window !== "undefined" ? JSON.parse(localStorage.getItem("cart") || "[]") : [];
+      const itemsWithUser = stored.map((i) => ({ ...i, addedBy: currentUser || undefined }));
+      setCart(itemsWithUser);
+      calculateTotal(itemsWithUser);
     } else {
       loadCart();
     }
-  }, [cartCode]);
+  }, [cartCode, currentUser]);
 
   const loadCart = async () => {
     if (!token || !cartCode) return;
@@ -75,32 +76,33 @@ export default function CartPage() {
   /* ---------------- CREATE CART ---------------- */
   const createCart = async () => {
     if (!cart.length) return alert("Cart is empty");
-    if (!currentUser) return alert("User info missing.");
+    if (!currentUser) return alert("User info missing");
 
     const itemsWithUser = cart.map((i) => ({ ...i, addedBy: currentUser }));
+
     const res = await fetch(`https://zep-it-back.onrender.com/api/cart/create`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
       body: JSON.stringify({ items: itemsWithUser }),
     });
+
     const data = await res.json();
     if (data.success) {
       alert(`Cart created! Code: ${data.code}`);
       localStorage.removeItem("cart");
       router.push(`/navitems/cart/${data.code}`);
-    } else alert("Failed to create cart");
+    } else {
+      alert("Failed to create cart");
+    }
   };
 
   /* ---------------- JOIN CART ---------------- */
   const joinCart = async () => {
     if (!cartCodeInput) return alert("Enter a cart code");
-    if (!currentUser) return alert("User info missing.");
+    if (!currentUser) return alert("User info missing");
 
-    const localCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const itemsWithUser = localCart.map((i: LocalCartItem) => ({
-      ...i,
-      addedBy: currentUser, // now TypeScript knows currentUser exists
-    }));
+    const localCart: LocalCartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+    const itemsWithUser = localCart.map((i) => ({ ...i, addedBy: currentUser }));
 
     const res = await fetch(`https://zep-it-back.onrender.com/api/cart/join`, {
       method: "POST",
@@ -112,12 +114,14 @@ export default function CartPage() {
     if (data.success) {
       localStorage.removeItem("cart");
       router.push(`/navitems/cart/${cartCodeInput}`);
-    } else alert("Cart not found or join failed");
+    } else {
+      alert("Cart not found or join failed");
+    }
   };
 
   /* ---------------- UPDATE QUANTITY ---------------- */
   const updateQuantity = async (itemId: string, qty: number) => {
-    if (qty < 1 || !cartCode) return;
+    if (!cartCode || qty < 1) return;
     await fetch(`https://zep-it-back.onrender.com/api/cart/update-quantity`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
