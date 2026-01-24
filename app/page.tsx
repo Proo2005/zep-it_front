@@ -300,20 +300,6 @@ export default function HomePage() {
                           }
                           className="mb-3 px-2 py-1 border rounded-lg text-sm text-black"
                         />
-                        <Button
-                          variant="outline"
-                          onClick={() =>
-                            toast("Event has been created", {
-                              description: "Sunday, December 03, 2023 at 9:00 AM",
-                              action: {
-                                label: "Undo",
-                                onClick: () => console.log("Undo"),
-                              },
-                            })
-                          }
-                        >
-                          Show Toast
-                        </Button>
 
                         <Button
                           onClick={() => {
@@ -327,7 +313,7 @@ export default function HomePage() {
                               },
                             });
                           }}
-                          className="mt-auto w-full py-2 rounded-xl font-extrabold border border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
+                          className="mt-auto w-full py-2 rounded-xl font-extrabold border text-white border-[#0C831F] text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
                         >
                           ADD
                         </Button>
