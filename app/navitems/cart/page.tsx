@@ -21,6 +21,14 @@ export default function CartPage() {
   const params = useParams();
   const cartCode = params?.cartCode as string | undefined;
 
+  /* ---------------- LOAD RAZORPAY SCRIPT ---------------- */
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   /* ---------------- LOAD CART ---------------- */
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -34,14 +42,12 @@ export default function CartPage() {
 
   const loadCart = async () => {
     if (!cartCode) {
-      // NORMAL CART (localStorage)
       const stored = JSON.parse(localStorage.getItem("cart") || "[]");
       setCart(stored);
       calculateTotal(stored);
       return;
     }
 
-    // SHARED CART (backend)
     const res = await fetch(
       `https://zep-it-back.onrender.com/api/cart/${cartCode}`,
       {
@@ -107,18 +113,46 @@ export default function CartPage() {
     loadCart();
   };
 
-  /* ---------------- CHECKOUT ---------------- */
-  const handlePay = () => {
+  /* ---------------- RAZORPAY PAYMENT ---------------- */
+  const handleRazorpayPayment = async () => {
     if (!cart.length) return alert("Cart is empty");
 
-    if (cartCode) {
-      router.push(`/navitems/cart/${cartCode}/checkout`);
-      return;
-    }
+    const res = await fetch(
+      "https://zep-it-back.onrender.com/api/payment/create-order",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ amount: total }),
+      }
+    );
 
-    localStorage.setItem("checkoutCart", JSON.stringify(cart));
-    localStorage.setItem("checkoutTotal", total.toString());
-    router.push("/paymentpage");
+    const order = await res.json();
+
+    const options = {
+      key: "rzp_test_xxxxxxxx", // 🔴 replace with real key
+      amount: order.amount,
+      currency: "INR",
+      name: "ZepIt Store",
+      description: "Order Payment",
+      order_id: order.id,
+      handler: function (response: any) {
+        alert("Payment Successful ✅");
+        console.log("Payment response:", response);
+
+        // optional: clear cart
+        localStorage.removeItem("cart");
+        router.push("/orders");
+      },
+      theme: {
+        color: "#0C831F",
+      },
+    };
+
+    const razorpay = new (window as any).Razorpay(options);
+    razorpay.open();
   };
 
   /* ---------------- CREATE SHARED CART ---------------- */
@@ -133,7 +167,7 @@ export default function CartPage() {
     const data = await res.json();
     if (data.cartCode) {
       navigator.clipboard.writeText(data.cartCode);
-      alert(`Shared Cart Created! Code copied to clipboard: ${data.cartCode}`);
+      alert(`Shared Cart Created! Code copied`);
       router.push(`/navitems/cart/${data.cartCode}`);
     }
   };
@@ -156,13 +190,13 @@ export default function CartPage() {
             <div className="flex gap-4">
               <button
                 onClick={createSharedCart}
-                className="mb-6 bg-black text-white px-6 py-3 rounded-xl font-semibold"
+                className="bg-black text-white px-6 py-3 rounded-xl font-semibold"
               >
                 Create Shared Cart
               </button>
               <button
                 onClick={joinCart}
-                className="mb-6 bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
+                className="bg-green-600 text-white px-6 py-3 rounded-xl font-semibold"
               >
                 Join Shared Cart
               </button>
@@ -189,7 +223,6 @@ export default function CartPage() {
                     <p className="text-green-600 font-medium">
                       ₹{item.price} each
                     </p>
-
                     {item.addedBy && (
                       <p className="text-xs text-gray-500 mt-1">
                         Added by {item.addedBy.name}
@@ -197,14 +230,12 @@ export default function CartPage() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-1">
-                      <button onClick={() => decreaseQty(item.itemId)}>−</button>
-                      <span className="w-6 text-center font-semibold">
-                        {item.quantity}
-                      </span>
-                      <button onClick={() => increaseQty(item.itemId)}>+</button>
-                    </div>
+                  <div className="flex items-center gap-2 bg-gray-100 rounded-xl px-3 py-1">
+                    <button onClick={() => decreaseQty(item.itemId)}>−</button>
+                    <span className="w-6 text-center font-semibold">
+                      {item.quantity}
+                    </span>
+                    <button onClick={() => increaseQty(item.itemId)}>+</button>
                   </div>
                 </div>
               ))}
@@ -232,10 +263,10 @@ export default function CartPage() {
               </div>
 
               <button
-                onClick={handlePay}
-                className="w-full bg-green-600 hover:bg-green-500 text-black py-3 rounded-xl font-bold transition"
+                onClick={handleRazorpayPayment}
+                className="w-full bg-green-600 hover:bg-green-500 text-black py-3 rounded-xl font-bold"
               >
-                Proceed to Pay ₹{total}
+                Pay ₹{total} with Razorpay
               </button>
             </div>
           </div>
