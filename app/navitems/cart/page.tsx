@@ -55,8 +55,18 @@ export default function CartPage() {
     calculateTotal(data.items || []);
   };
 
-  const calculateTotal = (items: CartItem[]) => {
-    setTotal(items.reduce((acc, item) => acc + item.price * item.quantity, 0));
+  const calculateTotal = (items: CartItem[] | number) => {
+    if (typeof items === "number") {
+      setTotal(items);
+    } else {
+      setTotal(items.reduce((acc, item) => acc + item.price * item.quantity, 0));
+    }
+  };
+
+  const emptyCart = () => {
+    localStorage.removeItem("cart");
+    setCart([]);
+    calculateTotal(0);
   };
 
   /* ---------------- CREATE / JOIN CART ---------------- */
@@ -195,6 +205,12 @@ export default function CartPage() {
             >
               Join Cart
             </button>
+            <button
+              onClick={emptyCart}
+              className="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-500 font-bold"
+            >
+              Clear Cart
+            </button>
           </div>
         )}
 
@@ -257,6 +273,14 @@ export default function CartPage() {
                   View Split Details
                 </button>
               )}
+
+              {/* CLEAR CART BUTTON IN SUMMARY */}
+              <button
+                onClick={emptyCart}
+                className="w-full mt-2 py-2 bg-red-600 hover:bg-red-500 text-white rounded-xl font-bold"
+              >
+                Clear Cart
+              </button>
             </div>
           </div>
         )}
