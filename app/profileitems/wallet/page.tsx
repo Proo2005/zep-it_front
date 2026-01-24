@@ -89,7 +89,7 @@ export default function WalletPage() {
           placeholder="Enter amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="w-full border rounded-lg px-4 py-2 mb-4"
+          className="w-full border rounded-lg px-4 py-2 mb-4 text-black"
         />
 
         <button
