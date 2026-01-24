@@ -19,7 +19,21 @@ export default function Navbar() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const loadUser = () => setUserName(localStorage.getItem("name"));
+    const loadUser = () => {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        setUserName(null);
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(user);
+        setUserName(parsed.name);
+      } catch {
+        setUserName(null);
+      }
+    };
+
     loadUser();
     window.addEventListener("authChanged", loadUser);
 
