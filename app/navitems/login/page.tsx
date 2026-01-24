@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Login() {
   const router = useRouter();
@@ -23,10 +24,12 @@ export default function Login() {
     }));
   };
 
+  /* ===============================
+      NORMAL LOGIN
+  =============================== */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
 
     try {
       const res = await axios.post(
@@ -34,46 +37,57 @@ export default function Login() {
         form
       );
 
-      const { token, user } = res.data;
-
-      /* ===============================
-         🔐 AUTH STORAGE (MAIN)
-      =============================== */
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
-
-      /* ===============================
-         🔁 BACKWARD COMPAT (Navbar etc.)
-      =============================== */
-      localStorage.setItem("userId", user._id || user.id);
-      localStorage.setItem("name", user.name);
-      localStorage.setItem("email", user.email);
-      localStorage.setItem("type", user.type);
-
-      if (user.city) localStorage.setItem("city", user.city);
-      if (user.state) localStorage.setItem("state", user.state);
-      if (user.fullAddress) localStorage.setItem("fullAddress", user.fullAddress);
-      /* ===============================
-         ✅ AUTH FLAGS
-      =============================== */
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("loggedInAt", new Date().toISOString());
-
-      // Notify Navbar / Guards
-      window.dispatchEvent(new Event("authChanged"));
-      
-
-      toast.success(`Welcome back, ${user.name}!`);
-      // Redirect based on role
-      if (user.type === "customer") {
-        router.push("/");
-      } else {
-        router.push("/essential/shop-items");
-      }
+      handleAuthSuccess(res.data);
     } catch (err: any) {
-      alert(err.response?.data?.message || "Invalid email or password");
+      toast.error(err.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
+    }
+  };
+
+  /* ===============================
+      GOOGLE LOGIN
+  =============================== */
+  const handleGoogleLogin = async (credential: string) => {
+    try {
+      const res = await axios.post(
+        "https://zep-it-back.onrender.com/api/auth/google",
+        { token: credential }
+      );
+
+      handleAuthSuccess(res.data);
+    } catch (err) {
+      toast.error("Google login failed");
+    }
+  };
+
+  /* ===============================
+      SHARED AUTH STORAGE
+  =============================== */
+  const handleAuthSuccess = ({ token, user }: any) => {
+    localStorage.setItem("token", token);
+    localStorage.setItem("user", JSON.stringify(user));
+
+    localStorage.setItem("userId", user._id || user.id);
+    localStorage.setItem("name", user.name);
+    localStorage.setItem("email", user.email);
+    localStorage.setItem("type", user.type);
+
+    if (user.city) localStorage.setItem("city", user.city);
+    if (user.state) localStorage.setItem("state", user.state);
+    if (user.fullAddress) localStorage.setItem("fullAddress", user.fullAddress);
+
+    localStorage.setItem("isAuthenticated", "true");
+    localStorage.setItem("loggedInAt", new Date().toISOString());
+
+    window.dispatchEvent(new Event("authChanged"));
+
+    toast.success(`Welcome back, ${user.name}!`);
+
+    if (user.type === "customer") {
+      router.push("/");
+    } else {
+      router.push("/essential/shop-items");
     }
   };
 
@@ -86,17 +100,13 @@ export default function Login() {
         <h2 className="text-3xl font-bold text-[#0C831F] text-center">
           Welcome Back
         </h2>
-        <p className="text-center text-gray-600">
-          Log in to continue to your account
-        </p>
 
         {/* Email */}
         <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1 text-gray-700">Email</label>
+          <label className="text-sm font-semibold mb-1">Email</label>
           <input
             name="email"
             type="email"
-            placeholder="you@example.com"
             value={form.email}
             onChange={handleChange}
             className="px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
@@ -106,11 +116,10 @@ export default function Login() {
 
         {/* Password */}
         <div className="flex flex-col relative">
-          <label className="text-sm font-semibold mb-1 text-gray-700">Password</label>
+          <label className="text-sm font-semibold mb-1">Password</label>
           <input
             name="password"
             type={showPassword ? "text" : "password"}
-            placeholder="Enter your password"
             value={form.password}
             onChange={handleChange}
             className="px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
@@ -119,32 +128,40 @@ export default function Login() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-9 text-gray-500 text-sm hover:text-gray-800"
+            className="absolute right-3 top-9 text-sm text-gray-500"
           >
             {showPassword ? "Hide" : "Show"}
           </button>
         </div>
 
-        {/* Forgot Password */}
-        <div className="text-right">
-          <a href="/forgot-password" className="text-green-600 font-semibold hover:underline text-sm">
-            Forgot Password?
-          </a>
-        </div>
-
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0C831F] to-[#2ECC71] text-white font-bold text-lg hover:opacity-90 transition disabled:opacity-50"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0C831F] to-[#2ECC71] text-white font-bold"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
 
-        {/* Signup link */}
+        {/* Divider */}
+        <div className="flex items-center gap-2 text-gray-400">
+          <div className="flex-1 h-px bg-gray-300" />
+          <span className="text-sm">OR</span>
+          <div className="flex-1 h-px bg-gray-300" />
+        </div>
+
+        {/* Google Login */}
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={(res) => handleGoogleLogin(res.credential!)}
+            onError={() => toast.error("Google login failed")}
+            theme="outline"
+            size="large"
+          />
+        </div>
+
         <p className="text-center text-gray-600">
           Don’t have an account?{" "}
-          <a href="/navitems/signup" className="text-green-600 font-semibold hover:underline">
+          <a href="/navitems/signup" className="text-green-600 font-semibold">
             Signup
           </a>
         </p>
