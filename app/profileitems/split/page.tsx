@@ -1,106 +1,117 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
-type SplitItem = {
+type CartItem = {
+  itemId: string;
   name: string;
-  quantity: number;
   price: number;
-  total: number;
+  quantity: number;
+  addedBy?: { name: string; email: string };
 };
 
 type UserSplit = {
-  userId: string;
-  name: string;
-  email: string;
-  items: SplitItem[];
-  subtotal: number;
+  user: string;
+  items: CartItem[];
+  total: number;
 };
 
-export default function SplitDetailsPage() {
-  const params = useParams();
-  const router = useRouter();
-  const cartCode = params.cartCode as string;
+export default function CartSplitPage() {
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [userSplits, setUserSplits] = useState<UserSplit[]>([]);
+  const [total, setTotal] = useState(0);
 
-  const [splits, setSplits] = useState<UserSplit[]>([]);
-  const [grandTotal, setGrandTotal] = useState(0);
+  const router = useRouter();
+  const params = useParams();
+  const cartCode = params?.cartCode as string | undefined;
 
   useEffect(() => {
-    fetchSplit();
-  }, []);
+    if (!cartCode) {
+      alert("No cart code provided");
+      router.push("/navitems/cart");
+      return;
+    }
+    loadCart();
+  }, [cartCode]);
 
-  const fetchSplit = async () => {
-    const res = await fetch(
-      `https://zep-it-back.onrender.com/api/split/${cartCode}`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      }
-    );
+  const loadCart = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first");
+      router.push("/navitems/login");
+      return;
+    }
 
+    const res = await fetch(`https://zep-it-back.onrender.com/api/cart/${cartCode}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
     const data = await res.json();
-    setSplits(data.splitDetails || []);
-    setGrandTotal(data.grandTotal || 0);
+    const items: CartItem[] = data.items || [];
+    setCart(items);
+    calculateTotal(items);
+    calculateSplit(items);
+  };
+
+  const calculateTotal = (items: CartItem[]) => {
+    const sum = items.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    setTotal(sum);
+  };
+
+  const calculateSplit = (items: CartItem[]) => {
+    const splitMap: Record<string, CartItem[]> = {};
+
+    items.forEach((item) => {
+      const user = item.addedBy?.name || "Unknown";
+      if (!splitMap[user]) splitMap[user] = [];
+      splitMap[user].push(item);
+    });
+
+    const splits: UserSplit[] = Object.entries(splitMap).map(([user, items]) => ({
+      user,
+      items,
+      total: items.reduce((acc, i) => acc + i.price * i.quantity, 0),
+    }));
+
+    setUserSplits(splits);
   };
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] px-4 pt-28 pb-20 text-black">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pt-32 text-black">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8">Split Details</h1>
 
-        <h1 className="text-3xl font-bold mb-8">
-          Split Payment Details
-        </h1>
-
-        {splits.map(user => (
-          <div
-            key={user.userId}
-            className="bg-white rounded-2xl shadow-sm mb-6 p-6"
-          >
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold">{user.name}</h2>
-              <p className="text-sm text-gray-500">{user.email}</p>
-            </div>
-
-            <div className="space-y-3">
-              {user.items.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="flex justify-between text-sm"
-                >
+        {userSplits.map((split) => (
+          <div key={split.user} className="bg-white rounded-2xl shadow p-5 mb-6">
+            <h2 className="text-xl font-semibold mb-3">{split.user}</h2>
+            <ul className="space-y-2">
+              {split.items.map((item) => (
+                <li key={item.itemId} className="flex justify-between">
                   <span>
-                    {item.name} × {item.quantity}
+                    {item.name} x {item.quantity}
                   </span>
-                  <span>₹{item.total}</span>
-                </div>
+                  <span>₹{item.price * item.quantity}</span>
+                </li>
               ))}
+            </ul>
+            <div className="flex justify-between font-bold mt-3 border-t pt-2">
+              <span>Total</span>
+              <span>₹{split.total}</span>
             </div>
-
-            <div className="border-t mt-4 pt-4 flex justify-between font-bold">
-              <span>Subtotal</span>
-              <span className="text-green-600">
-                ₹{user.subtotal}
-              </span>
-            </div>
-
-            <button
-              onClick={() =>
-                router.push(
-                  `/paymentpage?amount=${user.subtotal}&cart=${cartCode}&user=${user.userId}`
-                )
-              }
-              className="mt-4 w-full bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold"
-            >
-              Pay ₹{user.subtotal}
-            </button>
           </div>
         ))}
 
-        <div className="bg-black text-white rounded-2xl p-6 mt-10 flex justify-between text-xl font-bold">
-          <span>Grand Total</span>
-          <span>₹{grandTotal}</span>
+        <div className="flex justify-between font-bold text-lg mt-6 p-4 bg-gray-100 rounded-xl shadow">
+          <span>Cart Total</span>
+          <span>₹{total}</span>
         </div>
+
+        <button
+          onClick={() => router.push(`/cart/${cartCode}`)}
+          className="mt-6 w-full py-3 bg-green-600 hover:bg-green-500 text-white rounded-xl font-bold"
+        >
+          Back to Cart
+        </button>
       </div>
     </div>
   );

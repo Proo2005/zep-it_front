@@ -7,7 +7,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 
 type CartItem = {
   itemId: string;
@@ -23,22 +23,31 @@ export default function FloatingCart() {
   const [pulse, setPulse] = useState(false);
   const router = useRouter();
 
+  // ------------------ FUNCTIONS ------------------
+  const loadCart = () => {
+    const stored: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+    setCart(stored);
+
+    const sum = stored.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    setTotal(sum);
+
+    setPulse(true);
+    setTimeout(() => setPulse(false), 250);
+    setIsVisible(stored.length > 0);
+  };
+
+  const emptyCart = () => {
+    localStorage.removeItem("cart");
+    setCart([]);
+    setTotal(0);
+    setIsVisible(false);
+
+    setPulse(true);
+    setTimeout(() => setPulse(false), 250);
+  };
+
+  // ------------------ EFFECT ------------------
   useEffect(() => {
-    const loadCart = () => {
-      const stored = JSON.parse(localStorage.getItem("cart") || "[]");
-      setCart(stored);
-
-      const sum = stored.reduce(
-        (acc: number, item: CartItem) => acc + item.price * item.quantity,
-        0
-      );
-      setTotal(sum);
-
-      setPulse(true);
-      setTimeout(() => setPulse(false), 250);
-      setIsVisible(stored.length > 0);
-    };
-
     loadCart();
     window.addEventListener("cartUpdated", loadCart);
     window.addEventListener("storage", loadCart);
@@ -49,7 +58,7 @@ export default function FloatingCart() {
     };
   }, []);
 
-  if (cart.length === 0) return null;
+  if (!isVisible || cart.length === 0) return null;
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
   const lastItem = cart[cart.length - 1];
@@ -59,7 +68,6 @@ export default function FloatingCart() {
       className={`fixed bottom-4 left-1/2 -translate-x-1/2 z-50
       transition-all duration-300
       ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}
-      
       w-[90%] sm:w-[70%] md:w-[40%] lg:w-[25%]`}
     >
       <div
@@ -82,23 +90,27 @@ export default function FloatingCart() {
 
         {/* RIGHT */}
         <div className="flex items-center gap-4">
-          <p className="text-lg font-bold text-zinc-900">
-            ₹{total}
-          </p>
+          <p className="text-lg font-bold text-zinc-900">₹{total}</p>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <button
+                onClick={() => router.push("/navitems/cart")}
+                className="bg-green-600 hover:bg-green-500 text-black px-3 py-2 rounded-lg font-bold text-sm transition"
+              >
+                <IoCartOutline size={20} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Proceed to Cart</p>
+            </TooltipContent>
+          </Tooltip>
 
           <button
-            onClick={() => router.push("/navitems/cart")}
-            className="bg-green-600 hover:bg-green-500
-                       text-black px-4 py-2
-                       rounded-lg font-bold
-                       text-sm transition"
+            onClick={emptyCart}
+            className="bg-red-600 hover:bg-red-500 text-white px-3 py-2 rounded-lg font-bold text-sm transition"
           >
-            <Tooltip>
-              <TooltipTrigger><IoCartOutline size={20} /></TooltipTrigger>
-              <TooltipContent>
-                <p>Proceed to Cart</p>
-              </TooltipContent>
-            </Tooltip>
+            Clear
           </button>
         </div>
       </div>
