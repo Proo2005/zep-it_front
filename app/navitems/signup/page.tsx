@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function Signup() {
   const [form, setForm] = useState({
@@ -14,7 +15,7 @@ export default function Signup() {
     city: "",
     fullAddress: "",
   });
-  
+
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -41,6 +42,22 @@ export default function Signup() {
       setLoading(false);
     }
   };
+
+  const handleGoogleLogin = async (credential: string) => {
+    try {
+      const res = await axios.post(
+        "https://zep-it-back.onrender.com/api/auth/google-login",
+        { credential }
+      );
+
+      localStorage.setItem("token", res.data.token);
+      alert("Logged in with Google ✅");
+      router.push("/");
+    } catch (err: any) {
+      alert("Google login failed");
+    }
+  };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
@@ -80,7 +97,7 @@ export default function Signup() {
         {/* Type */}
         <div className="flex flex-col">
           <label className="text-sm font-semibold mb-1">Account Type</label>
-          
+
           <select
             name="type"
             value={form.type}
@@ -143,6 +160,14 @@ export default function Signup() {
             required
           />
         </div>
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={(res) => handleGoogleLogin(res.credential!)}
+            onError={() => alert("Google Login Failed")}
+          />
+        </div>
+
+        <div className="text-center text-gray-400 text-sm">or</div>
 
         {/* Submit */}
         <button
