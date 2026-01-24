@@ -46,11 +46,12 @@ export default function CartPage() {
       return;
     }
 
+    const token = localStorage.getItem("token");
     const res = await fetch(
       `https://zep-it-back.onrender.com/api/cart/${cartCode}`,
       {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -60,11 +61,7 @@ export default function CartPage() {
   };
 
   const calculateTotal = (items: CartItem[]) => {
-    const sum = items.reduce(
-      (acc, item) => acc + item.price * item.quantity,
-      0
-    );
-    setTotal(sum);
+    setTotal(items.reduce((acc, item) => acc + item.price * item.quantity, 0));
   };
 
   /* ---------------- CREATE / JOIN CART ---------------- */
@@ -84,9 +81,10 @@ export default function CartPage() {
       }
     );
     const data = await res.json();
+
     if (data.success) {
       alert(`Cart created! Code: ${data.code}`);
-      router.push(`/cart/${data.code}`);
+      router.replace(`/navitems/cart/${data.code}`); // corrected dynamic route
     } else {
       alert("Failed to create cart");
     }
@@ -108,8 +106,10 @@ export default function CartPage() {
       }
     );
     const data = await res.json();
+
     if (data.success) {
-      router.push(`/cart/${cartCodeInput}`);
+      setCartCodeInput("");
+      router.replace(`/navitems/cart/${cartCodeInput}`); // corrected dynamic route
     } else {
       alert("Cart not found");
     }
@@ -120,25 +120,18 @@ export default function CartPage() {
     if (newQty < 1) return;
 
     const token = localStorage.getItem("token");
-    await fetch(
-      "https://zep-it-back.onrender.com/api/cart/update-quantity",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          cartCode,
-          itemId,
-          quantity: newQty,
-        }),
-      }
-    );
+    await fetch("https://zep-it-back.onrender.com/api/cart/update-quantity", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ cartCode, itemId, quantity: newQty }),
+    });
     loadCart();
   };
 
-  /* ---------------- RAZORPAY PAYMENT (EXISTING) ---------------- */
+  /* ---------------- RAZORPAY PAYMENT ---------------- */
   const handleRazorpayPayment = async () => {
     if (!cart.length) return alert("Cart is empty");
 
@@ -168,7 +161,7 @@ export default function CartPage() {
       description: "Order Payment",
       order_id: order.id,
 
-      handler: async function (response: any) {
+      handler: async (response: any) => {
         try {
           const verifyRes = await fetch(
             "https://zep-it-back.onrender.com/api/payment/verify",
