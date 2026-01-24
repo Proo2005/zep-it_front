@@ -1,29 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { CiRedo } from "react-icons/ci"; // ✅ FIXED IMPORT
 
-type HistoryItem = {
-  itemId: string;
-  name: string;
-  quantity: number;
-  amount: number;
-};
-
-type PaymentHistory = {
+type Payment = {
   _id: string;
-  userName: string;
-  email: string;
-  items: HistoryItem[];
-  totalAmount: number;
-  paymentMethod: string;
+  amount: number;
+  currency: string;
+  status: "success" | "failed";
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
   createdAt: string;
+  items: {
+    name: string;
+    price: number;
+    quantity: number;
+  }[];
 };
 
 export default function PaymentHistoryPage() {
-  const [history, setHistory] = useState<PaymentHistory[]>([]);
-  const router = useRouter();
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchHistory();
@@ -32,132 +28,109 @@ export default function PaymentHistoryPage() {
   const fetchHistory = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return router.push("/login");
 
       const res = await fetch(
-        "https://zep-it-back.onrender.com/api/paymenthistory/history",
+        "https://zep-it-back.onrender.com/api/payment/history",
         {
-          headers: { Authorization: `Bearer ${token}` },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
       const data = await res.json();
-      if (data.success) setHistory(data.history);
+      setPayments(data || []);
     } catch (err) {
-      console.error(err);
-      alert("Failed to fetch payment history");
+      console.error("Failed to load history", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleReorder = (items: HistoryItem[]) => {
-    const existingCart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const newCart = [...existingCart];
-
-    items.forEach((item) => {
-      const index = newCart.findIndex(
-        (c: any) => c.itemId === item.itemId
-      );
-
-      if (index !== -1) {
-        newCart[index].quantity += item.quantity;
-      } else {
-        newCart.push({
-          itemId: item.itemId,
-          name: item.name,
-          price: item.amount,
-          quantity: item.quantity,
-        });
-      }
-    });
-
-    localStorage.setItem("cart", JSON.stringify(newCart));
-    router.push("/cart");
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
-      <div className="max-w-6xl mx-auto  pt-32 ">
-      
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pb-16 -mt-24 text-black">
+      <div className="max-w-5xl mx-auto pt-32">
 
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-3xl font-bold">
-            Payment History
-          </h1>
-          <p className=" mt-1">
-            View your past orders and quickly reorder items
-          </p>
-        </div>
+        <h1 className="text-3xl font-bold mb-8">Payment History</h1>
 
-        {/* Empty State */}
-        {history.length === 0 ? (
-          <div className=" border-zinc-800 rounded-2xl p-10 text-center">
-            <p className="text-zinc-400 text-lg">
-              No payment history available yet.
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {history.map((h) => (
+        {/* LOADING */}
+        {loading && (
+          <div className="space-y-4">
+            {[1, 2, 3].map((i) => (
               <div
-                key={h._id}
-                className=" border border-zinc-800 rounded-2xl p-6"
-              >
-                {/* Order Header */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div>
-                    <div className="text-2xl font-bold text-green-400">
-                      ₹{h.totalAmount}
-                    </div>
-                    <div className="text-sm mt-1">
-                      {h.paymentMethod} •{" "}
-                      {new Date(h.createdAt).toLocaleString()}
-                    </div>
-                    <div className="text-xs mt-1">
-                      {h.items.length} item(s)
-                    </div>
-                  </div>
-
-                  <button
-                    onClick={() => handleReorder(h.items)}
-                    className="flex items-center gap-2
-                               bg-green-600 hover:bg-green-500 
-                               text-black font-bold 
-                               px-6 py-2 rounded-xl 
-                               transition self-start md:self-auto"
-                  >
-                    <CiRedo size={18} />
-                    Reorder
-                  </button>
-                </div>
-
-                {/* Items */}
-                <div className="mt-6 divide-y divide-zinc-800">
-                  {h.items.map((item) => (
-                    <div
-                      key={item.itemId}
-                      className="flex justify-between items-center py-3 text-sm"
-                    >
-                      <div>
-                        <p className="font-medium">
-                          {item.name}
-                        </p>
-                        <p className="text-xs">
-                          Quantity: {item.quantity}
-                        </p>
-                      </div>
-
-                      <div className="font-semibold">
-                        ₹{item.amount * item.quantity}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-              </div>
+                key={i}
+                className="h-24 bg-white rounded-2xl animate-pulse"
+              />
             ))}
           </div>
         )}
+
+        {/* EMPTY */}
+        {!loading && payments.length === 0 && (
+          <div className="text-center text-lg mt-20 text-gray-600">
+            No payments found
+          </div>
+        )}
+
+        {/* HISTORY LIST */}
+        <div className="space-y-5">
+          {payments.map((pay) => (
+            <div
+              key={pay._id}
+              className="bg-white rounded-2xl p-5 shadow-sm border"
+            >
+              <div className="flex justify-between items-start mb-3">
+                <div>
+                  <p className="font-semibold">
+                    Order #{pay.razorpay_order_id}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {new Date(pay.createdAt).toLocaleString()}
+                  </p>
+                </div>
+
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                    pay.status === "success"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-600"
+                  }`}
+                >
+                  {pay.status.toUpperCase()}
+                </span>
+              </div>
+
+              <div className="flex justify-between items-center mb-3">
+                <p className="text-sm text-gray-600">
+                  Items: {pay.items.length}
+                </p>
+                <p className="text-lg font-bold text-green-600">
+                  ₹{pay.amount}
+                </p>
+              </div>
+
+              <details className="text-sm">
+                <summary className="cursor-pointer text-green-600 font-semibold">
+                  View items
+                </summary>
+
+                <div className="mt-3 space-y-2">
+                  {pay.items.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="flex justify-between text-gray-700"
+                    >
+                      <span>
+                        {item.name} × {item.quantity}
+                      </span>
+                      <span>₹{item.price * item.quantity}</span>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
