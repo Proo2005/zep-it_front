@@ -61,7 +61,8 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("name", user.name);
       localStorage.setItem("email", user.email);
-      localStorage.setItem("type", user.type);
+      localStorage.setItem("type", user.type || "customer");
+
       localStorage.setItem("isAuthenticated", "true");
 
       window.dispatchEvent(new Event("authChanged"));

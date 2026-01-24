@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
+import { Data } from "@react-google-maps/api";
 
 type CartItem = {
   itemId: string;
@@ -71,23 +72,43 @@ export default function CartPage() {
 
   /* ---------------- CREATE / JOIN CART ---------------- */
   const createCart = async () => {
-    if (!cart.length) return alert("Cart is empty");
+    if (!cart.length) {
+      alert("Cart is empty");
+      return;
+    }
 
     const token = localStorage.getItem("token");
-    const res = await fetch("https://zep-it-back.onrender.com/api/cart/create", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ items: cart }),
-    });
+
+    const res = await fetch(
+      "https://zep-it-back.onrender.com/api/cart/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ items: cart }),
+      }
+    );
+
     const data = await res.json();
 
     if (data.success) {
-      alert(`Cart created! Code: ${data.code}`);
-      router.replace(`/navitems/cart/${data.code}`);
+      const cartCode = data.code;
+
+      // ✅ copy to clipboard
+      await navigator.clipboard.writeText(cartCode);
+
+      alert(`Cart created!\nCode: ${cartCode}\n(Copied to clipboard)`);
+
+      router.replace(`/navitems/cart/${cartCode}`);
     } else {
       alert("Failed to create cart");
     }
   };
+
+
+
 
   const joinCart = async () => {
     if (!cartCodeInput) return alert("Enter cart code");

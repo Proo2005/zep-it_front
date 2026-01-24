@@ -22,7 +22,7 @@ import { Divider } from "@heroui/divider";
 
 export default function ProfilePage() {
   const router = useRouter();
-  const appLink = "https://zep-it-front.vercel.app/p";
+  const appLink = "https://zep-it-front.vercel.app/";
 
   const [shareOpen, setShareOpen] = useState(false);
 
@@ -31,7 +31,7 @@ export default function ProfilePage() {
     email: "",
     phone: "",
     type: "customer",
-    fullAddress: "",
+  
   });
 
   useEffect(() => {
@@ -40,7 +40,6 @@ export default function ProfilePage() {
       email: localStorage.getItem("email") || "user@email.com",
       phone: localStorage.getItem("phone") || "+91 XXXXX XXXXX",
       type: localStorage.getItem("type") || "customer",
-      fullAddress: localStorage.getItem("fullAddress") || "address",
     });
   }, []);
 
@@ -67,7 +66,6 @@ export default function ProfilePage() {
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
               <p className="text-gray-600 text-sm">{user.email}</p>
-              <p className="text-gray-600 text-sm">{user.fullAddress}</p>
             </div>
           </div>
           <button
@@ -181,7 +179,7 @@ export default function ProfilePage() {
                 <a
                   href={`https://wa.me/?text=${encodeURIComponent(appLink)}`}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel="noopener noreferrer" onClick={handleCopy}
                   className="bg-green-500 px-4 py-2 rounded-xl text-white font-semibold hover:bg-green-600 transition"
                 >
                   <div className="flex gap-1 "> WhatsApp
