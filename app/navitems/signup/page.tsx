@@ -43,10 +43,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0C831F]/20 to-[#2ECC71]/20 p-4 text-black">
+    <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/90 backdrop-blur-md p-8 rounded-2xl w-full max-w-md shadow-lg border border-gray-200 space-y-5"
+        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6"
       >
         <h2 className="text-2xl font-bold text-[#0C831F] text-center mb-4">Create Account</h2>
 
