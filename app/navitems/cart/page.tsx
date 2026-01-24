@@ -8,15 +8,13 @@ type CartItem = {
   name: string;
   price: number;
   quantity: number;
-  addedBy?: {
-    name: string;
-    email: string;
-  };
+  addedBy?: { name: string; email: string };
 };
 
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
+  const [cartCodeInput, setCartCodeInput] = useState("");
   const router = useRouter();
   const params = useParams();
   const cartCode = params?.cartCode as string | undefined;
@@ -38,7 +36,7 @@ export default function CartPage() {
       return;
     }
     loadCart();
-  }, []);
+  }, [cartCode]);
 
   const loadCart = async () => {
     if (!cartCode) {
@@ -69,7 +67,78 @@ export default function CartPage() {
     setTotal(sum);
   };
 
-  /* ---------------- RAZORPAY PAYMENT (FIXED) ---------------- */
+  /* ---------------- CREATE / JOIN CART ---------------- */
+  const createCart = async () => {
+    if (!cart.length) return alert("Cart is empty");
+
+    const token = localStorage.getItem("token");
+    const res = await fetch(
+      "https://zep-it-back.onrender.com/api/cart/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ items: cart }),
+      }
+    );
+    const data = await res.json();
+    if (data.success) {
+      alert(`Cart created! Code: ${data.code}`);
+      router.push(`/cart/${data.code}`);
+    } else {
+      alert("Failed to create cart");
+    }
+  };
+
+  const joinCart = async () => {
+    if (!cartCodeInput) return alert("Enter cart code");
+
+    const token = localStorage.getItem("token");
+    const res = await fetch(
+      "https://zep-it-back.onrender.com/api/cart/join",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ code: cartCodeInput }),
+      }
+    );
+    const data = await res.json();
+    if (data.success) {
+      router.push(`/cart/${cartCodeInput}`);
+    } else {
+      alert("Cart not found");
+    }
+  };
+
+  /* ---------------- UPDATE ITEM QUANTITY ---------------- */
+  const updateQuantity = async (itemId: string, newQty: number) => {
+    if (newQty < 1) return;
+
+    const token = localStorage.getItem("token");
+    await fetch(
+      "https://zep-it-back.onrender.com/api/cart/update-quantity",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          cartCode,
+          itemId,
+          quantity: newQty,
+        }),
+      }
+    );
+    loadCart();
+  };
+
+  /* ---------------- RAZORPAY PAYMENT (EXISTING) ---------------- */
   const handleRazorpayPayment = async () => {
     if (!cart.length) return alert("Cart is empty");
 
@@ -92,7 +161,7 @@ export default function CartPage() {
 
     // 2️⃣ RAZORPAY OPTIONS
     const options = {
-      key: "rzp_test_S7hU7z0jJ1lRFZ", // move to env later
+      key: "rzp_test_S7hU7z0jJ1lRFZ",
       amount: order.amount,
       currency: "INR",
       name: "ZepIt Store",
@@ -101,7 +170,6 @@ export default function CartPage() {
 
       handler: async function (response: any) {
         try {
-          // 3️⃣ VERIFY PAYMENT + SAVE TO DB
           const verifyRes = await fetch(
             "https://zep-it-back.onrender.com/api/payment/verify",
             {
@@ -122,18 +190,11 @@ export default function CartPage() {
           );
 
           const verifyData = await verifyRes.json();
+          if (!verifyData.success) return alert("Payment verification failed");
 
-          if (!verifyData.success) {
-            alert("Payment verification failed");
-            return;
-          }
-
-          // 4️⃣ CLEAR CART
           localStorage.removeItem("cart");
-
           alert("Payment successful ✅");
           router.push("/");
-
         } catch (err) {
           console.error(err);
           alert("Payment failed");
@@ -153,6 +214,31 @@ export default function CartPage() {
 
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
+        {/* ---------------- CREATE / JOIN CART BUTTONS ---------------- */}
+        {!cartCode && (
+          <div className="flex flex-wrap gap-4 mb-8">
+            <button
+              onClick={createCart}
+              className="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-500 font-bold"
+            >
+              Create Cart
+            </button>
+            <input
+              type="text"
+              placeholder="Enter Cart Code"
+              value={cartCodeInput}
+              onChange={(e) => setCartCodeInput(e.target.value)}
+              className="border px-3 py-2 rounded-xl"
+            />
+            <button
+              onClick={joinCart}
+              className="px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-500 font-bold"
+            >
+              Join Cart
+            </button>
+          </div>
+        )}
+
         {cart.length === 0 ? (
           <div className="text-center text-lg mt-20">
             Your cart is empty
@@ -162,7 +248,7 @@ export default function CartPage() {
 
             {/* ITEMS */}
             <div className="lg:col-span-2 space-y-4">
-              {cart.map(item => (
+              {cart.map((item) => (
                 <div
                   key={item.itemId}
                   className="bg-white rounded-2xl p-5 shadow-sm flex justify-between items-center"
@@ -172,16 +258,35 @@ export default function CartPage() {
                     <p className="text-green-600 font-medium">
                       ₹{item.price} each
                     </p>
+                    {item.addedBy && (
+                      <p className="text-sm">Added by: {item.addedBy.name}</p>
+                    )}
                   </div>
 
-                  <span className="font-bold">x{item.quantity}</span>
+                  {/* QUANTITY ADJUST */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => updateQuantity(item.itemId, item.quantity - 1)}
+                      className="px-2 py-1 bg-gray-200 rounded"
+                      disabled={item.quantity <= 1}
+                    >
+                      -
+                    </button>
+                    <span className="font-bold">{item.quantity}</span>
+                    <button
+                      onClick={() => updateQuantity(item.itemId, item.quantity + 1)}
+                      className="px-2 py-1 bg-gray-200 rounded"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* SUMMARY */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm h-fit">
-              <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
+            <div className="bg-white rounded-2xl p-6 shadow-sm h-fit space-y-4">
+              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
               <div className="flex justify-between mb-4 text-lg font-bold">
                 <span>Total</span>
@@ -194,6 +299,16 @@ export default function CartPage() {
               >
                 Pay ₹{total} with Razorpay
               </button>
+
+              {/* SPLIT PAGE */}
+              {cartCode && (
+                <button
+                  onClick={() => router.push(`/cart/${cartCode}/split`)}
+                  className="w-full mt-2 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-bold"
+                >
+                  View Split Details
+                </button>
+              )}
             </div>
 
           </div>
