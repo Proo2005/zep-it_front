@@ -132,7 +132,7 @@ export default function CartPage() {
     const order = await res.json();
 
     const options = {
-      key: "rzp_test_xxxxxxxx", // 🔴 replace with real key
+      key: "rzp_test_S7hU7z0jJ1lRFZ", // 🔴 replace with real key
       amount: order.amount,
       currency: "INR",
       name: "ZepIt Store",
@@ -144,7 +144,7 @@ export default function CartPage() {
 
         // optional: clear cart
         localStorage.removeItem("cart");
-        router.push("/orders");
+        router.push("/");
       },
       theme: {
         color: "#0C831F",
