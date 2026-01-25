@@ -19,7 +19,7 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { FaTwitter } from "react-icons/fa";
 import { Tooltip } from "@heroui/tooltip";
 import { Divider } from "@heroui/divider";
-
+import { MdAdminPanelSettings } from "react-icons/md";
 export default function ProfilePage() {
   const router = useRouter();
   const appLink = "https://zep-it-front.vercel.app/";
@@ -157,6 +157,7 @@ export default function ProfilePage() {
           <ListItem icon={<GoShareAndroid />} text="Share the App" onClick={() => setShareOpen(true)} />
           <ListItem icon={<FcAbout />} text="About Us" onClick={() => router.push("/profileitems/about-us")} />
           <ListItem icon={<RiAccountCircle2Line />} text="Account Privacy" onClick={() => router.push("/profileitems/account-privacy")} />
+          <ListItem icon={<MdAdminPanelSettings />} text="Admin" onClick={() => router.push("/essential/driver")} />
         </Section>
 
         {/* SHARE MODAL */}
