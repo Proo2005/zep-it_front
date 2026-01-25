@@ -53,7 +53,7 @@ export default function AdminPage() {
           <div className="col-span-1 bg-white rounded-2xl shadow-md p-6 space-y-4">
             <h2 className="text-xl font-semibold mb-4">Tabs</h2>
             <ul className="space-y-2">
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">Contact</li>
+              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/contact-messages">Contact</a></li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">Driver</li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">JoinCart</li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">ShopItems</li>
