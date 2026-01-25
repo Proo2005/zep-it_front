@@ -2,12 +2,12 @@
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 py-12">
-      <div className="max-w-6xl mx-auto space-y-16">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-7xl mx-auto  gap-8 pt-32">
 
         {/* Hero Section */}
         <section className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold text-white">
+          <h1 className="text-4xl md:text-5xl font-bold">
             About Zepit
           </h1>
           <p className="text-zinc-400 max-w-3xl mx-auto text-lg">
@@ -34,7 +34,7 @@ export default function AboutPage() {
 
         {/* What We Do */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-white">
+          <h2 className="text-3xl font-bold mb-6">
             What We Do
           </h2>
 
@@ -59,7 +59,7 @@ export default function AboutPage() {
 
         {/* How It Works */}
         <section>
-          <h2 className="text-3xl font-bold mb-6 text-white">
+          <h2 className="text-3xl font-bold mb-6">
             How Zepit Works
           </h2>
 
@@ -73,7 +73,7 @@ export default function AboutPage() {
 
         {/* Trust & Security */}
         <section className="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-10 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 className="text-3xl font-bold mb-4">
             Trust & Security
           </h2>
           <p className="text-zinc-400 max-w-3xl mx-auto">
@@ -85,7 +85,7 @@ export default function AboutPage() {
 
         {/* Closing */}
         <section className="text-center space-y-4">
-          <h2 className="text-3xl font-bold text-white">
+          <h2 className="text-3xl font-bold">
             Built for Speed. Designed for Trust.
           </h2>
           <p className="text-zinc-400 max-w-2xl mx-auto">
@@ -103,8 +103,8 @@ export default function AboutPage() {
 
 function InfoCard({ title, text }: { title: string; text: string }) {
   return (
-    <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-8">
-      <h3 className="text-2xl font-semibold text-white mb-3">{title}</h3>
+    <div className="bg-white border border-zinc-800 rounded-2xl p-8">
+      <h3 className="text-2xl font-semibold text-black mb-3">{title}</h3>
       <p className="text-zinc-400">{text}</p>
     </div>
   );
@@ -112,8 +112,8 @@ function InfoCard({ title, text }: { title: string; text: string }) {
 
 function FeatureCard({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6 hover:border-green-600 transition">
-      <h4 className="text-xl font-semibold text-white mb-2">{title}</h4>
+    <div className="bg-white border border-zinc-800 rounded-2xl p-6 hover:border-green-600 transition">
+      <h4 className="text-xl font-semibold text-black mb-2">{title}</h4>
       <p className="text-zinc-400 text-sm">{desc}</p>
     </div>
   );
@@ -121,11 +121,11 @@ function FeatureCard({ title, desc }: { title: string; desc: string }) {
 
 function StepCard({ step, title }: { step: string; title: string }) {
   return (
-    <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6 text-center">
+    <div className="bg-white border border-zinc-800 rounded-2xl p-6 text-center">
       <div className="w-10 h-10 mx-auto mb-3 rounded-full bg-green-600 text-black font-bold flex items-center justify-center">
         {step}
       </div>
-      <p className="font-semibold text-white">{title}</p>
+      <p className="font-semibold text-black">{title}</p>
     </div>
   );
 }

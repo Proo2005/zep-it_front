@@ -65,7 +65,7 @@ export default function HelpPage() {
         <div className="  border-zinc-800 rounded-2xl p-8">
           <h2 className="text-2xl font-bold mb-4">Contact Support</h2>
 
-          <div className="space-y-3 text-zinc-300">
+          <div className="space-y-3">
             <p>
               📧 <span className="font-medium">Email:</span> support@zepit.com
             </p>
