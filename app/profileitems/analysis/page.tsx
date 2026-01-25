@@ -25,12 +25,12 @@ export default function ShopAnalysisPage() {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white px-6 py-10">
-      <div className="max-w-7xl mx-auto space-y-10">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-7xl mx-auto gap-8 pt-32">
         {/* HEADER */}
         <div>
           <h1 className="text-3xl font-bold">Shop Performance Overview</h1>
-          <p className="text-gray-400 mt-1">
+          <p className="text-gray-800 mt-1">
             Monthly sales, revenue & payment insights
           </p>
         </div>
@@ -85,9 +85,9 @@ export default function ShopAnalysisPage() {
             {data.monthly.map((m: any) => (
               <div
                 key={m._id}
-                className="bg-zinc-800 rounded-xl p-4 border border-zinc-700"
+                className=" rounded-xl p-4 border border-zinc-700"
               >
-                <p className="text-gray-400 text-sm">Month {m._id}</p>
+                <p className="text-gray-800 text-sm">Month {m._id}</p>
                 <p className="text-xl font-bold text-green-400 mt-1">
                   ₹{m.total.toLocaleString()}
                 </p>
@@ -115,8 +115,8 @@ const Stat = ({ title, value, accent }: any) => {
   };
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-6 border border-zinc-800 hover:border-zinc-700 transition">
-      <p className="text-gray-400 text-sm">{title}</p>
+    <div className="bg-white rounded-2xl p-6 border border-zinc-800 hover:border-zinc-700 transition">
+      <p className="text-black text-sm">{title}</p>
       <h2 className={`text-2xl font-bold mt-2 ${accentMap[accent]}`}>
         {value}
       </h2>
@@ -125,15 +125,15 @@ const Stat = ({ title, value, accent }: any) => {
 };
 
 const Section = ({ title, children }: any) => (
-  <div className="bg-zinc-900 rounded-2xl p-6 border border-zinc-800">
+  <div className="bg-white rounded-2xl p-6 border border-zinc-800">
     <h2 className="text-xl font-semibold mb-5">{title}</h2>
     <div className="space-y-3">{children}</div>
   </div>
 );
 
 const Row = ({ label, value }: any) => (
-  <div className="flex justify-between items-center bg-zinc-800 px-4 py-3 rounded-lg">
-    <span className="text-gray-300">{label}</span>
-    <span className="font-semibold text-white">{value}</span>
+  <div className="flex justify-between items-center bg-white px-4 py-3 rounded-lg">
+    <span className="text-gray-800">{label}</span>
+    <span className="font-semibold text-black">{value}</span>
   </div>
 );
