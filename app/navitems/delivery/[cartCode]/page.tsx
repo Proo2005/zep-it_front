@@ -46,7 +46,12 @@ export default function DeliveryPage() {
       if (!token) return router.push("/navitems/login");
 
       let items: CartItem[] = [];
-      if (!cartCode) {
+
+      // Try reading cart from query first
+      const queryCart = (new URLSearchParams(window.location.search)).get("cart");
+      if (queryCart) {
+        items = JSON.parse(queryCart);
+      } else if (!cartCode) {
         items = JSON.parse(localStorage.getItem("cart") || "[]");
       } else {
         const res = await fetch(`${API}/api/cart/${cartCode}`, {
@@ -59,7 +64,7 @@ export default function DeliveryPage() {
       setCartItems(items);
       setTotal(items.reduce((acc, i) => acc + i.price * i.quantity, 0));
 
-      // Fetch drivers
+      // Random driver
       const driverRes = await fetch(`${API}/api/drivers`);
       const drivers: Driver[] = await driverRes.json();
       if (drivers.length > 0) {
@@ -70,6 +75,7 @@ export default function DeliveryPage() {
 
     fetchDelivery();
   }, [cartCode]);
+
 
   /* ---------------- COUNTDOWN ---------------- */
   useEffect(() => {

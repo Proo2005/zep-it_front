@@ -190,10 +190,17 @@ export default function CartPage() {
         const verifyData = await verifyRes.json();
         if (!verifyData.success) return alert("Payment verification failed");
 
-        localStorage.removeItem("cart");
+        // ✅ Pass cart items in query string
+        const cartQuery = encodeURIComponent(JSON.stringify(cart));
+
         alert("Payment successful ✅");
-        // ✅ redirect to delivery page
-        router.push(`/navitems/delivery/${verifyData.orderId || cartCode}`);
+
+        // ✅ Redirect to delivery page with cart
+        router.push(`/navitems/delivery/${verifyData.orderId || cartCode}?cart=${cartQuery}`);
+
+        // ✅ Now safe to remove localStorage
+        localStorage.removeItem("cart");
+
       },
       theme: { color: "#0C831F" },
     };
