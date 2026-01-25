@@ -138,11 +138,11 @@ export default function DeliveryPage() {
         )}
       </div>
       <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-green-500">
-        <h2 className="text-xl font-semibold mb-2">Driver Details</h2>
+        <h2 className="text-xl font-semibold mb-2">User Details</h2>
         {user ? (
           <>
             <p><b>Name:</b> {user.name}</p>
-            <p><b>Phone:</b> {user.phone}</p>
+            <p><b>Email:</b> {user.email}</p>
             
           </>
         ) : (
