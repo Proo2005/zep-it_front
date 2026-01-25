@@ -18,7 +18,7 @@ export default function HelpPage() {
         </div>
 
         {/* Help Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 bg-white text-black">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 bg-white text-black border-zinc-800">
           <HelpCard
             title="Orders & Reorders"
             desc="Track orders, reorder items, or report missing items"
@@ -38,7 +38,7 @@ export default function HelpPage() {
         </div>
 
         {/* FAQs */}
-        <div className="mb-12 bg-white text-black border-4">
+        <div className="mb-12 bg-white text-black border-zinc-800">
           <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
 
           <div className="space-y-4">
@@ -62,7 +62,7 @@ export default function HelpPage() {
         </div>
 
         {/* Contact Support */}
-        <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-8">
+        <div className="  border-zinc-800 rounded-2xl p-8">
           <h2 className="text-2xl font-bold mb-4">Contact Support</h2>
 
           <div className="space-y-3 text-zinc-300">
