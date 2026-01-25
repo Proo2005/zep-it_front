@@ -19,7 +19,7 @@ export default function DriverPage() {
   }, []);
 
   const fetchDrivers = async () => {
-    const res = await fetch("http://localhost:5000/api/drivers");
+    const res = await fetch("https://zep-it-back.onrender.com/api/drivers");
     const data = await res.json();
     setDrivers(data);
   };
@@ -29,7 +29,7 @@ export default function DriverPage() {
   };
 
   const addDriver = async () => {
-    await fetch("http://localhost:5000/api/drivers", {
+    await fetch("https://zep-it-back.onrender.com/api/drivers", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
@@ -49,11 +49,11 @@ export default function DriverPage() {
   };
 
   return (
-    <div className="p-6 space-y-8">
-      <h1 className="text-2xl font-bold">Drivers</h1>
+    <div className="p-6 space-y-8 bg-white text-black">
+      <h1 className="text-2xl font-bold ">Drivers</h1>
 
       {/* Add Driver Form */}
-      <div className="grid grid-cols-2 gap-4 bg-white dark:bg-zinc-900 p-4 rounded-xl">
+      <div className="grid grid-cols-2 gap-4 bg-white p-4 rounded-xl">
         {[
           "name",
           "phoneNumber",
