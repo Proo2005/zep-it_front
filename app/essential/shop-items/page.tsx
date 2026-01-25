@@ -105,7 +105,7 @@ export default function ShopItemsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
-      <div className=" bg-gray-100 px-6 py-8 text-black mt-24">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32">
         <h1 className="text-4xl font-bold mb-4 text-gray-900">{shopName || "Your Shop"}</h1>
 
         {/* Summary Bar */}
@@ -142,8 +142,8 @@ export default function ShopItemsPage() {
                   <td className="px-4 py-3 border-t">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-semibold ${item.quantity > 5
-                          ? "bg-green-200 text-green-800"
-                          : "bg-red-200 text-red-800"
+                        ? "bg-green-200 text-green-800"
+                        : "bg-red-200 text-red-800"
                         }`}
                     >
                       {item.quantity} {item.quantity > 0 ? "in stock" : "out of stock"}
