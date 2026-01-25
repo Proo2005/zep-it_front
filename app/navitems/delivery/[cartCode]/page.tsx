@@ -33,11 +33,26 @@ export default function DeliveryPage() {
   const [total, setTotal] = useState(0);
   const [countdown, setCountdown] = useState(15);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [user, setUser] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    type: "customer",
 
+  });
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY", // replace with your key
     libraries,
   });
+
+  useEffect(() => {
+    setUser({
+      name: localStorage.getItem("name") || "User",
+      email: localStorage.getItem("email") || "user@email.com",
+      phone: localStorage.getItem("phone") || "+91 XXXXX XXXXX",
+      type: localStorage.getItem("type") || "customer",
+    });
+  }, []);
 
   /* ---------------- LOAD CART AND RANDOM DRIVER ---------------- */
   useEffect(() => {
@@ -120,6 +135,18 @@ export default function DeliveryPage() {
           </>
         ) : (
           <p>Loading driver...</p>
+        )}
+      </div>
+      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-green-500">
+        <h2 className="text-xl font-semibold mb-2">Driver Details</h2>
+        {user ? (
+          <>
+            <p><b>Name:</b> {user.name}</p>
+            <p><b>Phone:</b> {user.phone}</p>
+            
+          </>
+        ) : (
+          <p>Loading user...</p>
         )}
       </div>
 
