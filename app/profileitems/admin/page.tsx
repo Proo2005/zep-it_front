@@ -54,7 +54,7 @@ export default function AdminPage() {
             <h2 className="text-xl font-semibold mb-4">Tabs</h2>
             <ul className="space-y-2">
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/contact-messages">Contact</a></li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">Driver</li>
+              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/driver">Driver</a></li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">JoinCart</li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">ShopItems</li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">Update Blinkit Location</li>

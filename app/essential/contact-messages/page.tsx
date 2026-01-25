@@ -49,31 +49,33 @@ export default function ContactMessagesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB] px-6 py-8">
-      <h1 className="text-3xl font-bold mb-6">Contact Messages</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-6xl mx-auto  pt-32 ">
+        <h1 className="text-3xl font-bold mb-6">Contact Messages</h1>
 
-      {messages.length === 0 && (
-        <p className="text-gray-500">No messages found.</p>
-      )}
+        {messages.length === 0 && (
+          <p className="text-gray-500">No messages found.</p>
+        )}
 
-      <div className="space-y-10">
-        {Object.keys(groupedMessages).map((subject) => (
-          <div key={subject}>
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <FiTag className="text-[#0C831F]" />
-              {subject}
-              <span className="text-sm text-gray-500">
-                ({groupedMessages[subject].length})
-              </span>
-            </h2>
+        <div className="space-y-10">
+          {Object.keys(groupedMessages).map((subject) => (
+            <div key={subject}>
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <FiTag className="text-[#0C831F]" />
+                {subject}
+                <span className="text-sm text-gray-500">
+                  ({groupedMessages[subject].length})
+                </span>
+              </h2>
 
-            <div className="grid gap-4">
-              {groupedMessages[subject].map((msg: ContactMessage) => (
-                <MessageCard key={msg._id} message={msg} />
-              ))}
+              <div className="grid gap-4">
+                {groupedMessages[subject].map((msg: ContactMessage) => (
+                  <MessageCard key={msg._id} message={msg} />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

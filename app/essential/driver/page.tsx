@@ -81,9 +81,10 @@ export default function DriversPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black p-8 -mt-24">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-6xl mx-auto  pt-32 ">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8 mt-24">
+      
         <h1 className="text-3xl font-bold">Drivers</h1>
         <button
           onClick={() => setShowForm(true)}
