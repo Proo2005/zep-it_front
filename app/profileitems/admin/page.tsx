@@ -21,13 +21,26 @@ export default function AdminPage() {
   };
 
   /* ------------------ Fetch Shop Analysis ------------------ */
-  const fetchAnalysis = () => {
-    fetch("https://zep-it-back.onrender.com/api/shop-analysis", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    })
-      .then((res) => res.json())
-      .then(setData);
-  };
+  useEffect(() => {
+    const fetchAnalysis = async () => {
+      try {
+        const res = await fetch("https://zep-it-back.onrender.com/api/shop-analysis", {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const data = await res.json();
+        setData(data);
+      } catch (err) {
+        console.error("Failed to load shop analysis", err);
+      }
+    };
+
+    fetchAnalysis();
+  }, []);
+
 
   /* ------------------ Loading Screen ------------------ */
   if (!accessGranted) {
