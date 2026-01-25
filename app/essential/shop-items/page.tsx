@@ -104,92 +104,93 @@ export default function ShopItemsPage() {
   const totalValue = items.reduce((sum, i) => sum + i.quantity * i.amount, 0);
 
   return (
-    <div className="min-h-screen bg-gray-100 px-6 py-8 text-black">
-      <h1 className="text-4xl font-bold mb-4 text-gray-900">{shopName || "Your Shop"}</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32">
+        <h1 className="text-4xl font-bold mb-4 text-gray-900">{shopName || "Your Shop"}</h1>
 
-      {/* Summary Bar */}
-      <div className="flex flex-wrap gap-4 mb-6">
-        <div className="bg-white shadow-md rounded-xl px-6 py-3 flex-1 min-w-[150px]">
-          <p className="text-sm text-gray-500">Total Items</p>
-          <p className="text-xl font-bold text-gray-900">{totalItems}</p>
+        {/* Summary Bar */}
+        <div className="flex flex-wrap gap-4 mb-6">
+          <div className="bg-white shadow-md rounded-xl px-6 py-3 flex-1 min-w-[150px]">
+            <p className="text-sm text-gray-500">Total Items</p>
+            <p className="text-xl font-bold text-gray-900">{totalItems}</p>
+          </div>
+          <div className="bg-white shadow-md rounded-xl px-6 py-3 flex-1 min-w-[150px]">
+            <p className="text-sm text-gray-500">Total Stock Value</p>
+            <p className="text-xl font-bold text-gray-900">₹{totalValue}</p>
+          </div>
         </div>
-        <div className="bg-white shadow-md rounded-xl px-6 py-3 flex-1 min-w-[150px]">
-          <p className="text-sm text-gray-500">Total Stock Value</p>
-          <p className="text-xl font-bold text-gray-900">₹{totalValue}</p>
-        </div>
-      </div>
 
-      {/* Items Table */}
-      <div className="overflow-x-auto bg-white shadow-md rounded-xl">
-        <table className="w-full text-left rounded-xl border-collapse">
-          <thead className="bg-green-100 text-gray-900">
-            <tr>
-              <th className="px-4 py-3">Item Name</th>
-              <th className="px-4 py-3">Category</th>
-              <th className="px-4 py-3">Price (₹)</th>
-              <th className="px-4 py-3">Available Qty</th>
-              <th className="px-4 py-3">Add Qty</th>
-              <th className="px-4 py-3">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <tr key={item._id} className="hover:bg-gray-50">
-                <td className="px-4 py-3 border-t">{item.itemName}</td>
-                <td className="px-4 py-3 border-t">{item.category}</td>
-                <td className="px-4 py-3 border-t font-semibold">₹{item.amount}</td>
-                <td className="px-4 py-3 border-t">
-                  <span
-                    className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      item.quantity > 5
-                        ? "bg-green-200 text-green-800"
-                        : "bg-red-200 text-red-800"
-                    }`}
-                  >
-                    {item.quantity} {item.quantity > 0 ? "in stock" : "out of stock"}
-                  </span>
-                </td>
-                <td className="px-4 py-3 border-t">
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => decrementQty(item._id)}
-                      className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
-                    >
-                      -
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      value={quantityMap[item._id] || 1}
-                      onChange={(e) =>
-                        handleQtyChange(item._id, Number(e.target.value))
-                      }
-                      className="w-16 px-2 py-1 rounded bg-gray-100 outline-none text-center text-gray-900"
-                    />
-                    <button
-                      onClick={() => incrementQty(item._id)}
-                      className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
-                    >
-                      +
-                    </button>
-                  </div>
-                </td>
-                <td className="px-4 py-3 border-t">
-                  <button
-                    onClick={() => addQuantity(item)}
-                    className="bg-green-500 hover:bg-green-400 text-white px-4 py-1 rounded font-semibold"
-                  >
-                    Add
-                  </button>
-                </td>
+        {/* Items Table */}
+        <div className="overflow-x-auto bg-white shadow-md rounded-xl">
+          <table className="w-full text-left rounded-xl border-collapse">
+            <thead className="bg-green-100 text-gray-900">
+              <tr>
+                <th className="px-4 py-3">Item Name</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Price (₹)</th>
+                <th className="px-4 py-3">Available Qty</th>
+                <th className="px-4 py-3">Add Qty</th>
+                <th className="px-4 py-3">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <tr key={item._id} className="hover:bg-gray-50">
+                  <td className="px-4 py-3 border-t">{item.itemName}</td>
+                  <td className="px-4 py-3 border-t">{item.category}</td>
+                  <td className="px-4 py-3 border-t font-semibold">₹{item.amount}</td>
+                  <td className="px-4 py-3 border-t">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${item.quantity > 5
+                          ? "bg-green-200 text-green-800"
+                          : "bg-red-200 text-red-800"
+                        }`}
+                    >
+                      {item.quantity} {item.quantity > 0 ? "in stock" : "out of stock"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 border-t">
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => decrementQty(item._id)}
+                        className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
+                      >
+                        -
+                      </button>
+                      <input
+                        type="number"
+                        min={1}
+                        value={quantityMap[item._id] || 1}
+                        onChange={(e) =>
+                          handleQtyChange(item._id, Number(e.target.value))
+                        }
+                        className="w-16 px-2 py-1 rounded bg-gray-100 outline-none text-center text-gray-900"
+                      />
+                      <button
+                        onClick={() => incrementQty(item._id)}
+                        className="bg-gray-300 px-2 py-1 rounded hover:bg-gray-400"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 border-t">
+                    <button
+                      onClick={() => addQuantity(item)}
+                      className="bg-green-500 hover:bg-green-400 text-white px-4 py-1 rounded font-semibold"
+                    >
+                      Add
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        {items.length === 0 && (
-          <p className="text-gray-500 p-6 text-center">No items found for your shop.</p>
-        )}
+          {items.length === 0 && (
+            <p className="text-gray-500 p-6 text-center">No items found for your shop.</p>
+          )}
+        </div>
       </div>
     </div>
   );
