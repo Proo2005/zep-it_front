@@ -11,14 +11,14 @@ export default function HelpPage() {
 
         {/* Header */}
         <div className="mb-10">
-          <h1 className="text-4xl font-bold text-white">Need Help?</h1>
+          <h1 className="text-4xl font-bold">Need Help?</h1>
           <p className="text-zinc-400 mt-2">
             We’re here to help you with orders, payments, wallet & account issues
           </p>
         </div>
 
         {/* Help Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 bg-white text-black">
           <HelpCard
             title="Orders & Reorders"
             desc="Track orders, reorder items, or report missing items"
@@ -38,7 +38,7 @@ export default function HelpPage() {
         </div>
 
         {/* FAQs */}
-        <div className="mb-12">
+        <div className="mb-12 bg-white text-black border-4">
           <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
 
           <div className="space-y-4">
