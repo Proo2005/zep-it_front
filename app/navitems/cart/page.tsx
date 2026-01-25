@@ -189,9 +189,11 @@ export default function CartPage() {
         });
         const verifyData = await verifyRes.json();
         if (!verifyData.success) return alert("Payment verification failed");
+
         localStorage.removeItem("cart");
         alert("Payment successful ✅");
-        router.push("/");
+        // ✅ redirect to delivery page
+        router.push(`/navitems/delivery/${verifyData.orderId || cartCode}`);
       },
       theme: { color: "#0C831F" },
     };
