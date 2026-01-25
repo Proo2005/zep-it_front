@@ -57,7 +57,7 @@ export default function AdminPage() {
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/driver">Driver</a></li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/joincart">Join Cart</a></li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/shop-items">Shop-Items</a></li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/uploadblinkitlocation">Blinkit Locations</a>></li>
+              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/uploadblinkitlocation">Blinkit Locations</a></li>
             </ul>
           </div>
 
