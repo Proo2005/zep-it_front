@@ -19,7 +19,7 @@ export default function AdminPage() {
 
   if (!accessGranted) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 text-black">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 text-black -mt-24">
         <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
           <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -55,9 +55,9 @@ export default function AdminPage() {
             <ul className="space-y-2">
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/contact-messages">Contact</a></li>
               <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/driver">Driver</a></li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">JoinCart</li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">ShopItems</li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer">Update Blinkit Location</li>
+              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/joincart">Join Cart</a></li>
+              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/shop-items">Shop-Items</a></li>
+              <li className="px-3 py-2 rounded-xl hover:bg-green-50 cursor-pointer"><a href="/essential/uploadblinkitlocation">Blinkit Locations</a>></li>
             </ul>
           </div>
 
