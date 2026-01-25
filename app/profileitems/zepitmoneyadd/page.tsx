@@ -43,8 +43,8 @@ export default function AddMoneyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white flex items-center justify-center px-4">
-      <div className="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-8 w-full max-w-md">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-7xl mx-auto  gap-8 pt-32">
 
         <h2 className="text-xl font-bold mb-6 text-center">
           Add Money via UPI

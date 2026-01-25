@@ -6,8 +6,8 @@ export default function HelpPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 py-10">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-7xl mx-auto  gap-8 pt-32">
 
         {/* Header */}
         <div className="mb-10">
