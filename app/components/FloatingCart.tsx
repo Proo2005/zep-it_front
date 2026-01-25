@@ -38,6 +38,7 @@ export default function FloatingCart() {
 
   const emptyCart = () => {
     localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("cartUpdated"));
     setCart([]);
     setTotal(0);
     setIsVisible(false);

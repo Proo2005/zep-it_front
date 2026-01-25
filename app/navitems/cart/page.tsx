@@ -66,6 +66,7 @@ export default function CartPage() {
 
   const emptyCart = () => {
     localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("cartUpdated"));
     setCart([]);
     calculateTotal(0);
   };
