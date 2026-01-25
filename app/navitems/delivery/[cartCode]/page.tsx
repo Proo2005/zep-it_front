@@ -12,18 +12,12 @@ type Driver = {
   vehicleType: string;
 };
 
-type User = {
-  name: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-};
-
 type CartItem = {
+  itemId: string;
   name: string;
   price: number;
   quantity: number;
+  addedBy?: { name: string; email: string };
 };
 
 const libraries: ("places")[] = ["places"];
@@ -35,34 +29,37 @@ export default function DeliveryPage() {
   const cartCode = params?.cartCode as string | undefined;
 
   const [driver, setDriver] = useState<Driver | null>(null);
-  const [user, setUser] = useState<User | null>(null);
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
   const [countdown, setCountdown] = useState(15);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  /* Load Google Maps */
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY", // replace with your key
     libraries,
   });
 
-  /* Fetch cart and user data */
+  /* ---------------- LOAD CART AND RANDOM DRIVER ---------------- */
   useEffect(() => {
     const fetchDelivery = async () => {
       const token = localStorage.getItem("token");
-      if (!token || !cartCode) return;
+      if (!token) return router.push("/navitems/login");
 
-      // Fetch cart data from backend
-      const res = await fetch(`${API}/api/cart/${cartCode}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const data = await res.json();
+      let items: CartItem[] = [];
+      if (!cartCode) {
+        items = JSON.parse(localStorage.getItem("cart") || "[]");
+      } else {
+        const res = await fetch(`${API}/api/cart/${cartCode}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        items = data.items || [];
+      }
 
-      setUser(data.user || { name: "Jane Doe", phone: "9876543210", address: "123 Street", city: "Delhi", state: "Delhi" });
-      setCartItems(data.items || []);
-      setTotal(data.items?.reduce((acc: any, i: any) => acc + i.price * i.quantity, 0) || 0);
+      setCartItems(items);
+      setTotal(items.reduce((acc, i) => acc + i.price * i.quantity, 0));
 
-      // Fetch all drivers
+      // Fetch drivers
       const driverRes = await fetch(`${API}/api/drivers`);
       const drivers: Driver[] = await driverRes.json();
       if (drivers.length > 0) {
@@ -74,32 +71,32 @@ export default function DeliveryPage() {
     fetchDelivery();
   }, [cartCode]);
 
-  /* Countdown Timer */
+  /* ---------------- COUNTDOWN ---------------- */
   useEffect(() => {
     const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
           clearInterval(interval);
+          setShowSuccess(true);
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
-  if (!isLoaded) return <div>Loading map...</div>;
+  if (!isLoaded) return <div className="text-center mt-20">Loading map...</div>;
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] p-6 text-black">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] p-6 text-black">
       <h1 className="text-3xl font-bold mb-6">Delivery Details</h1>
 
       {/* MAP */}
       <div className="w-full h-64 rounded-xl overflow-hidden mb-6 shadow-md">
         <GoogleMap
           zoom={14}
-          center={{ lat: 28.6139, lng: 77.209 }} // example: Delhi
+          center={{ lat: 28.6139, lng: 77.209 }}
           mapContainerStyle={{ width: "100%", height: "100%" }}
         >
           <Marker position={{ lat: 28.6139, lng: 77.209 }} />
@@ -107,7 +104,7 @@ export default function DeliveryPage() {
       </div>
 
       {/* DRIVER DETAILS */}
-      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md">
+      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-green-500">
         <h2 className="text-xl font-semibold mb-2">Driver Details</h2>
         {driver ? (
           <>
@@ -120,26 +117,16 @@ export default function DeliveryPage() {
         )}
       </div>
 
-      {/* USER DETAILS */}
-      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md">
-        <h2 className="text-xl font-semibold mb-2">Delivery To</h2>
-        {user ? (
-          <>
-            <p><b>Name:</b> {user.name}</p>
-            <p><b>Phone:</b> {user.phone}</p>
-            <p><b>Address:</b> {user.address}, {user.city}, {user.state}</p>
-          </>
-        ) : (
-          <p>Loading user...</p>
-        )}
-      </div>
-
       {/* CART ITEMS */}
-      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md">
+      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-purple-500">
         <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-        {cartItems.map((item, i) => (
-          <div key={i} className="flex justify-between border-b py-2">
-            <span>{item.name} x {item.quantity}</span>
+        {cartItems.length === 0 && <p>Your cart is empty.</p>}
+        {cartItems.map((item) => (
+          <div key={item.itemId} className="flex justify-between border-b py-2">
+            <div>
+              <span>{item.name} x {item.quantity}</span>
+              {item.addedBy && <p className="text-sm text-gray-500">Added by: {item.addedBy.name}</p>}
+            </div>
             <span>₹{item.price * item.quantity}</span>
           </div>
         ))}
@@ -153,6 +140,22 @@ export default function DeliveryPage() {
       <div className="bg-green-500 text-black font-bold text-center py-3 rounded-xl text-lg shadow-md">
         Estimated Arrival in: {countdown}s
       </div>
+
+      {/* DELIVERY SUCCESS MODAL */}
+      {showSuccess && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl p-6 w-80 text-center shadow-lg">
+            <h2 className="text-2xl font-bold mb-4 text-green-600">Delivery Successful ✅</h2>
+            <p className="mb-6">Your order has been delivered successfully.</p>
+            <button
+              onClick={() => router.push("/")}
+              className="px-6 py-2 bg-green-600 text-black rounded-xl font-bold hover:bg-green-500"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
