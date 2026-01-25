@@ -38,10 +38,10 @@ export default function DeliveryPage() {
     email: "",
     phone: "",
     type: "customer",
-
   });
+
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY", // replace with your key
+    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY",
     libraries,
   });
 
@@ -54,7 +54,6 @@ export default function DeliveryPage() {
     });
   }, []);
 
-  /* ---------------- LOAD CART AND RANDOM DRIVER ---------------- */
   useEffect(() => {
     const fetchDelivery = async () => {
       const token = localStorage.getItem("token");
@@ -62,8 +61,7 @@ export default function DeliveryPage() {
 
       let items: CartItem[] = [];
 
-      // Try reading cart from query first
-      const queryCart = (new URLSearchParams(window.location.search)).get("cart");
+      const queryCart = new URLSearchParams(window.location.search).get("cart");
       if (queryCart) {
         items = JSON.parse(queryCart);
       } else if (!cartCode) {
@@ -79,7 +77,6 @@ export default function DeliveryPage() {
       setCartItems(items);
       setTotal(items.reduce((acc, i) => acc + i.price * i.quantity, 0));
 
-      // Random driver
       const driverRes = await fetch(`${API}/api/drivers`);
       const drivers: Driver[] = await driverRes.json();
       if (drivers.length > 0) {
@@ -91,8 +88,6 @@ export default function DeliveryPage() {
     fetchDelivery();
   }, [cartCode]);
 
-
-  /* ---------------- COUNTDOWN ---------------- */
   useEffect(() => {
     const interval = setInterval(() => {
       setCountdown((prev) => {
@@ -107,88 +102,92 @@ export default function DeliveryPage() {
     return () => clearInterval(interval);
   }, []);
 
-  if (!isLoaded) return <div className="text-center mt-20">Loading map...</div>;
+  if (!isLoaded) return <div className="text-center mt-20 text-gray-600">Loading map...</div>;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] p-6 text-black">
-      <h1 className="text-3xl font-bold mb-6">Delivery Details</h1>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+      <div className="max-w-6xl mx-auto  pt-32">
+        <h1 className="text-3xl font-bold mb-8">Delivery Details</h1>
 
-      {/* MAP */}
-      <div className="w-full h-64 rounded-xl overflow-hidden mb-6 shadow-md">
-        <GoogleMap
-          zoom={14}
-          center={{ lat: 28.6139, lng: 77.209 }}
-          mapContainerStyle={{ width: "100%", height: "100%" }}
-        >
-          <Marker position={{ lat: 28.6139, lng: 77.209 }} />
-        </GoogleMap>
-      </div>
+        {/* MAP */}
+        <div className="w-full h-64 rounded-2xl overflow-hidden mb-6 shadow-lg border border-gray-200">
+          <GoogleMap
+            zoom={14}
+            center={{ lat: 28.6139, lng: 77.209 }}
+            mapContainerStyle={{ width: "100%", height: "100%" }}
+          >
+            <Marker position={{ lat: 28.6139, lng: 77.209 }} />
+          </GoogleMap>
+        </div>
 
-      {/* DRIVER DETAILS */}
-      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-green-500">
-        <h2 className="text-xl font-semibold mb-2">Driver Details</h2>
-        {driver ? (
-          <>
-            <p><b>Name:</b> {driver.name}</p>
-            <p><b>Phone:</b> {driver.phoneNumber}</p>
-            <p><b>Vehicle:</b> {driver.vehicleNumber} ({driver.vehicleType})</p>
-          </>
-        ) : (
-          <p>Loading driver...</p>
-        )}
-      </div>
-      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-green-500">
-        <h2 className="text-xl font-semibold mb-2">User Details</h2>
-        {user ? (
-          <>
-            <p><b>Name:</b> {user.name}</p>
-            <p><b>Email:</b> {user.email}</p>
-            
-          </>
-        ) : (
-          <p>Loading user...</p>
-        )}
-      </div>
-
-      {/* CART ITEMS */}
-      <div className="bg-white rounded-2xl p-5 mb-6 shadow-md border-l-4 border-purple-500">
-        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-        {cartItems.length === 0 && <p>Your cart is empty.</p>}
-        {cartItems.map((item) => (
-          <div key={item.itemId} className="flex justify-between border-b py-2">
-            <div>
-              <span>{item.name} x {item.quantity}</span>
-              {item.addedBy && <p className="text-sm text-gray-500">Added by: {item.addedBy.name}</p>}
+        {/* DRIVER DETAILS */}
+        <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg border-l-4 border-green-500 hover:shadow-xl transition-shadow duration-200">
+          <h2 className="text-xl font-semibold mb-3">Driver Details</h2>
+          {driver ? (
+            <div className="space-y-1 text-gray-700">
+              <p><span className="font-medium">Name:</span> {driver.name}</p>
+              <p><span className="font-medium">Phone:</span> {driver.phoneNumber}</p>
+              <p><span className="font-medium">Vehicle:</span> {driver.vehicleNumber} ({driver.vehicleType})</p>
             </div>
-            <span>₹{item.price * item.quantity}</span>
-          </div>
-        ))}
-        <div className="flex justify-between mt-4 font-bold text-lg">
-          <span>Total</span>
-          <span>₹{total}</span>
+          ) : (
+            <p className="text-gray-500">Loading driver...</p>
+          )}
         </div>
-      </div>
 
-      {/* COUNTDOWN TIMER */}
-      <div className="bg-green-500 text-black font-bold text-center py-3 rounded-xl text-lg shadow-md">
-        Estimated Arrival in: {countdown}s
-      </div>
+        {/* USER DETAILS */}
+        <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg border-l-4 border-blue-500 hover:shadow-xl transition-shadow duration-200">
+          <h2 className="text-xl font-semibold mb-3">User Details</h2>
+          {user ? (
+            <div className="space-y-1 text-gray-700">
+              <p><span className="font-medium">Name:</span> {user.name}</p>
+              <p><span className="font-medium">Email:</span> {user.email}</p>
+              <p><span className="font-medium">Phone:</span> {user.phone}</p>
+            </div>
+          ) : (
+            <p className="text-gray-500">Loading user...</p>
+          )}
+        </div>
 
-      {/* DELIVERY SUCCESS MODAL */}
-      {showSuccess && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl p-6 w-80 text-center shadow-lg">
-            <h2 className="text-2xl font-bold mb-4 text-green-600">Delivery Successful ✅</h2>
-            <p className="mb-6">Your order has been delivered successfully.</p>
-            <button
-              onClick={() => router.push("/")}
-              className="px-6 py-2 bg-green-600 text-black rounded-xl font-bold hover:bg-green-500"
-            >
-              OK
-            </button>
+        {/* CART ITEMS */}
+        <div className="bg-white rounded-2xl p-6 mb-6 shadow-lg border-l-4 border-purple-500 hover:shadow-xl transition-shadow duration-200">
+          <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+          {cartItems.length === 0 && <p className="text-gray-500">Your cart is empty.</p>}
+          {cartItems.map((item) => (
+            <div key={item.itemId} className="flex justify-between py-2 border-b border-gray-200">
+              <div>
+                <span className="font-medium">{item.name}</span> x {item.quantity}
+                {item.addedBy && <p className="text-sm text-gray-400">Added by: {item.addedBy.name}</p>}
+              </div>
+              <span className="font-semibold">₹{item.price * item.quantity}</span>
+            </div>
+          ))}
+          <div className="flex justify-between mt-4 font-bold text-lg">
+            <span>Total</span>
+            <span>₹{total}</span>
           </div>
         </div>
-      )}
+
+        {/* COUNTDOWN TIMER */}
+        <div className="bg-green-500 text-black font-bold text-center py-3 rounded-xl text-lg shadow-md mb-6">
+          Estimated Arrival in: {countdown}s
+        </div>
+
+        {/* DELIVERY SUCCESS MODAL */}
+        {showSuccess && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white rounded-2xl p-8 w-96 text-center shadow-2xl animate-fadeIn">
+              <h2 className="text-2xl font-bold mb-4 text-green-600">Delivery Successful ✅</h2>
+              <p className="mb-6 text-gray-700">Your order has been delivered successfully.</p>
+              <button
+                onClick={() => router.push("/")}
+                className="px-8 py-3 bg-green-600 text-black rounded-xl font-bold hover:bg-green-500 transition-colors duration-200"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
