@@ -14,7 +14,7 @@ export default function AdminPage() {
     if (password === "123456789") {
       setAccessGranted(true);
       setError("");
-      fetchAnalysis(); // load shop analysis after login
+      // load shop analysis after login
     } else {
       setError("Incorrect password. Try again!");
     }
