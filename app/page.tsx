@@ -278,13 +278,31 @@ export default function HomePage() {
                         </h3>
 
                         <div className="flex justify-between items-center mb-2">
-                          <span className="font-bold text-[#0C831F]">
-                            ₹{item.amount}
-                          </span>
-                          <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full">
-                            {item.quantity} left
-                          </span>
+                          <div className="flex flex-col">
+                            {/* Crossed MRP (75% higher) */}
+                            <span className="text-sm text-gray-400 line-through">
+                              ₹{Math.round(item.amount * 1.75)}
+                            </span>
+
+                            {/* Actual price */}
+                            <span className="font-bold text-[#0C831F] text-lg">
+                              ₹{item.amount}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-col items-end gap-1">
+                            {/* Discount badge */}
+                            <span className="text-xs bg-[#0C831F] text-white px-2 py-0.5 rounded-full font-semibold">
+                              75% OFF
+                            </span>
+
+                            {/* Quantity left */}
+                            <span className="text-xs text-gray-500">
+                              {item.quantity} left
+                            </span>
+                          </div>
                         </div>
+
 
                         <input
                           type="number"
