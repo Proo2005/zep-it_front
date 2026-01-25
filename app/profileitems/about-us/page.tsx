@@ -72,7 +72,7 @@ export default function AboutPage() {
         </section>
 
         {/* Trust & Security */}
-        <section className="bg-zinc-900/80 border border-zinc-800 rounded-3xl p-10 text-center">
+        <section className="bg-white border-zinc-800 rounded-3xl p-10 text-center">
           <h2 className="text-3xl font-bold mb-4">
             Trust & Security
           </h2>
