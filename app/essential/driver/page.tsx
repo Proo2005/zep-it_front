@@ -6,34 +6,44 @@ import { FiPlus, FiX } from "react-icons/fi";
 type Driver = {
   _id?: string;
   name: string;
-  phone: string;
+  phoneNumber: string;
   address: string;
   city: string;
   state: string;
   vehicleNumber: string;
-  vehicleType: "ev" | "petrol";
-  rating: number;
+  vehicleType: "EV" | "Petrol";
+  rating?: number;
 };
 
 export default function DriverPage() {
   const [drivers, setDrivers] = useState<Driver[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState<Driver>({
     name: "",
-    phone: "",
+    phoneNumber: "",
     address: "",
     city: "",
     state: "",
     vehicleNumber: "",
-    vehicleType: "petrol",
+    vehicleType: "Petrol",
     rating: 5,
   });
 
-  /* Fetch drivers (API later) */
+  /* Fetch drivers */
+  const fetchDrivers = async () => {
+    try {
+      const res = await fetch("https://zep-it-back.onrender.com/api/drivers");
+      const data = await res.json();
+      setDrivers(data);
+    } catch (err) {
+      console.error("Failed to fetch drivers");
+    }
+  };
+
   useEffect(() => {
-    // TODO: replace with API call
-    setDrivers([]);
+    fetchDrivers();
   }, []);
 
   const handleChange = (
@@ -42,23 +52,36 @@ export default function DriverPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
-    // TODO: POST to backend
-    setDrivers((prev) => [...prev, form]);
+    try {
+      const res = await fetch("https://zep-it-back.onrender.com/api/drivers", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
 
-    setShowForm(false);
-    setForm({
-      name: "",
-      phone: "",
-      address: "",
-      city: "",
-      state: "",
-      vehicleNumber: "",
-      vehicleType: "petrol",
-      rating: 5,
-    });
+      if (!res.ok) throw new Error("Failed");
+
+      await fetchDrivers();
+      setShowForm(false);
+      setForm({
+        name: "",
+        phoneNumber: "",
+        address: "",
+        city: "",
+        state: "",
+        vehicleNumber: "",
+        vehicleType: "Petrol",
+        rating: 5,
+      });
+    } catch (err) {
+      alert("Error adding driver");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -66,10 +89,9 @@ export default function DriverPage() {
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">Drivers</h1>
-
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 font-semibold transition"
+          className="flex items-center gap-2 px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 font-semibold"
         >
           <FiPlus /> Add Driver
         </button>
@@ -77,35 +99,34 @@ export default function DriverPage() {
 
       {/* Driver List */}
       {drivers.length === 0 ? (
-        <div className="text-gray-500 text-center mt-20">
+        <p className="text-gray-500 text-center mt-20">
           No drivers added yet
-        </div>
+        </p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {drivers.map((driver, i) => (
+          {drivers.map((driver) => (
             <div
-              key={i}
-              className="border border-gray-200 rounded-2xl p-5 shadow-sm"
+              key={driver._id}
+              className="border rounded-2xl p-5 shadow-sm"
             >
               <h2 className="text-lg font-bold">{driver.name}</h2>
-              <p className="text-sm text-gray-600">{driver.phone}</p>
+              <p className="text-sm text-gray-600">
+                {driver.phoneNumber}
+              </p>
 
               <div className="mt-3 text-sm space-y-1">
                 <p>
-                  <span className="font-semibold">Address:</span>{" "}
-                  {driver.address}
+                  <b>Address:</b> {driver.address}
                 </p>
                 <p>
-                  <span className="font-semibold">City:</span> {driver.city},{" "}
-                  {driver.state}
+                  <b>City:</b> {driver.city}, {driver.state}
                 </p>
                 <p>
-                  <span className="font-semibold">Vehicle:</span>{" "}
-                  {driver.vehicleNumber} ({driver.vehicleType})
+                  <b>Vehicle:</b> {driver.vehicleNumber} (
+                  {driver.vehicleType})
                 </p>
                 <p>
-                  <span className="font-semibold">Rating:</span> ⭐{" "}
-                  {driver.rating}
+                  <b>Rating:</b> ⭐ {driver.rating ?? 5}
                 </p>
               </div>
             </div>
@@ -113,13 +134,13 @@ export default function DriverPage() {
         </div>
       )}
 
-      {/* Add Driver Modal */}
+      {/* Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white w-full max-w-lg rounded-2xl p-6 relative">
             <button
               onClick={() => setShowForm(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-black"
+              className="absolute top-4 right-4"
             >
               <FiX size={20} />
             </button>
@@ -127,64 +148,24 @@ export default function DriverPage() {
             <h2 className="text-xl font-bold mb-4">Add Driver</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                name="name"
-                placeholder="Driver Name"
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-2"
-                required
-              />
-              <input
-                name="phone"
-                placeholder="Phone Number"
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-2"
-                required
-              />
-              <input
-                name="address"
-                placeholder="Address"
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-2"
-                required
-              />
+              <input name="name" placeholder="Name" onChange={handleChange} required className="input" />
+              <input name="phoneNumber" placeholder="Phone Number" onChange={handleChange} required className="input" />
+              <input name="address" placeholder="Address" onChange={handleChange} required className="input" />
               <div className="flex gap-3">
-                <input
-                  name="city"
-                  placeholder="City"
-                  onChange={handleChange}
-                  className="w-full border rounded-xl px-4 py-2"
-                  required
-                />
-                <input
-                  name="state"
-                  placeholder="State"
-                  onChange={handleChange}
-                  className="w-full border rounded-xl px-4 py-2"
-                  required
-                />
+                <input name="city" placeholder="City" onChange={handleChange} required className="input" />
+                <input name="state" placeholder="State" onChange={handleChange} required className="input" />
               </div>
-              <input
-                name="vehicleNumber"
-                placeholder="Vehicle Number"
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-2"
-                required
-              />
-              <select
-                name="vehicleType"
-                onChange={handleChange}
-                className="w-full border rounded-xl px-4 py-2"
-              >
-                <option value="petrol">Petrol</option>
-                <option value="ev">EV</option>
+              <input name="vehicleNumber" placeholder="Vehicle Number" onChange={handleChange} required className="input" />
+              <select name="vehicleType" onChange={handleChange} className="input">
+                <option value="Petrol">Petrol</option>
+                <option value="EV">EV</option>
               </select>
 
               <button
-                type="submit"
-                className="w-full bg-gray-800 text-white py-2 rounded-xl font-bold hover:bg-gray-900 transition"
+                disabled={loading}
+                className="w-full bg-gray-900 text-white py-2 rounded-xl font-bold"
               >
-                Save Driver
+                {loading ? "Saving..." : "Save Driver"}
               </button>
             </form>
           </div>
