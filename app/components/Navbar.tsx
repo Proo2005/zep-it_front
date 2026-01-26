@@ -123,7 +123,7 @@ export default function Navbar() {
             </button>
 
             {open && (
-              <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border">
+              <div className="absolute right-0 mt-3 w-48 bg-white rounded-xl shadow-lg border text-black">
                 {!userName ? (
                   <>
                     <Link href="/navitems/login" className="block px-4 py-3 hover:bg-green-50">
