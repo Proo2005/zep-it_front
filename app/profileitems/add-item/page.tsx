@@ -89,12 +89,12 @@ export default function CreateProductPage() {
   /* ================= UI ================= */
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 py-20">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 py-20 text-black -mt-24">
       <div className="max-w-3xl mx-auto">
 
         {/* HEADER */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-black">
+          <h1 className="text-3xl font-extrabold text-black pt-32">
             Create Product
           </h1>
           <p className="text-gray-600">
