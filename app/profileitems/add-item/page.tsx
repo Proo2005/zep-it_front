@@ -90,11 +90,11 @@ export default function CreateProductPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 py-20 text-black -mt-24">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto pt-32">
 
         {/* HEADER */}
         <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-black pt-32">
+          <h1 className="text-3xl font-extrabold text-black ">
             Create Product
           </h1>
           <p className="text-gray-600">
