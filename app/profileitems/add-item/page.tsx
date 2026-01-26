@@ -2,220 +2,184 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 
-/* ================= TYPES ================= */
-
-type Category = {
-  id: number;
-  name: string;
-};
-
-/* ================= PAGE ================= */
-
-export default function CreateProductPage() {
-  const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-
+export default function AddItem() {
   const [form, setForm] = useState({
-    title: "",
-    price: "",
-    description: "",
-    categoryId: "",
-    image: "",
+    shopName: "",
+    shopGstId: "",
+    shopkeeperEmail: "",
+    category: "grocery_and_kitchen",
+    itemName: "",
+    quantity: 1,
+    amount: "",
   });
 
-  /* ================= FETCH CATEGORIES ================= */
-
+  // Autofill email for shop accounts
   useEffect(() => {
-    fetchCategories();
+    const email = localStorage.getItem("email");
+    const type = localStorage.getItem("type");
+
+    if (type !== "shop") {
+      alert("Only shop accounts can add items");
+      return;
+    }
+
+    if (email) {
+      setForm((prev) => ({
+        ...prev,
+        shopkeeperEmail: email,
+      }));
+    }
   }, []);
 
-  const fetchCategories = async () => {
-    try {
-      const res = await axios.get(
-        "https://api.escuelajs.co/api/v1/categories"
-      );
-      setCategories(res.data);
-    } catch (err) {
-      toast.error("Failed to load categories");
-    }
-  };
-
-  /* ================= HANDLERS ================= */
-
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    setForm((prev) => ({
+      ...prev,
+      [name]: name === "quantity" ? Number(value) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.title || !form.price || !form.categoryId || !form.image) {
-      toast.error("Please fill all required fields");
-      return;
-    }
-
     try {
-      setLoading(true);
-
-      await axios.post("http://localhost:5000/api/products/create", {
-        title: form.title,
-        price: Number(form.price),
-        description: form.description,
-        categoryId: Number(form.categoryId),
-        images: [form.image],
+      await axios.post("https://zep-it-back.onrender.com/api/item/add", form, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
       });
 
-      toast.success("Product created successfully");
+      alert("Item added successfully");
 
-      setForm({
-        title: "",
-        price: "",
-        description: "",
-        categoryId: "",
-        image: "",
-      });
-    } catch (err) {
-      toast.error("Failed to create product");
-    } finally {
-      setLoading(false);
+      setForm((prev) => ({
+        ...prev,
+        itemName: "",
+        quantity: 1,
+        amount: "",
+      }));
+    } catch (err: any) {
+      alert(err.response?.data?.message || "Failed to add item");
     }
   };
 
-  /* ================= UI ================= */
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 py-20 text-black -mt-24">
-      <div className="max-w-3xl mx-auto pt-32">
 
-        {/* HEADER */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-extrabold text-black ">
-            Create Product
-          </h1>
-          <p className="text-gray-600">
-            Add a new product to the catalog
-          </p>
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] flex items-center justify-center text-black -mt-24">
+
+
+      <form
+        onSubmit={handleSubmit}
+        className=" p-6 rounded-xl w-[420px] space-y-4 outline-black border-black"
+      >
+        <h2 className=" text-xl font-bold">Add Item</h2>
+
+        {/* Shop Name */}
+        <div>
+          <label className="text-sm text-gray-600">Shop Name</label>
+          <input
+            name="shopName"
+            value={form.shopName}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded  outline-black  border-black"
+            placeholder="Shop Name"
+            required
+          />
         </div>
 
-        {/* CARD */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-3xl shadow-sm border p-6 sm:p-8 grid grid-cols-1 sm:grid-cols-2 gap-6"
-        >
-          {/* TITLE */}
-          <div className="sm:col-span-2">
-            <label className="block text-sm font-semibold mb-1">
-              Product Title
-            </label>
+        {/* GST ID */}
+        <div>
+          <label className="text-sm text-gray-600">Shop GST ID</label>
+          <input
+            name="shopGstId"
+            value={form.shopGstId}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded outline-black  border-black"
+            placeholder="GST ID"
+            required
+          />
+        </div>
+
+        {/* Email */}
+        <div>
+          <label className="text-sm text-gray-600">Shopkeeper Email</label>
+          <input
+            value={form.shopkeeperEmail}
+            disabled
+            className="w-full px-3 py-2 rounded  cursor-not-allowed"
+          />
+        </div>
+
+        {/* Category */}
+        <div>
+          <label className="text-sm text-gray-600">Item Category</label>
+          <select
+            name="category"
+            value={form.category}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded outline-black  border-black"
+          >
+            <option value="grocery_and_kitchen">Grocery & Kitchen</option>
+            <option value="snacks_and_drinks">Snacks & Drinks</option>
+            <option value="beauty_and_personal_care">
+              Beauty & Personal Care
+            </option>
+            <option value="household_essential">
+              Household Essential
+            </option>
+          </select>
+        </div>
+
+        {/* Item Name + Quantity */}
+        <div>
+          <label className="text-sm text-gray-800">Item Name & Quantity</label>
+          <div className="flex gap-2">
             <input
-              name="title"
-              value={form.title}
+              name="itemName"
+              value={form.itemName}
               onChange={handleChange}
-              placeholder="Handmade Fresh Table"
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#0C831F]"
+              placeholder="Item name"
+              className="flex-1 px-3 py-2 rounded outline-black  border-black"
               required
             />
-          </div>
 
-          {/* PRICE */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">
-              Price (₹)
-            </label>
             <input
-              name="price"
+              name="quantity"
               type="number"
-              value={form.price}
+              min={1}
+              value={form.quantity}
               onChange={handleChange}
-              placeholder="699"
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#0C831F]"
-              required
+              className="w-24 px-3 py-2 rounded outline-black"
             />
           </div>
+        </div>
 
-          {/* CATEGORY */}
-          <div>
-            <label className="block text-sm font-semibold mb-1">
-              Category
-            </label>
-            <select
-              name="categoryId"
-              value={form.categoryId}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border bg-white focus:outline-none focus:ring-2 focus:ring-[#0C831F]"
-              required
-            >
-              <option value="">Select category</option>
-              {categories.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {cat.name}
-                </option>
-              ))}
-            </select>
-          </div>
+        {/* Amount */}
+        <div>
+          <label className="text-sm text-gray-600">Amount (₹)</label>
+          <input
+            name="amount"
+            type="number"
+            value={form.amount}
+            onChange={handleChange}
+            className="w-full px-3 py-2 rounded outline-black  border-black"
+            placeholder="Amount"
+            required
+          />
+        </div>
 
-          {/* IMAGE URL */}
-          <div className="sm:col-span-2">
-            <label className="block text-sm font-semibold mb-1">
-              Image URL
-            </label>
-            <input
-              name="image"
-              value={form.image}
-              onChange={handleChange}
-              placeholder="https://placehold.co/600x400"
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#0C831F]"
-              required
-            />
-          </div>
-
-          {/* IMAGE PREVIEW */}
-          {form.image && (
-            <div className="sm:col-span-2">
-              <p className="text-sm font-semibold mb-2">Preview</p>
-              <div className="w-40 h-40 rounded-xl border overflow-hidden bg-gray-100">
-                <img
-                  src={form.image}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </div>
-          )}
-
-          {/* DESCRIPTION */}
-          <div className="sm:col-span-2">
-            <label className="block text-sm font-semibold mb-1">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder="A high quality handmade product…"
-              rows={4}
-              className="w-full px-4 py-3 rounded-xl border focus:outline-none focus:ring-2 focus:ring-[#0C831F]"
-            />
-          </div>
-
-          {/* ACTION */}
-          <div className="sm:col-span-2 flex justify-end">
-            <Button
-              disabled={loading}
-              className="px-8 py-3 rounded-xl font-bold
-              border border-[#0C831F] text-[#0C831F]
-              hover:bg-[#0C831F] hover:text-white transition"
-            >
-              {loading ? "Creating..." : "Create Product"}
-            </Button>
-          </div>
-        </form>
-      </div>
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={!form.itemName}
+          className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 text-black py-2 rounded-lg font-semibold"
+        >
+          Add Item to Database
+        </button>
+      </form>
     </div>
   );
 }
