@@ -195,10 +195,10 @@ export default function CartPage() {
         const cartQuery = encodeURIComponent(JSON.stringify(cart));
 
         alert("Payment successful ✅");
-
+        
         // ✅ Redirect to delivery page with cart
         router.push(`/navitems/delivery/${verifyData.orderId || cartCode}?cart=${cartQuery}`);
-
+        window.dispatchEvent(new Event("cartUpdated"));
         // ✅ Now safe to remove localStorage
         localStorage.removeItem("cart");
 
