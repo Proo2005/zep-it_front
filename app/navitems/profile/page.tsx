@@ -32,7 +32,7 @@ export default function ProfilePage() {
     username: "",
     phone: "",
     type: "customer",
-  
+
   });
 
   useEffect(() => {
@@ -67,8 +67,16 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
-              <p className="text-gray-600 text-sm">{user.phone}</p>
+
+              <p className="text-gray-600 text-sm">
+                @{user.username}
+              </p>
+
+              <p className="text-gray-500 text-xs">
+                📞 {user.phone}
+              </p>
             </div>
+
           </div>
           <button
             onClick={logout}
@@ -140,7 +148,7 @@ export default function ProfilePage() {
             text="Split with friends"
             onClick={() => router.push("/profileitems/split")}
           />
-          
+
           <DropdownItem title="Payment Settings" icon={<FiCreditCard />}>
             <DropdownOption
               text="Add Payment Method"
@@ -217,8 +225,8 @@ export default function ProfilePage() {
     </div>
   );
 
-      /* ---------- REUSABLE COMPONENTS ---------- */
-      function ActionBox({title, onClick, icon}: any) {
+  /* ---------- REUSABLE COMPONENTS ---------- */
+  function ActionBox({ title, onClick, icon }: any) {
     return (
       <div
         onClick={onClick}
@@ -227,19 +235,19 @@ export default function ProfilePage() {
         <div className="text-2xl text-[#0C831F]">{icon}</div>
         <span className="text-sm">{title}</span>
       </div>
-      );
+    );
   }
 
-      function Section({title, children}: any) {
+  function Section({ title, children }: any) {
     return (
       <div className="mb-8">
         <h2 className="text-lg font-bold mb-3">{title}</h2>
         <div className="bg-white rounded-2xl divide-y divide-gray-200 shadow-md">{children}</div>
       </div>
-      );
+    );
   }
 
-      function ListItem({text, onClick, danger, icon}: any) {
+  function ListItem({ text, onClick, danger, icon }: any) {
     return (
       <div
         onClick={onClick}
@@ -252,10 +260,10 @@ export default function ProfilePage() {
         </div>
         <span className="text-gray-400">›</span>
       </div>
-      );
+    );
   }
 
-      function DropdownItem({title, children, icon}: any) {
+  function DropdownItem({ title, children, icon }: any) {
     return (
       <details className="group">
         <summary className="p-4 cursor-pointer flex items-center justify-between hover:bg-[#F4F6FB]">
@@ -267,10 +275,10 @@ export default function ProfilePage() {
         </summary>
         <div className="bg-[#F4F6FB]">{children}</div>
       </details>
-      );
+    );
   }
 
-      function DropdownOption({text, onClick}: any) {
+  function DropdownOption({ text, onClick }: any) {
     return (
       <div
         onClick={onClick}
@@ -278,6 +286,6 @@ export default function ProfilePage() {
       >
         {text}
       </div>
-      );
+    );
   }
 }
