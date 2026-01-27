@@ -54,13 +54,20 @@ export default function AccountPrivacyPage() {
   }, []);
 
   const handleTwoFAChange = () => {
-    if (!twoFA) {
-      setShow2FADialog(true); // open dialog
-    } else {
+    if (twoFA) {
+      // disabling 2FA
       setTwoFA(false);
       localStorage.setItem("2fa", "false");
+      return;
     }
+
+    // enable flow → open dialog only
+    setShow2FADialog(true);
+    setOtp("");
+    setOtpStep("send");
+    setOtpSuccess(false);
   };
+
 
 
   const handleTrackingChange = () => {
@@ -72,33 +79,55 @@ export default function AccountPrivacyPage() {
   const sendOtp = async () => {
     try {
       const token = localStorage.getItem("token");
-      await fetch("https://zep-it-back.onrender.com/api/2fa/send-otp", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      if (!token) return alert("Login required");
+
+      const res = await fetch(
+        "https://zep-it-back.onrender.com/api/2fa/send-otp",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!res.ok) throw new Error("OTP send failed");
+
       setOtpStep("verify");
       alert("OTP sent to your email");
-    } catch {
+    } catch (err) {
       alert("Failed to send OTP");
     }
   };
 
+
   const verifyOtp = async () => {
     try {
       const token = localStorage.getItem("token");
-      await fetch("https://zep-it-back.onrender.com/api/2fa/verify-otp", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ otp }),
-      });
+      if (!token) return alert("Login required");
 
+      const res = await fetch(
+        "https://zep-it-back.onrender.com/api/2fa/verify-otp",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ otp }),
+        }
+      );
+
+      if (!res.ok) throw new Error("Invalid OTP");
+
+      // ✅ enable only AFTER success
       setTwoFA(true);
       localStorage.setItem("2fa", "true");
       setOtpSuccess(true);
-    } catch {
+
+      // notify other tabs/pages
+      window.dispatchEvent(new Event("twoFAEnabled"));
+    } catch (err) {
       alert("Invalid or expired OTP");
     }
   };
@@ -268,14 +297,15 @@ export default function AccountPrivacyPage() {
                   <button
                     onClick={() => {
                       setShow2FADialog(false);
-                      setOtpStep("send");
                       setOtp("");
+                      setOtpStep("send");
                       setOtpSuccess(false);
                     }}
                     className="bg-[#0C831F] text-white px-4 py-2 rounded-lg"
                   >
                     Done
                   </button>
+
                 </div>
               )}
 
