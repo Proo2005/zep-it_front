@@ -9,33 +9,52 @@ export default function Signup() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    username:"",
-    phone:"",
+    username: "",
+    phone: "",
     type: "customer",
     password: "",
-    state: "",
-    city: "",
-    fullAddress: "",
+    address: {
+      state: "",
+      city: "",
+      fullAddress: "",
+    },
   });
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    if (name.startsWith("address.")) {
+      const key = name.split(".")[1];
+      setForm((prev) => ({
+        ...prev,
+        address: { ...prev.address, [key]: value },
+      }));
+    } else {
+      setForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.state || !form.city || !form.fullAddress) {
-      alert("Please fill in all address details");
+    const { state, city, fullAddress } = form.address;
+    if (!state || !city || !fullAddress) {
+      alert("Please fill complete address");
       return;
     }
 
     setLoading(true);
     try {
-      await axios.post("https://zep-it-back.onrender.com/api/auth/signup", form);
+      await axios.post(
+        "https://zep-it-back.onrender.com/api/auth/signup",
+        form
+      );
+
       alert("Signup successful!");
       router.push("/navitems/login");
     } catch (err: any) {
@@ -57,11 +76,10 @@ export default function Signup() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("name", user.name);
-      localStorage.setItem("name", user.username);
-      localStorage.setItem("name", user.phone);
+      localStorage.setItem("username", user.username || "");
+      localStorage.setItem("phone", user.phone || "");
       localStorage.setItem("email", user.email);
       localStorage.setItem("type", user.type || "customer");
-
       localStorage.setItem("isAuthenticated", "true");
 
       window.dispatchEvent(new Event("authChanged"));
@@ -73,161 +91,121 @@ export default function Signup() {
     }
   };
 
-
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
+    <div className="min-h-screen flex items-center justify-center bg-white text-black">
       <form
         onSubmit={handleSubmit}
-        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6 mt-24"
+        className="w-full max-w-md p-8 rounded-2xl shadow-lg border space-y-5"
       >
-        <h2 className="text-2xl font-bold text-[#0C831F] text-center mb-4">Create Account</h2>
+        <h2 className="text-2xl font-bold text-[#0C831F] text-center">
+          Create Account
+        </h2>
 
         {/* Name */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Name</label>
-          <input
-            name="name"
-            placeholder="John Doe"
-            value={form.name}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="name"
+          placeholder="Full Name"
+          value={form.name}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
         {/* Email */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            value={form.email}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
         {/* Username */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Email</label>
-          <input
-            type="username"
-            name="username"
-            placeholder="johny"
-            value={form.username}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="username"
+          placeholder="Username"
+          value={form.username}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
         {/* Phone */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Email</label>
-          <input
-            type="phone"
-            name="phone"
-            placeholder="8222739229"
-            value={form.phone}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          type="tel"
+          name="phone"
+          placeholder="Phone number"
+          value={form.phone}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
-        {/* Type */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Account Type</label>
-
-          <select
-            name="type"
-            value={form.type}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-          >
-            <option value="customer">Customer</option>
-            <option value="shop">Shop</option>
-          </select>
-        </div>
+        {/* Account Type */}
+        <select
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+          className="input"
+        >
+          <option value="customer">Customer</option>
+          <option value="shop">Shop</option>
+        </select>
 
         {/* Address */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">State</label>
-          <input
-            name="state"
-            placeholder="State"
-            value={form.state}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="address.state"
+          placeholder="State"
+          value={form.address.state}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">City</label>
-          <input
-            name="city"
-            placeholder="City"
-            value={form.city}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="address.city"
+          placeholder="City"
+          value={form.address.city}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Full Address</label>
-          <textarea
-            name="fullAddress"
-            placeholder="Street, Building, Landmark..."
-            value={form.fullAddress}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none resize-none"
-            rows={3}
-            required
-          />
-        </div>
+        <textarea
+          name="address.fullAddress"
+          placeholder="Full address"
+          value={form.address.fullAddress}
+          onChange={handleChange}
+          className="input resize-none"
+          rows={3}
+          required
+        />
 
         {/* Password */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter a strong password"
-            value={form.password}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={(res) => handleGoogleLogin(res.credential!)}
-            onError={() => alert("Google Login Failed")}
-          />
-        </div>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          className="input"
+          required
+        />
 
-        <div className="text-center text-gray-400 text-sm">or</div>
+        <GoogleLogin
+          onSuccess={(res) => handleGoogleLogin(res.credential!)}
+          onError={() => alert("Google Login Failed")}
+        />
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0C831F] to-[#2ECC71] text-white font-bold text-lg hover:opacity-90 transition disabled:opacity-50"
+          className="w-full py-3 rounded-xl bg-[#0C831F] text-white font-bold"
         >
-          {loading ? "Signing Up..." : "Signup"}
+          {loading ? "Signing up..." : "Signup"}
         </button>
-
-        <p className="text-center text-gray-600">
-          Already have an account?{" "}
-          <a href="/navitems/login" className="text-green-600 font-semibold hover:underline">
-            Login
-          </a>
-        </p>
       </form>
     </div>
   );
