@@ -73,7 +73,12 @@ export default function ProfilePage() {
               </p>
 
               <p className="text-gray-500 text-xs">
-                ✉️ {user.email}
+                ✉️ {user.email} 
+                
+              </p>
+
+              <p className="text-gray-500 text-xs">
+                
                 📞 {user.phone}
               </p>
             </div>

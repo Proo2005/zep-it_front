@@ -145,6 +145,7 @@ export default function Signup() {
         >
           <option value="customer">Customer</option>
           <option value="shop">Shop</option>
+          <option value="admin">Admin</option>
         </select>
 
         {/* Address */}
