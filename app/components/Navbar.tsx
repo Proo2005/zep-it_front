@@ -20,7 +20,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const loadUser = () => {
-      const user = localStorage.getItem("username");
+      const user = localStorage.getItem("user");
       if (!user) {
         setUserName(null);
         return;
