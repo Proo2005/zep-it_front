@@ -38,11 +38,25 @@ export default function AccountPrivacyPage() {
     // Example: load user settings from API in real app
     setTwoFA(localStorage.getItem("2fa") === "true");
     setTracking(localStorage.getItem("tracking") !== "false");
+
+    const handleTwoFAEnabled = () => setTwoFA(true);
+    window.addEventListener("twoFAEnabled", handleTwoFAEnabled);
+
+    return () => {
+      window.removeEventListener("twoFAEnabled", handleTwoFAEnabled);
+    };
+
   }, []);
 
   const handleTwoFAChange = () => {
-    setTwoFA(!twoFA);
-    localStorage.setItem("2fa", (!twoFA).toString());
+    if (!twoFA) {
+      // Redirect to 2FA setup page
+      router.push("/profileitems/account-privacy/2fa");
+    } else {
+      // Optionally: disable 2FA
+      setTwoFA(false);
+      localStorage.setItem("2fa", "false");
+    }
   };
 
   const handleTrackingChange = () => {
@@ -63,7 +77,7 @@ export default function AccountPrivacyPage() {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Login required");
 
-      const res = await fetch("http://localhost:5000/api/user/delete", {
+      const res = await fetch("https://zep-it-back.onrender.com/api/user/delete", {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
