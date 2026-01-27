@@ -3,8 +3,10 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Navbar from "./components/Navbar";
+
+import DarkVeil from '@/components/DarkVeil';
 import DarkModeToggle
- from "./components/DarkModeToggle";
+  from "./components/DarkModeToggle";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -29,13 +31,25 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} bg-black text-white`}
-      >  
-        <GoogleOAuthProvider
+      >
+
+        <div style={{ width: '100%', height: '600px', position: 'relative' }}>
+          <DarkVeil
+            hueShift={327}
+            noiseIntensity={0}
+            scanlineIntensity={0}
+            speed={1.7}
+            scanlineFrequency={2}
+            warpAmount={0}
+          />
+          <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
-          <Navbar /> 
+          <Navbar />
           <div className="pt-24">{children}</div>
         </GoogleOAuthProvider>
+        </div>
+        
       </body>
     </html>
   );
