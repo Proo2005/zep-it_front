@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Data } from "@react-google-maps/api";
-
+import { ArrowUpIcon } from "lucide-react"
 type CartItem = {
   itemId: string;
   name: string;
@@ -213,7 +213,7 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pb-16 -mt-24 text-black">
       <div className="max-w-6xl mx-auto pt-32">
-        <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
+        <h1 className="text-3xl font-bold mb-8"><ArrowUpIcon size={20}  onClick={()=> router.push('/')}/>Shopping Cart</h1>
 
         {!cartCode && (
           <div className="flex flex-wrap gap-4 mb-8">
