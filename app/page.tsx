@@ -18,6 +18,13 @@ import {
 import ItemCardSkeleton from "./components/ItemCardSkeleton";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 
 type Item = {
@@ -198,13 +205,16 @@ export default function HomePage() {
             className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-6 text-black"
           />
 
-          <div className="h-52 rounded-3xl bg-gradient-to-r from-[#0C831F] to-[#14B8A6] text-white flex flex-col justify-center px-8 mb-10">
-            <h1 className="text-3xl font-extrabold">
-              Daily Needs, Delivered Fast
-            </h1>
-            <p className="opacity-90">
-              Fresh stock • Best prices • Instant delivery
-            </p>
+          <div >
+            <Carousel className="h-52 rounded-3xl flex flex-col justify-center px-8 mb-10">
+              <CarouselContent>
+                <CarouselItem>...</CarouselItem>
+                <CarouselItem>...</CarouselItem>
+                <CarouselItem>...</CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           </div>
 
           {/* ===== SKELETON BEFORE DATA LOADS ===== */}
