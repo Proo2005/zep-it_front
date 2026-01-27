@@ -205,7 +205,7 @@ export default function HomePage() {
             className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-6 text-black"
           />
 
-          <div >
+          
             <Carousel className="h-52 rounded-3xl flex flex-col justify-center px-8 mb-10">
               <CarouselContent>
                 <CarouselItem>...</CarouselItem>
@@ -215,7 +215,7 @@ export default function HomePage() {
               <CarouselPrevious />
               <CarouselNext />
             </Carousel>
-          </div>
+          
 
           {/* ===== SKELETON BEFORE DATA LOADS ===== */}
           {loading && (
