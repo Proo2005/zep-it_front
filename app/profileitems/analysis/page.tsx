@@ -62,8 +62,8 @@ export default function ShopAnalysisPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB] px-6 py-10 text-black">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#F4F6FB] px-6 py-10 text-black -mt-24">
+      <div className="max-w-7xl mx-auto space-y-8 pt-32">
 
         <h1 className="text-3xl font-bold">Shop Analysis</h1>
 
