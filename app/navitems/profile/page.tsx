@@ -174,7 +174,6 @@ export default function ProfilePage() {
           <ListItem icon={<GoShareAndroid />} text="Share the App" onClick={() => setShareOpen(true)} />
           <ListItem icon={<FcAbout />} text="About Us" onClick={() => router.push("/profileitems/about-us")} />
           <ListItem icon={<RiAccountCircle2Line />} text="Account Privacy" onClick={() => router.push("/profileitems/account-privacy")} />
-          <ListItem icon={<MdAdminPanelSettings />} text="Admin" onClick={() => router.push("/profileitems/admin")} />
           {user.type === "admin" && (
             <>
               <ListItem icon={<MdAdminPanelSettings />} text="Admin" onClick={() => router.push("/profileitems/admin")} />
