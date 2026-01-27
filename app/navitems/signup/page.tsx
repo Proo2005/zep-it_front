@@ -4,7 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { GoogleLogin } from "@react-oauth/google";
-
+import { toast } from "sonner";
 export default function Signup() {
   const [form, setForm] = useState({
     name: "",
@@ -92,10 +92,10 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white text-black">
+    <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md p-8 rounded-2xl shadow-lg border space-y-5"
+        className="w-full max-w-md p-8 rounded-2xl shadow-lg border space-y-5 pt-24 bg-white text-black border-b-gray-500"
       >
         <h2 className="text-2xl font-bold text-[#0C831F] text-center">
           Create Account
@@ -194,10 +194,14 @@ export default function Signup() {
           required
         />
 
-        <GoogleLogin
-          onSuccess={(res) => handleGoogleLogin(res.credential!)}
-          onError={() => alert("Google Login Failed")}
-        />
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={(res) => handleGoogleLogin(res.credential!)}
+            onError={() => toast.error("Google login failed")}
+            theme="outline"
+            size="large"
+          />
+        </div>
 
         <button
           type="submit"
