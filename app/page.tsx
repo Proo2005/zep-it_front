@@ -25,6 +25,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Autoplay from "embla-carousel-autoplay";
 
 
 type Item = {
@@ -205,17 +206,74 @@ export default function HomePage() {
             className="w-full px-5 py-4 rounded-2xl bg-white shadow-sm border mb-6 text-black"
           />
 
-          
-            <Carousel className="h-52 rounded-3xl flex flex-col justify-center px-8 mb-10">
-              <CarouselContent>
-                <CarouselItem>...</CarouselItem>
-                <CarouselItem>...</CarouselItem>
-                <CarouselItem>...</CarouselItem>
-              </CarouselContent>
-              <CarouselPrevious />
-              <CarouselNext />
-            </Carousel>
-          
+          {/* HERO CAROUSEL */}
+          <Carousel
+            className="mb-10"
+            plugins={[
+              Autoplay({
+                delay: 3500,
+                stopOnInteraction: false,
+              }),
+            ]}
+            opts={{
+              loop: true,
+            }}
+          >
+            <CarouselContent>
+              {[
+                {
+                  title: "Daily Needs, Delivered Fast",
+                  subtitle: "Fresh stock • Best prices • Instant delivery",
+                  image:
+                    "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600",
+                },
+                {
+                  title: "Groceries in Minutes",
+                  subtitle: "No queues • No waiting • Just tap & get",
+                  image:
+                    "https://images.unsplash.com/photo-1586201375754-1421e0aa2c0b?q=80&w=1600",
+                },
+                {
+                  title: "Smart Shopping Starts Here",
+                  subtitle: "Premium quality • Lightning fast delivery",
+                  image:
+                    "https://images.unsplash.com/photo-1601598851547-4302969d0614?q=80&w=1600",
+                },
+              ].map((slide, index) => (
+                <CarouselItem key={index}>
+                  <div
+                    className="relative h-44 sm:h-52 md:h-60 lg:h-64 
+                     rounded-3xl overflow-hidden flex items-center"
+                  >
+                    {/* Image */}
+                    <img
+                      src={slide.image}
+                      alt={slide.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    {/* Overlay */}
+                    <div className="absolute inset-0 bg-black/40" />
+
+                    {/* Text */}
+                    <div className="relative z-10 px-6 sm:px-8 text-white max-w-xl">
+                      <h1 className="text-xl sm:text-3xl font-extrabold mb-1">
+                        {slide.title}
+                      </h1>
+                      <p className="text-sm sm:text-base opacity-90">
+                        {slide.subtitle}
+                      </p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+
+            {/* Controls (hidden on small screens) */}
+            <CarouselPrevious className="hidden sm:flex left-4" />
+            <CarouselNext className="hidden sm:flex right-4" />
+          </Carousel>
+
 
           {/* ===== SKELETON BEFORE DATA LOADS ===== */}
           {loading && (
