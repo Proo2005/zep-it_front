@@ -20,7 +20,7 @@ export default function Navbar() {
 
   useEffect(() => {
     const loadUser = () => {
-      const user = localStorage.getItem("user");
+      const user = localStorage.getItem("username");
       if (!user) {
         setUserName(null);
         return;
@@ -28,7 +28,7 @@ export default function Navbar() {
 
       try {
         const parsed = JSON.parse(user);
-        setUserName(parsed.name);
+        setUserName(parsed.username);
       } catch {
         setUserName(null);
       }
