@@ -29,6 +29,7 @@ export default function ProfilePage() {
   const [user, setUser] = useState({
     name: "",
     email: "",
+    username: "",
     phone: "",
     type: "customer",
   
@@ -38,6 +39,7 @@ export default function ProfilePage() {
     setUser({
       name: localStorage.getItem("name") || "User",
       email: localStorage.getItem("email") || "user@email.com",
+      username: localStorage.getItem("username") || "user012",
       phone: localStorage.getItem("phone") || "+91 XXXXX XXXXX",
       type: localStorage.getItem("type") || "customer",
     });
@@ -65,7 +67,7 @@ export default function ProfilePage() {
             </div>
             <div>
               <h1 className="text-2xl font-bold">{user.name}</h1>
-              <p className="text-gray-600 text-sm">{user.email}</p>
+              <p className="text-gray-600 text-sm">{user.phone}</p>
             </div>
           </div>
           <button
