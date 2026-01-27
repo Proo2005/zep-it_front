@@ -51,7 +51,7 @@ export default function AccountPrivacyPage() {
   const handleTwoFAChange = () => {
     if (!twoFA) {
       // Redirect to 2FA setup page
-      router.push("/profileitems/account-privacy/2fa");
+      router.push("/profileitems/tfa");
     } else {
       // Optionally: disable 2FA
       setTwoFA(false);

@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 export default function TwoFactorAuth() {
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<"send" | "verify">("send");
   const [success, setSuccess] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
 
-  const token = localStorage.getItem("token");
+  // Only access localStorage in useEffect
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    setToken(storedToken);
+  }, []);
 
   const sendOtp = async () => {
+    if (!token) return alert("Login required");
+
     try {
       await axios.post(
         "https://zep-it-back.onrender.com/api/2fa/send-otp",
@@ -25,12 +32,18 @@ export default function TwoFactorAuth() {
   };
 
   const verifyOtp = async () => {
+    if (!token) return alert("Login required");
+
     try {
       await axios.post(
         "https://zep-it-back.onrender.com/api/2fa/verify-otp",
         { otp },
         { headers: { Authorization: `Bearer ${token}` } }
       );
+
+      // Dispatch event to notify account privacy page
+      window.dispatchEvent(new Event("twoFAEnabled"));
+
       setSuccess(true);
     } catch {
       alert("Invalid or expired OTP");
