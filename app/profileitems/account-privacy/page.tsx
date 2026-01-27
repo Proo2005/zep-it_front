@@ -27,6 +27,11 @@ export default function AccountPrivacyPage() {
   });
   const [twoFA, setTwoFA] = useState(false);
   const [tracking, setTracking] = useState(true);
+  const [show2FADialog, setShow2FADialog] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpStep, setOtpStep] = useState<"send" | "verify">("send");
+  const [otpSuccess, setOtpSuccess] = useState(false);
+
 
   useEffect(() => {
     setUser({
@@ -50,18 +55,52 @@ export default function AccountPrivacyPage() {
 
   const handleTwoFAChange = () => {
     if (!twoFA) {
-      // Redirect to 2FA setup page
-      router.push("/profileitems/tfa");
+      setShow2FADialog(true); // open dialog
     } else {
-      // Optionally: disable 2FA
       setTwoFA(false);
       localStorage.setItem("2fa", "false");
     }
   };
 
+
   const handleTrackingChange = () => {
     setTracking(!tracking);
     localStorage.setItem("tracking", (!tracking).toString());
+  };
+
+
+  const sendOtp = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("https://zep-it-back.onrender.com/api/2fa/send-otp", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setOtpStep("verify");
+      alert("OTP sent to your email");
+    } catch {
+      alert("Failed to send OTP");
+    }
+  };
+
+  const verifyOtp = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      await fetch("https://zep-it-back.onrender.com/api/2fa/verify-otp", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ otp }),
+      });
+
+      setTwoFA(true);
+      localStorage.setItem("2fa", "true");
+      setOtpSuccess(true);
+    } catch {
+      alert("Invalid or expired OTP");
+    }
   };
 
   const logout = () => {
@@ -92,6 +131,8 @@ export default function AccountPrivacyPage() {
       alert(err.message || "Error deleting account");
     }
   };
+
+
 
 
   return (
@@ -187,6 +228,61 @@ export default function AccountPrivacyPage() {
           </AlertDialog>
 
         </Section>
+        {show2FADialog && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+            <div className="bg-white p-6 rounded-xl w-full max-w-sm space-y-4">
+
+              <h3 className="text-lg font-bold text-center text-[#0C831F]">
+                Two-Factor Authentication
+              </h3>
+
+              {!otpSuccess && otpStep === "send" && (
+                <button
+                  onClick={sendOtp}
+                  className="w-full bg-[#0C831F] text-white py-2 rounded-lg"
+                >
+                  Send OTP to Email
+                </button>
+              )}
+
+              {!otpSuccess && otpStep === "verify" && (
+                <>
+                  <input
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    placeholder="Enter 6-digit OTP"
+                    className="w-full border px-3 py-2 rounded-lg"
+                  />
+                  <button
+                    onClick={verifyOtp}
+                    className="w-full bg-[#0C831F] text-white py-2 rounded-lg"
+                  >
+                    Verify OTP
+                  </button>
+                </>
+              )}
+
+              {otpSuccess && (
+                <div className="text-center space-y-3">
+                  <h4 className="text-green-600 font-bold text-lg">✅ 2FA Enabled</h4>
+                  <button
+                    onClick={() => {
+                      setShow2FADialog(false);
+                      setOtpStep("send");
+                      setOtp("");
+                      setOtpSuccess(false);
+                    }}
+                    className="bg-[#0C831F] text-white px-4 py-2 rounded-lg"
+                  >
+                    Done
+                  </button>
+                </div>
+              )}
+
+            </div>
+          </div>
+        )}
+
         <Footer />
       </div>
     </div>
