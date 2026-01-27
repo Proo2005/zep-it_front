@@ -231,7 +231,7 @@ export default function HomePage() {
                   title: "Groceries in Minutes",
                   subtitle: "No queues • No waiting • Just tap & get",
                   image:
-                    "https://images.unsplash.com/photo-1586201375754-1421e0aa2c0b?q=80&w=1600",
+                    "https://unsplash.com/photos/pile-of-vegetables-QvkAQTNj4zk?q=80&w=1600",
                 },
                 {
                   title: "Smart Shopping Starts Here",
