@@ -1,136 +1,168 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FiTrendingUp, FiShoppingCart, FiDollarSign, FiBox } from "react-icons/fi";
+
+type Summary = {
+  totalRevenue: number;
+  totalOrders: number;
+  totalItemsSold: number;
+  avgOrderValue: number;
+};
+
+type Order = {
+  _id: string;
+  amount: number;
+  itemsCount: number;
+  status: string;
+  createdAt: string;
+};
+
+type TopItem = {
+  name: string;
+  quantity: number;
+};
 
 export default function ShopAnalysisPage() {
-  const [data, setData] = useState<any>(null);
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [topItems, setTopItems] = useState<TopItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://zep-it-back.onrender.com/api/shop-analysis", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then(setData);
+    const token = localStorage.getItem("token");
+
+    const fetchAnalytics = async () => {
+      try {
+        const res = await fetch(
+          "https://zep-it-back.onrender.com/api/analysis/shop",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const data = await res.json();
+        setSummary(data.summary);
+        setOrders(data.orders);
+        setTopItems(data.topItems);
+      } catch (err) {
+        console.error("Failed to load analytics", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnalytics();
   }, []);
 
-  if (!data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white text-black">
-        Loading analytics…
-      </div>
-    );
+  if (loading) {
+    return <div className="p-8 text-center text-gray-600">Loading analytics...</div>;
   }
 
   return (
-    <div className="min-h-screen bg-white text-black px-6 py-10">
-      <div className="max-w-7xl mx-auto space-y-10">
-        {/* HEADER */}
-        <div>
-          <h1 className="text-3xl font-bold">Shop Performance Overview</h1>
-          <p className="text-gray-600 mt-1">
-            Monthly sales, revenue & payment insights
-          </p>
-        </div>
+    <div className="min-h-screen bg-[#F4F6FB] px-6 py-10 text-black">
+      <div className="max-w-7xl mx-auto space-y-8">
 
-        {/* TOP METRICS */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Stat
+        <h1 className="text-3xl font-bold">Shop Analysis</h1>
+
+        {/* SUMMARY CARDS */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <StatCard
             title="Total Revenue"
-            value={`₹${data.totalRevenue.toLocaleString()}`}
-            accent="green"
+            value={`₹${summary?.totalRevenue}`}
+            icon={<FiDollarSign />}
           />
-          <Stat
-            title="Items Sold"
-            value={data.totalItemsSold}
-            accent="blue"
-          />
-          <Stat
+          <StatCard
             title="Total Orders"
-            value={data.totalOrders}
-            accent="purple"
+            value={summary?.totalOrders}
+            icon={<FiShoppingCart />}
+          />
+          <StatCard
+            title="Items Sold"
+            value={summary?.totalItemsSold}
+            icon={<FiBox />}
+          />
+          <StatCard
+            title="Avg Order Value"
+            value={`₹${summary?.avgOrderValue}`}
+            icon={<FiTrendingUp />}
           />
         </div>
 
-        {/* GRID SECTIONS */}
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* PAYMENT SPLIT */}
-          <Section title="Payment Method Breakdown">
-            {data.paymentSplit.map((p: any) => (
-              <Row
-                key={p._id}
-                label={p._id}
-                value={`₹${p.amount.toLocaleString()}`}
-              />
-            ))}
-          </Section>
+        {/* RECENT ORDERS */}
+        <div className="bg-white rounded-2xl shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
 
-          {/* WEEKLY SALES */}
-          <Section title="Weekly Sales Trend">
-            {data.weekly.map((w: any) => (
-              <Row
-                key={w._id}
-                label={`Week ${w._id}`}
-                value={`₹${w.total.toLocaleString()}`}
-              />
-            ))}
-          </Section>
-        </div>
-
-        {/* MONTHLY SALES */}
-        <Section title="Monthly Revenue Summary">
-          <div className="grid md:grid-cols-3 gap-4">
-            {data.monthly.map((m: any) => (
-              <div
-                key={m._id}
-                className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm"
-              >
-                <p className="text-gray-500 text-sm">Month {m._id}</p>
-                <p className="text-xl font-bold text-black mt-1">
-                  ₹{m.total.toLocaleString()}
-                </p>
-              </div>
-            ))}
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left">
+                  <th className="py-2">Order ID</th>
+                  <th>Amount</th>
+                  <th>Items</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {orders.map((order) => (
+                  <tr key={order._id} className="border-b last:border-none">
+                    <td className="py-2">{order._id.slice(-6)}</td>
+                    <td>₹{order.amount}</td>
+                    <td>{order.itemsCount}</td>
+                    <td
+                      className={
+                        order.status === "success"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }
+                    >
+                      {order.status}
+                    </td>
+                    <td>
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </Section>
-
-        {/* FOOTER NOTE */}
-        <div className="text-sm text-gray-500 pt-6 border-t border-gray-200">
-          Data updated in real-time • Secure & encrypted analytics
         </div>
+
+        {/* TOP ITEMS */}
+        <div className="bg-white rounded-2xl shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-4">Top Selling Items</h2>
+
+          <ul className="space-y-3">
+            {topItems.map((item, idx) => (
+              <li
+                key={idx}
+                className="flex justify-between border-b pb-2 last:border-none"
+              >
+                <span>{item.name}</span>
+                <span className="font-semibold">{item.quantity} sold</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
       </div>
     </div>
   );
 }
 
-/* ------------------ UI COMPONENTS ------------------ */
+/* ---------- COMPONENTS ---------- */
 
-const Stat = ({ title, value, accent }: any) => {
-  const accentMap: any = {
-    green: "text-green-600",
-    blue: "text-blue-600",
-    purple: "text-purple-600",
-  };
-
+function StatCard({ title, value, icon }: any) {
   return (
-    <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow hover:shadow-md transition">
-      <p className="text-gray-500 text-sm">{title}</p>
-      <h2 className={`text-2xl font-bold mt-2 ${accentMap[accent]}`}>{value}</h2>
+    <div className="bg-white rounded-2xl shadow-md p-6 flex items-center gap-4">
+      <div className="text-[#0C831F] text-2xl">{icon}</div>
+      <div>
+        <p className="text-gray-500 text-sm">{title}</p>
+        <p className="text-xl font-bold">{value}</p>
+      </div>
     </div>
   );
-};
-
-const Section = ({ title, children }: any) => (
-  <div className="bg-white rounded-2xl p-6 border border-gray-200 shadow hover:shadow-md transition">
-    <h2 className="text-xl font-semibold mb-5">{title}</h2>
-    <div className="space-y-3">{children}</div>
-  </div>
-);
-
-const Row = ({ label, value }: any) => (
-  <div className="flex justify-between items-center bg-gray-50 px-4 py-3 rounded-lg border border-gray-100 shadow-sm">
-    <span className="text-gray-700">{label}</span>
-    <span className="font-semibold text-black">{value}</span>
-  </div>
-);
+}
