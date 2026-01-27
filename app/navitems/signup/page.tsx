@@ -43,6 +43,11 @@ export default function Signup() {
       );
 
       alert("Signup successful!");
+      localStorage.setItem("name", form.name);
+      localStorage.setItem("email", form.email);
+      localStorage.setItem("username", form.username);
+      localStorage.setItem("phone", form.phone);
+      localStorage.setItem("type", form.type);
       router.push("/navitems/login");
     } catch (err: any) {
       alert(err.response?.data?.message || "Signup failed");
@@ -63,7 +68,11 @@ export default function Signup() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("isAuthenticated", "true");
-
+      localStorage.setItem("name", form.name);
+      localStorage.setItem("email", form.email);
+      localStorage.setItem("username", form.username);
+      localStorage.setItem("phone", form.phone);
+      localStorage.setItem("type", form.type);
       window.dispatchEvent(new Event("authChanged"));
       router.push("/");
     } catch {

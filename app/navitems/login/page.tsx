@@ -69,6 +69,7 @@ export default function Login() {
       localStorage.setItem("username", user.username || "");
       localStorage.setItem("phone", user.phone || "");
 
+
       localStorage.setItem("type", user.type || "customer");
 
       localStorage.setItem("isAuthenticated", "true");
@@ -107,6 +108,7 @@ export default function Login() {
     localStorage.setItem("email", user.email);
     localStorage.setItem("username", user.username || "");
     localStorage.setItem("phone", user.phone || "");
+
 
     localStorage.setItem("type", user.type);
 
