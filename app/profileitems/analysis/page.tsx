@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { FiTrendingUp, FiShoppingCart, FiDollarSign, FiBox } from "react-icons/fi";
+import PageTransition from "@/app/components/animations/PageTransition";
+
 
 type Summary = {
   totalRevenue: number;
@@ -62,7 +64,9 @@ export default function ShopAnalysisPage() {
   }
 
   return (
+    <PageTransition>
     <div className="min-h-screen bg-[#F4F6FB] px-6 py-10 text-black -mt-24">
+      
       <div className="max-w-7xl mx-auto space-y-8 pt-32">
 
         <h1 className="text-3xl font-bold">Shop Analysis</h1>
@@ -150,6 +154,7 @@ export default function ShopAnalysisPage() {
 
       </div>
     </div>
+    </PageTransition>
   );
 }
 
