@@ -65,20 +65,25 @@ export default function Signup() {
 
       const { token, user } = res.data;
 
+      // ✅ SAVE BACKEND DATA, NOT FORM DATA
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("name", form.name);
-      localStorage.setItem("email", form.email);
-      localStorage.setItem("username", form.username);
-      localStorage.setItem("phone", form.phone);
-      localStorage.setItem("type", form.type);
+
+      localStorage.setItem("name", user.name || "");
+      localStorage.setItem("email", user.email || "");
+      localStorage.setItem("username", user.username || "");
+      localStorage.setItem("phone", user.phone || "");
+      localStorage.setItem("type", user.type || "customer");
+
       window.dispatchEvent(new Event("authChanged"));
+
       router.push("/");
-    } catch {
+    } catch (err) {
       alert("Google signup failed");
     }
   };
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
