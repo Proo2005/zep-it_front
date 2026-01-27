@@ -67,10 +67,9 @@ export default function Login() {
       localStorage.setItem("name", user.name);
       localStorage.setItem("email", user.email);
       localStorage.setItem("type", user.type || "customer");
-      localStorage.setItem("username", user.username);
-      localStorage.setItem("phone", user.phone);
+
       localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("fullAddress", user.fullAddress);
+
       window.dispatchEvent(new Event("authChanged"));
 
       setAlertData({
@@ -85,10 +84,10 @@ export default function Login() {
 
     } catch {
       setAlertData({
-        type: "error",
-        title: "Google login failed",
-        description: "Something went wrong. Please try again.",
-      });
+      type: "error",
+      title: "Google login failed",
+      description: "Something went wrong. Please try again.",
+    });
     }
   };
 
@@ -104,8 +103,7 @@ export default function Login() {
     localStorage.setItem("name", user.name);
     localStorage.setItem("email", user.email);
     localStorage.setItem("type", user.type);
-    localStorage.setItem("username", user.username);
-    localStorage.setItem("phone", user.phone);
+
     if (user.city) localStorage.setItem("city", user.city);
     if (user.state) localStorage.setItem("state", user.state);
     if (user.fullAddress) localStorage.setItem("fullAddress", user.fullAddress);

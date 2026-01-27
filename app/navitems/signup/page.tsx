@@ -9,46 +9,32 @@ export default function Signup() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    username: "",
-    phone: "",
     type: "customer",
     password: "",
-    authProvider: "local",
-    address: {
-      state: "",
-      city: "",
-      fullAddress: "",
-    },
+    state: "",
+    city: "",
+    fullAddress: "",
   });
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-
-    if (name.startsWith("address.")) {
-      const key = name.split(".")[1];
-      setForm((prev) => ({
-        ...prev,
-        address: { ...prev.address, [key]: value },
-      }));
-    } else {
-      setForm((prev) => ({ ...prev, [name]: value }));
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!form.state || !form.city || !form.fullAddress) {
+      alert("Please fill in all address details");
+      return;
+    }
 
     setLoading(true);
     try {
-      await axios.post(
-        "https://zep-it-back.onrender.com/api/auth/signup",
-        form
-      );
-
-      alert("Signup successful");
+      await axios.post("https://zep-it-back.onrender.com/api/auth/signup", form);
+      alert("Signup successful!");
       router.push("/navitems/login");
     } catch (err: any) {
       alert(err.response?.data?.message || "Signup failed");
@@ -68,52 +54,148 @@ export default function Signup() {
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("name", user.name);
+      localStorage.setItem("email", user.email);
+      localStorage.setItem("type", user.type || "customer");
+
       localStorage.setItem("isAuthenticated", "true");
 
+      window.dispatchEvent(new Event("authChanged"));
+
+      alert(`Welcome ${user.name}`);
       router.push("/");
     } catch {
       alert("Google signup failed");
     }
   };
 
+
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center bg-white text-black -mt-24">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md p-8 rounded-2xl shadow border space-y-4"
+        className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6 mt-24"
       >
-        <h2 className="text-2xl font-bold text-center text-[#0C831F]">
-          Create Account
-        </h2>
+        <h2 className="text-2xl font-bold text-[#0C831F] text-center mb-4">Create Account</h2>
 
-        <input className="input" name="name" placeholder="Name" required onChange={handleChange} />
-        <input className="input" type="email" name="email" placeholder="Email" required onChange={handleChange} />
-        <input className="input" name="username" placeholder="Username" required onChange={handleChange} />
-        <input className="input" type="tel" name="phone" placeholder="Phone" required onChange={handleChange} />
+        {/* Name */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Name</label>
+          <input
+            name="name"
+            placeholder="John Doe"
+            value={form.name}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
 
-        <select name="type" className="input" required onChange={handleChange}>
-          <option value="customer">Customer</option>
-          <option value="shop">Shop</option>
-        </select>
+        {/* Email */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Email</label>
+          <input
+            type="email"
+            name="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
 
-        <input className="input" name="address.state" placeholder="State" required onChange={handleChange} />
-        <input className="input" name="address.city" placeholder="City" required onChange={handleChange} />
-        <textarea className="input" name="address.fullAddress" placeholder="Full Address" required onChange={handleChange} />
+        {/* Type */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Account Type</label>
 
-        <input className="input" type="password" name="password" placeholder="Password" required onChange={handleChange} />
+          <select
+            name="type"
+            value={form.type}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+          >
+            <option value="customer">Customer</option>
+            <option value="shop">Shop</option>
+          </select>
+        </div>
 
+        {/* Address */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">State</label>
+          <input
+            name="state"
+            placeholder="State"
+            value={form.state}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">City</label>
+          <input
+            name="city"
+            placeholder="City"
+            value={form.city}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
+
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Full Address</label>
+          <textarea
+            name="fullAddress"
+            placeholder="Street, Building, Landmark..."
+            value={form.fullAddress}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none resize-none"
+            rows={3}
+            required
+          />
+        </div>
+
+        {/* Password */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter a strong password"
+            value={form.password}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
+        <div className="flex justify-center">
+          <GoogleLogin
+            onSuccess={(res) => handleGoogleLogin(res.credential!)}
+            onError={() => alert("Google Login Failed")}
+          />
+        </div>
+
+        <div className="text-center text-gray-400 text-sm">or</div>
+
+        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-[#0C831F] text-white font-bold"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0C831F] to-[#2ECC71] text-white font-bold text-lg hover:opacity-90 transition disabled:opacity-50"
         >
-          {loading ? "Creating..." : "Signup"}
+          {loading ? "Signing Up..." : "Signup"}
         </button>
 
-        <GoogleLogin
-          onSuccess={(res) => handleGoogleLogin(res.credential!)}
-          onError={() => alert("Google Login Failed")}
-        />
+        <p className="text-center text-gray-600">
+          Already have an account?{" "}
+          <a href="/navitems/login" className="text-green-600 font-semibold hover:underline">
+            Login
+          </a>
+        </p>
       </form>
     </div>
   );
