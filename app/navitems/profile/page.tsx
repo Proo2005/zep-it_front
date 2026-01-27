@@ -73,12 +73,12 @@ export default function ProfilePage() {
               </p>
 
               <p className="text-gray-500 text-xs">
-                ✉️ {user.email} 
-                
+                ✉️ {user.email}
+
               </p>
 
               <p className="text-gray-500 text-xs">
-                
+
                 📞 {user.phone}
               </p>
             </div>
@@ -127,7 +127,7 @@ export default function ProfilePage() {
             text="Stores Near Me"
             onClick={() => router.push("/profileitems/store")}
           />
-          {user.type === "shop" && (
+          {(user.type === "shop" || user.type === "admin") && (
             <>
               <ListItem
                 icon={<FiSettings />}
@@ -141,6 +141,7 @@ export default function ProfilePage() {
               />
             </>
           )}
+
         </Section>
         <Divider className="my-4 text-gray-200" />
         <Section title="Payments & Coupons">
@@ -174,6 +175,12 @@ export default function ProfilePage() {
           <ListItem icon={<FcAbout />} text="About Us" onClick={() => router.push("/profileitems/about-us")} />
           <ListItem icon={<RiAccountCircle2Line />} text="Account Privacy" onClick={() => router.push("/profileitems/account-privacy")} />
           <ListItem icon={<MdAdminPanelSettings />} text="Admin" onClick={() => router.push("/profileitems/admin")} />
+          {user.type === "admin" && (
+            <>
+              <ListItem icon={<MdAdminPanelSettings />} text="Admin" onClick={() => router.push("/profileitems/admin")} />
+
+            </>
+          )}
         </Section>
 
         {/* SHARE MODAL */}
