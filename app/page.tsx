@@ -270,8 +270,7 @@ export default function HomePage() {
             </CarouselContent>
 
             {/* Controls (hidden on small screens) */}
-            <CarouselPrevious className="hidden sm:flex left-4" />
-            <CarouselNext className="hidden sm:flex right-4" />
+            
           </Carousel>
 
 
