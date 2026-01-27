@@ -225,13 +225,13 @@ export default function HomePage() {
                   title: "Daily Needs, Delivered Fast",
                   subtitle: "Fresh stock • Best prices • Instant delivery",
                   image:
-                    "https://unsplash.com/photos/pile-of-vegetables-QvkAQTNj4zk?q=80&w=1600",
+                    "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600",
                 },
                 {
                   title: "Groceries in Minutes",
                   subtitle: "No queues • No waiting • Just tap & get",
                   image:
-                    "https://unsplash.com/photos/pile-of-vegetables-QvkAQTNj4zk?q=80&w=1600",
+                    "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600",
                 },
                 {
                   title: "Smart Shopping Starts Here",

@@ -9,6 +9,8 @@ export default function Signup() {
   const [form, setForm] = useState({
     name: "",
     email: "",
+    username:"",
+    phone:"",
     type: "customer",
     password: "",
     state: "",
@@ -55,6 +57,8 @@ export default function Signup() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       localStorage.setItem("name", user.name);
+      localStorage.setItem("name", user.username);
+      localStorage.setItem("name", user.phone);
       localStorage.setItem("email", user.email);
       localStorage.setItem("type", user.type || "customer");
 
@@ -100,6 +104,34 @@ export default function Signup() {
             name="email"
             placeholder="you@example.com"
             value={form.email}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
+
+        {/* Username */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Email</label>
+          <input
+            type="username"
+            name="username"
+            placeholder="johny"
+            value={form.username}
+            onChange={handleChange}
+            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
+            required
+          />
+        </div>
+
+        {/* Phone */}
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold mb-1">Email</label>
+          <input
+            type="phone"
+            name="phone"
+            placeholder="8222739229"
+            value={form.phone}
             onChange={handleChange}
             className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
             required
