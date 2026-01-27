@@ -28,7 +28,7 @@ export default function Navbar() {
 
       try {
         const parsed = JSON.parse(user);
-        setUserName(parsed.username);
+        setUserName(parsed.name);
       } catch {
         setUserName(null);
       }
