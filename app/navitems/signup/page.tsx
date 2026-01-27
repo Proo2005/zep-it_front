@@ -8,7 +8,9 @@ import { GoogleLogin } from "@react-oauth/google";
 export default function Signup() {
   const [form, setForm] = useState({
     name: "",
+    username: "",
     email: "",
+    phone: "",
     type: "customer",
     password: "",
     state: "",
@@ -19,22 +21,33 @@ export default function Signup() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!form.state || !form.city || !form.fullAddress) {
-      alert("Please fill in all address details");
-      return;
-    }
-
     setLoading(true);
     try {
-      await axios.post("https://zep-it-back.onrender.com/api/auth/signup", form);
+      await axios.post(
+        "https://zep-it-back.onrender.com/api/auth/signup",
+        {
+          ...form,
+          authProvider: "local",
+        }
+      );
+
       alert("Signup successful!");
+      localStorage.setItem("name", form.name);
+      localStorage.setItem("email", form.email);
+      localStorage.setItem("username", form.username);
+      localStorage.setItem("phone", form.phone);
+      localStorage.setItem("type", form.type);
       router.push("/navitems/login");
     } catch (err: any) {
       alert(err.response?.data?.message || "Signup failed");
@@ -52,23 +65,24 @@ export default function Signup() {
 
       const { token, user } = res.data;
 
+      // ✅ SAVE BACKEND DATA, NOT FORM DATA
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
-      localStorage.setItem("name", user.name);
-      localStorage.setItem("email", user.email);
-      localStorage.setItem("type", user.type || "customer");
-
       localStorage.setItem("isAuthenticated", "true");
+
+      localStorage.setItem("name", user.name || "");
+      localStorage.setItem("email", user.email || "");
+      localStorage.setItem("username", user.username || "");
+      localStorage.setItem("phone", user.phone || "");
+      localStorage.setItem("type", user.type || "customer");
 
       window.dispatchEvent(new Event("authChanged"));
 
-      alert(`Welcome ${user.name}`);
       router.push("/");
-    } catch {
+    } catch (err) {
       alert("Google signup failed");
     }
   };
-
 
 
   return (
@@ -77,125 +91,114 @@ export default function Signup() {
         onSubmit={handleSubmit}
         className="bg-white/90 backdrop-blur-md w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-300 space-y-6 mt-24"
       >
-        <h2 className="text-2xl font-bold text-[#0C831F] text-center mb-4">Create Account</h2>
+        <h2 className="text-2xl font-bold text-[#0C831F] text-center mb-4">
+          Create Account
+        </h2>
 
         {/* Name */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Name</label>
-          <input
-            name="name"
-            placeholder="John Doe"
-            value={form.name}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="name"
+          placeholder="Full Name"
+          value={form.name}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
+
+        {/* Username */}
+        <input
+          name="username"
+          placeholder="Username"
+          value={form.username}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
 
         {/* Email */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="you@example.com"
-            value={form.email}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
 
-        {/* Type */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Account Type</label>
+        {/* Phone */}
+        <input
+          name="phone"
+          placeholder="Phone Number"
+          value={form.phone}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
 
-          <select
-            name="type"
-            value={form.type}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-          >
-            <option value="customer">Customer</option>
-            <option value="shop">Shop</option>
-          </select>
-        </div>
+        {/* Account Type */}
+        <select
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+        >
+          <option value="customer">Customer</option>
+          <option value="shop">Shop</option>
+        </select>
 
         {/* Address */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">State</label>
-          <input
-            name="state"
-            placeholder="State"
-            value={form.state}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="state"
+          placeholder="State"
+          value={form.state}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">City</label>
-          <input
-            name="city"
-            placeholder="City"
-            value={form.city}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
+        <input
+          name="city"
+          placeholder="City"
+          value={form.city}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
 
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Full Address</label>
-          <textarea
-            name="fullAddress"
-            placeholder="Street, Building, Landmark..."
-            value={form.fullAddress}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none resize-none"
-            rows={3}
-            required
-          />
-        </div>
+        <textarea
+          name="fullAddress"
+          placeholder="Full Address"
+          value={form.fullAddress}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          rows={3}
+          required
+        />
 
         {/* Password */}
-        <div className="flex flex-col">
-          <label className="text-sm font-semibold mb-1">Password</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Enter a strong password"
-            value={form.password}
-            onChange={handleChange}
-            className="px-4 py-2 border rounded-xl focus:ring-2 focus:ring-green-400 outline-none"
-            required
-          />
-        </div>
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={(res) => handleGoogleLogin(res.credential!)}
-            onError={() => alert("Google Login Failed")}
-          />
-        </div>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          value={form.password}
+          onChange={handleChange}
+          className="w-full px-4 py-2 border rounded-xl"
+          required
+        />
 
-        <div className="text-center text-gray-400 text-sm">or</div>
+        <GoogleLogin
+          onSuccess={(res) => handleGoogleLogin(res.credential!)}
+          onError={() => alert("Google Login Failed")}
+        />
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0C831F] to-[#2ECC71] text-white font-bold text-lg hover:opacity-90 transition disabled:opacity-50"
+          className="w-full py-3 rounded-xl bg-gradient-to-r from-[#0C831F] to-[#2ECC71] text-white font-bold"
         >
           {loading ? "Signing Up..." : "Signup"}
         </button>
-
-        <p className="text-center text-gray-600">
-          Already have an account?{" "}
-          <a href="/navitems/login" className="text-green-600 font-semibold hover:underline">
-            Login
-          </a>
-        </p>
       </form>
     </div>
   );
