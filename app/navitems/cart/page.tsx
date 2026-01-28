@@ -11,7 +11,7 @@ type CartItem = {
   quantity: number;
   addedBy?: { name: string; email: string };
 };
-
+import PaymentSuccessCSS from "@/app/components/animations/Payment";
 export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
@@ -20,6 +20,9 @@ export default function CartPage() {
   const router = useRouter();
   const params = useParams();
   const cartCode = params?.cartCode as string | undefined;
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("");
+
 
   /* ---------------- LOAD RAZORPAY SCRIPT ---------------- */
   useEffect(() => {
@@ -197,10 +200,10 @@ export default function CartPage() {
         // ✅ Pass cart items in query string
         const cartQuery = encodeURIComponent(JSON.stringify(cart));
 
-        alert("Payment successful ✅");
+        const url = `/navitems/delivery/${verifyData.orderId || cartCode}?cart=${cartQuery}`;
 
-        // ✅ Redirect to delivery page with cart
-        router.push(`/navitems/delivery/${verifyData.orderId || cartCode}?cart=${cartQuery}`);
+        setRedirectUrl(url);
+        setShowSuccess(true);
         window.dispatchEvent(new Event("cartUpdated"));
         // ✅ Now safe to remove localStorage
         localStorage.removeItem("cart");
@@ -342,6 +345,15 @@ export default function CartPage() {
           </div>
         )}
       </div>
+      {showSuccess && (
+        <PaymentSuccessCSS
+          onDone={() => {
+            setShowSuccess(false);
+            router.push(redirectUrl);
+          }}
+        />
+      )}
+
     </div>
   );
 }
