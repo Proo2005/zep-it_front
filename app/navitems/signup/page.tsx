@@ -4,7 +4,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { GoogleLogin } from "@react-oauth/google";
-
+import { Password } from 'primereact/password';
+        
 export default function Signup() {
   const [form, setForm] = useState({
     name: "",
@@ -178,15 +179,8 @@ export default function Signup() {
         />
 
         {/* Password */}
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={form.password}
-          onChange={handleChange}
-          className="w-full px-4 py-2 border rounded-xl"
-          required
-        />
+        
+        <Password value={form.password} onChange={handleChange}  promptLabel="Choose a password" weakLabel="Too simple"   strongLabel="Complex password" mediumLabel="Average complexity"  className="w-full px-4 py-2 border rounded-xl"  required />
 
         <GoogleLogin
           onSuccess={(res) => handleGoogleLogin(res.credential!)}
