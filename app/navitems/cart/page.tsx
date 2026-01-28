@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { Data } from "@react-google-maps/api";
-import { ArrowUpIcon } from "lucide-react"
+import { Alert } from "@heroui/alert";
 type CartItem = {
   itemId: string;
   name: string;
@@ -16,6 +16,7 @@ export default function CartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [total, setTotal] = useState(0);
   const [cartCodeInput, setCartCodeInput] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
   const router = useRouter();
   const params = useParams();
   const cartCode = params?.cartCode as string | undefined;
@@ -32,8 +33,10 @@ export default function CartPage() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Please login first");
-      router.push("/navitems/login");
+      setShowAlert(true);
+      setTimeout(() => {
+        router.push("/navitems/login");
+      }, 2000);
       return;
     }
     loadCart();
@@ -195,7 +198,7 @@ export default function CartPage() {
         const cartQuery = encodeURIComponent(JSON.stringify(cart));
 
         alert("Payment successful ✅");
-        
+
         // ✅ Redirect to delivery page with cart
         router.push(`/navitems/delivery/${verifyData.orderId || cartCode}?cart=${cartQuery}`);
         window.dispatchEvent(new Event("cartUpdated"));
@@ -211,7 +214,30 @@ export default function CartPage() {
   };
 
   return (
+
+
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 pb-16 -mt-24 text-black">
+      {showAlert && (
+        <div
+          style={{
+            position: "fixed",
+            top: 20,
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1000,
+            width: "90%",
+            maxWidth: "420px",
+          }}
+        >
+          <Alert
+            title="Login required"
+            description="Please login first to continue"
+            color="warning"
+            variant="flat"
+          />
+        </div>
+      )}
+
       <div className="max-w-6xl mx-auto pt-32">
         <h1 className="text-3xl font-bold mb-8">Shopping Cart</h1>
 
