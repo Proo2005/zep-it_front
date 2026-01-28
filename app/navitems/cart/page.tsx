@@ -36,7 +36,7 @@ export default function CartPage() {
       setShowAlert(true);
       setTimeout(() => {
         router.push("/navitems/login");
-      }, 2000);
+      }, 5000);
       return;
     }
     loadCart();
