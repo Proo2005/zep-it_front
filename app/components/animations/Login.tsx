@@ -1,42 +1,50 @@
 "use client";
 
+import { useEffect } from "react";
 
-export default function LoginSuccess() {
+
+export default function LoginSuccess ({
+  onDone,
+}: {
+  onDone: () => void;
+}) {
+  useEffect(() => {
+    const t = setTimeout(() => {
+      onDone();
+    }, 2200); // total animation time
+
+    return () => clearTimeout(t);
+  }, [onDone]);
+
   return (
-    <div className="login-success-overlay">
-      <div className="success-box">
-        <div className="checkmark" />
-        <div className="success-title">Login Successful</div>
-        <div className="success-sub">Redirecting to your account…</div>
+    <div className="overlay">
+      <div className="card">
+        <div className="check" />
+        <div className="title">Login Successful</div>
+        <div className="sub">Welcome on Board</div>
       </div>
       <style jsx>{`
-        /* Overlay */
-.login-success-overlay {
+        .overlay {
   position: fixed;
   inset: 0;
-  background: #aeb8b0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 9999;
-  animation: fadeIn 0.4s ease forwards;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0 }
-  to { opacity: 1 }
-}
-
-/* Card */
-.success-box {
+.card {
   background: white;
   border-radius: 24px;
-  padding: 40px 48px;
+  padding: 32px;
+  width: 320px;
   text-align: center;
-  animation: scaleIn 0.5s ease forwards;
+  animation: pop 0.35s ease-out;
 }
 
-@keyframes scaleIn {
+@keyframes pop {
   from {
     transform: scale(0.85);
     opacity: 0;
@@ -47,35 +55,36 @@ export default function LoginSuccess() {
   }
 }
 
-/* Check animation */
-.checkmark {
-  width: 80px;
-  height: 80px;
+.check {
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   border: 4px solid #0c831f;
+  margin: 0 auto 16px;
   position: relative;
-  margin: 0 auto 20px;
-  animation: pop 0.4s ease forwards;
+  animation: scaleIn 0.4s ease forwards;
 }
 
-@keyframes pop {
-  0% { transform: scale(0) }
-  80% { transform: scale(1.1) }
-  100% { transform: scale(1) }
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
-.checkmark::after {
+.check::after {
   content: "";
   position: absolute;
-  left: 22px;
-  top: 40px;
-  width: 18px;
-  height: 36px;
-  border-right: 4px solid #0c831f;
+  width: 28px;
+  height: 14px;
+  border-left: 4px solid #0c831f;
   border-bottom: 4px solid #0c831f;
-  transform: rotate(45deg);
-  animation: draw 0.4s ease forwards;
-  animation-delay: 0.3s;
+  transform: rotate(-45deg);
+  left: 26px;
+  top: 36px;
+  animation: draw 0.3s ease 0.4s forwards;
   opacity: 0;
 }
 
@@ -85,18 +94,17 @@ export default function LoginSuccess() {
   }
 }
 
-/* Text */
-.success-title {
+.title {
   font-size: 22px;
   font-weight: 700;
-  margin-bottom: 6px;
+  color: #000;
 }
 
-.success-sub {
+.sub {
   font-size: 14px;
   color: #666;
+  margin-top: 6px;
 }
-
 
       `}</style>
     </div>
