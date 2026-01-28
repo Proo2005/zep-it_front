@@ -5,6 +5,8 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { GoogleLogin } from "@react-oauth/google";
+import LoginSuccess from "@/app/components/animations/Login";
+
 
 export default function Login() {
   const router = useRouter();
@@ -18,7 +20,7 @@ export default function Login() {
     email: "",
     password: "",
   });
-
+  const [showSuccess, setShowSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -81,6 +83,7 @@ export default function Login() {
         title: "Login successful",
         description: `Welcome ${user.name}!`,
       });
+      setShowSuccess(true);
       setTimeout(() => {
         router.push("/");
       }, 1200
@@ -122,7 +125,7 @@ export default function Login() {
     window.dispatchEvent(new Event("authChanged"));
 
     toast.success(`Welcome back, ${user.name}!`);
-
+    setShowSuccess(true);
     if (user.type === "customer") {
       router.push("/");
     } else {
@@ -205,6 +208,8 @@ export default function Login() {
           </a>
         </p>
       </form>
+      {showSuccess && <LoginSuccess />}
+
     </div>
   );
 }
