@@ -1,30 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
 
-
-export default function LoginSuccess ({
-  onDone,
-}: {
-  onDone: () => void;
-}) {
-  useEffect(() => {
-    const t = setTimeout(() => {
-      onDone();
-    }, 2200); // total animation time
-
-    return () => clearTimeout(t);
-  }, [onDone]);
-
+export default function LoginPage() {
   return (
     <div className="overlay">
       <div className="card">
         <div className="check" />
         <div className="title">Login Successful</div>
-        <div className="sub">Welcome on Board</div>
+        <div className="sub">Redirecting to your account…</div>
       </div>
       <style jsx>{`
-        .overlay {
+       .overlay {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
@@ -105,6 +91,7 @@ export default function LoginSuccess ({
   color: #666;
   margin-top: 6px;
 }
+
 
       `}</style>
     </div>
