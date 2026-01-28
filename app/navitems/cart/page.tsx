@@ -36,7 +36,7 @@ export default function CartPage() {
       setShowAlert(true);
       setTimeout(() => {
         router.push("/navitems/login");
-      }, 5000);
+      }, 600);
       return;
     }
     loadCart();
@@ -221,7 +221,7 @@ export default function CartPage() {
         <div
           style={{
             position: "fixed",
-            top: 20,
+            top: 120,
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 1000,
