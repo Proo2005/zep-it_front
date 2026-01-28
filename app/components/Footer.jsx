@@ -97,13 +97,13 @@ export default function Footer() {
         </p>
 
         <div className="flex gap-4 mt-4 sm:mt-0 text-gray-500 text-lg">
-          <a href="#" className="hover:text-[#0C831F]">
+          <a href="https://x.com/" className="hover:text-[#0C831F]">
             <FaTwitter />
           </a>
-          <a href="#" className="hover:text-[#0C831F]">
+          <a href="https://www.instagram.com/" className="hover:text-[#0C831F]">
             <FaInstagram />
           </a>
-          <a href="#" className="hover:text-[#0C831F]">
+          <a href="https://www.linkedin.com/" className="hover:text-[#0C831F]">
             <FaLinkedin />
           </a>
         </div>
