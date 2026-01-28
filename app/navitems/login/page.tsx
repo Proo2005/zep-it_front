@@ -85,9 +85,12 @@ export default function Login() {
       });
       setShowSuccess(true);
       setTimeout(() => {
-        router.push("/");
-      }, 1200
-      );
+        if (user.type === "customer") {
+          router.push("/");
+        } else {
+          router.push("/essential/shop-items");
+        }
+      }, 1200);
 
     } catch {
       setAlertData({
@@ -126,11 +129,13 @@ export default function Login() {
 
     toast.success(`Welcome back, ${user.name}!`);
     setShowSuccess(true);
-    if (user.type === "customer") {
-      router.push("/");
-    } else {
-      router.push("/essential/shop-items");
-    }
+    setTimeout(() => {
+      if (user.type === "customer") {
+        router.push("/");
+      } else {
+        router.push("/essential/shop-items");
+      }
+    }, 1200);
   };
 
   return (
