@@ -57,7 +57,20 @@ export default function HomePage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<number>(2000);
   const [loading, setLoading] = useState(true);
+  const [showBikeIntro, setShowBikeIntro] = useState(false);
 
+  useEffect(() => {
+    const alreadyPlayed = localStorage.getItem("deliveryBikeIntroPlayed");
+
+    if (!alreadyPlayed) {
+      setShowBikeIntro(true);
+
+      setTimeout(() => {
+        setShowBikeIntro(false);
+        localStorage.setItem("deliveryBikeIntroPlayed", "true");
+      }, 2200); // match bike animation duration
+    }
+  }, []);
   useEffect(() => {
     toast.success(`Welcome back`);
     fetchItems();
@@ -128,10 +141,10 @@ export default function HomePage() {
   });
 
   return (
-    
     <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black dark:bg-zinc-900 dark:text-white">
-     <DeliveryBikeIntro/>
 
+      {showBikeIntro && <DeliveryBikeIntro />}
+      {!showBikeIntro && (
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8 pt-32">
 
         {/* FILTER PANEL */}
@@ -271,7 +284,7 @@ export default function HomePage() {
             </CarouselContent>
 
             {/* Controls (hidden on small screens) */}
-            
+
           </Carousel>
 
 
@@ -410,8 +423,9 @@ export default function HomePage() {
 
         <FloatingCart />
       </div>
-
+       )}
       <Footer />
+      
     </div>
   );
 }
