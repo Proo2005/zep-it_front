@@ -3,8 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Navbar from "./components/Navbar";
-import DarkModeToggle
- from "./components/DarkModeToggle";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
