@@ -85,10 +85,10 @@ export default function Login() {
       });
       setShowSuccess(true);
       setTimeout(() => {
-        if (user.type === "customer") {
-          router.push("/");
-        } else {
+        if (user.type === "shop")  {
           router.push("/essential/shop-items");
+        } else {
+          router.push("/");
         }
       }, 1200);
 

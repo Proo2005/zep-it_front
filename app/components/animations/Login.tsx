@@ -14,7 +14,7 @@ export default function LoginSuccess() {
 .login-success-overlay {
   position: fixed;
   inset: 0;
-  background: #0c831f;
+  background: #aeb8b0;
   display: flex;
   align-items: center;
   justify-content: center;
