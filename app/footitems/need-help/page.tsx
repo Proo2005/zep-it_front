@@ -1,80 +1,102 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import {Accordion, AccordionItem} from "@heroui/accordion";
 
 export default function HelpPage() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 py-10">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 px-6 py-12">
+      <div className="max-w-5xl mx-auto space-y-14">
 
-        {/* Header */}
-        <div className="mb-10">
-          <h1 className="text-4xl font-bold text-white">Need Help?</h1>
-          <p className="text-zinc-400 mt-2">
-            We’re here to help you with orders, payments, wallet & account issues
+        {/* HEADER */}
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-white">
+            Need Help?
+          </h1>
+          <p className="text-zinc-400 mt-3 max-w-xl mx-auto">
+            Get quick answers for orders, payments, wallet issues, and account security
           </p>
         </div>
 
-        {/* Help Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+        {/* HELP CATEGORIES */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <HelpCard
             title="Orders & Reorders"
-            desc="Track orders, reorder items, or report missing items"
+            desc="Track orders, reorder items, or report missing products"
           />
           <HelpCard
             title="Payments & Refunds"
-            desc="UPI, card payments, failed transactions & refunds"
+            desc="UPI, cards, failed transactions & refund timelines"
           />
           <HelpCard
             title="Zepit Wallet"
-            desc="Wallet balance, add money, deductions & issues"
+            desc="Balance issues, add money, deductions & errors"
           />
           <HelpCard
             title="Account & Security"
-            desc="Login issues, password, and data security"
+            desc="Login problems, password reset & data protection"
           />
         </div>
 
-        {/* FAQs */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-6">Frequently Asked Questions</h2>
+        {/* FAQ ACCORDION */}
+        <div>
+          <h2 className="text-2xl font-bold mb-6 text-white">
+            Frequently Asked Questions
+          </h2>
 
-          <div className="space-y-4">
-            <FAQ
-              q="Why is my wallet showing insufficient balance?"
-              a="Please refresh the page once. Wallet balance is loaded from secure storage. If the issue continues, contact support."
-            />
-            <FAQ
-              q="My payment failed but money was deducted"
-              a="Don’t worry. Failed payments are automatically refunded within 3–5 working days."
-            />
-            <FAQ
-              q="How do I reorder previous items?"
-              a="Go to Payment History and tap the Reorder button to add items back to your cart."
-            />
-            <FAQ
-              q="Which payment methods are supported?"
-              a="UPI, Debit/Credit Cards, and Zepit Wallet are fully supported."
-            />
+          <div className="bg-zinc-900/70 border border-zinc-800 rounded-2xl p-2">
+            <Accordion variant="splitted">
+              <AccordionItem
+                key="1"
+                title="Why is my wallet showing insufficient balance?"
+                subtitle="Wallet & balance issues"
+              >
+                Wallet balance loads from secure storage. Please refresh once.
+                If the issue continues, contact support for manual verification.
+              </AccordionItem>
+
+              <AccordionItem
+                key="2"
+                title="Payment failed but money was deducted"
+                subtitle="Refund & transaction safety"
+              >
+                Failed payments are automatically reversed within 3–5 working days.
+                You’ll receive a confirmation once refunded.
+              </AccordionItem>
+
+              <AccordionItem
+                key="3"
+                title="How do I reorder previous items?"
+                subtitle="Order history & reorders"
+              >
+                Go to Order History and tap the Reorder button to add items
+                back into your cart instantly.
+              </AccordionItem>
+
+              <AccordionItem
+                key="4"
+                title="Which payment methods are supported?"
+                subtitle="UPI, cards & wallet"
+              >
+                We support UPI, Debit/Credit Cards, Net Banking,
+                and Zepit Wallet across all regions.
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
 
-        {/* Contact Support */}
+        {/* CONTACT SUPPORT */}
         <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-8">
-          <h2 className="text-2xl font-bold mb-4">Contact Support</h2>
+          <h2 className="text-2xl font-bold mb-4 text-white">
+            <a href="/footitems/contact">Contact Support</a>
+          </h2>
 
-          <div className="space-y-3 text-zinc-300">
-            <p>
-              📧 <span className="font-medium">Email:</span> support@zepit.com
-            </p>
-            <p>
-              📞 <span className="font-medium">Phone:</span> +91 9XXXX XXXXX
-            </p>
-            <p>
-              🕒 <span className="font-medium">Support Hours:</span> 9 AM – 9 PM
-            </p>
+          <div className="grid sm:grid-cols-3 gap-4 text-zinc-300">
+            <p>📧 <span className="font-medium">support@zepit.com</span></p>
+            <p>📞 <span className="font-medium">+91 9XXXX XXXXX</span></p>
+            <p>🕒 <span className="font-medium">9 AM – 9 PM</span></p>
           </div>
 
           <button
@@ -90,22 +112,17 @@ export default function HelpPage() {
   );
 }
 
-/* Components */
+/* ---------- COMPONENTS ---------- */
 
 function HelpCard({ title, desc }: { title: string; desc: string }) {
   return (
-    <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6 hover:border-green-600 transition">
-      <h3 className="text-xl font-semibold text-white mb-2">{title}</h3>
-      <p className="text-zinc-400 text-sm">{desc}</p>
-    </div>
-  );
-}
-
-function FAQ({ q, a }: { q: string; a: string }) {
-  return (
-    <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4">
-      <p className="font-semibold text-white">{q}</p>
-      <p className="text-zinc-400 text-sm mt-1">{a}</p>
+    <div className="bg-zinc-900/80 border border-zinc-800 rounded-2xl p-6 hover:border-green-600 hover:scale-[1.02] transition">
+      <h3 className="text-xl font-semibold text-white mb-2">
+        {title}
+      </h3>
+      <p className="text-zinc-400 text-sm">
+        {desc}
+      </p>
     </div>
   );
 }

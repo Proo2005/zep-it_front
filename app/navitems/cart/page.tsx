@@ -221,7 +221,7 @@ export default function CartPage() {
         <div
           style={{
             position: "fixed",
-            top: 120,
+            top: "50%",
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 1000,

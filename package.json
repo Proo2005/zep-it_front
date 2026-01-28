@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@heroui/accordion": "^2.2.26",
     "@heroui/alert": "^2.2.29",
     "@heroui/divider": "^2.2.21",
     "@heroui/modal": "^2.2.26",
