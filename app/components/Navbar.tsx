@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { IoPersonCircleOutline, IoCartOutline, IoSearchOutline, IoMenu, IoClose } from "react-icons/io5";
-
+import ThemeToggle from "../components/ThemeToggle";
 import { AcmeLogo } from "./Logo";
 import {
   Tooltip,
@@ -73,7 +73,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-7xl z-50 shadow-lg rounded-2xl bg-white/60 backdrop-blur-lg border border-green-200">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[96%] max-w-7xl z-50 shadow-lg rounded-2xl bg-white/60 backdrop-blur-lg border border-green-200 dark:bg-zinc-900 dark:text-white">
 
 
       <div className="flex items-center justify-between px-6 py-3">
@@ -109,6 +109,7 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+          <ThemeToggle />
 
           {/* Profile Dropdown (Desktop) */}
           <div className="hidden md:block relative" ref={dropdownRef}>
