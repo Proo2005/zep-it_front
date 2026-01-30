@@ -66,45 +66,15 @@ const testimonials: Testimonial[] = [
 
 export default function PartnerPage() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-emerald-100">
-      
-      {/* --- Navigation --- */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="text-2xl font-extrabold tracking-tighter text-emerald-600">
-            blinkit<span className="text-slate-900">clone</span>
-          </div>
-          
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-8">
-            {['Home', 'About', 'Careers'].map((item) => (
-              <Link key={item} href="#" className="text-sm font-medium text-slate-600 hover:text-emerald-600 transition-colors">
-                {item}
-              </Link>
-            ))}
-            <Link 
-              href="/partner" 
-              className="px-4 py-2 rounded-lg bg-emerald-50 text-emerald-700 text-sm font-semibold hover:bg-emerald-100 transition-colors"
-            >
-              Partner
-            </Link>
-          </div>
-
-          {/* Mobile Menu Icon */}
-          <button className="md:hidden text-slate-600">
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </nav>
-
+    <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-emerald-100 -mt-24">
       {/* --- Hero Section --- */}
-      <section className="pt-20 pb-24 px-6 text-center max-w-4xl mx-auto">
+      <section className="pt-20 pb-24 px-6 text-center max-w-4xl mx-auto pt-32">
         <h1 className="text-4xl md:text-6xl font-bold text-slate-900 leading-tight mb-6">
           Shape the future of <br />
           <span className="text-emerald-600">instant commerce</span>
         </h1>
         <p className="text-lg md:text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed">
-          We believe our tech stack can empower thousands of local entrepreneurs. 
+          We believe our tech stack can empower thousands of local entrepreneurs.
           Join the revolution and deliver groceries, medicines, and electronics to millions.
         </p>
         <button className="px-8 py-4 bg-emerald-600 text-white font-semibold rounded-xl hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-200 transition-all duration-200 transform hover:-translate-y-1">
@@ -122,8 +92,8 @@ export default function PartnerPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {opportunities.map((item, idx) => (
-              <div 
-                key={idx} 
+              <div
+                key={idx}
                 className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm hover:shadow-xl hover:border-emerald-100 transition-all duration-300 group cursor-pointer"
               >
                 <div className="mb-6 p-3 bg-emerald-50 w-fit rounded-xl group-hover:bg-emerald-100 transition-colors">
@@ -146,7 +116,7 @@ export default function PartnerPage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Partner Testimonials</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((t, idx) => (
               <div key={idx} className="bg-slate-50 p-8 rounded-2xl border-l-4 border-emerald-500 relative">
@@ -167,8 +137,20 @@ export default function PartnerPage() {
           <div>
             <h4 className="font-bold text-slate-900 mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-slate-500">
-              {['About', 'Careers', 'Blog', 'Press'].map(i => (
-                <li key={i}><a href="#" className="hover:text-emerald-600 transition-colors">{i}</a></li>
+              {[
+                { label: "About", href: "/footitems/about-us" },
+                { label: "Careers", href: "/careers" },
+                { label: "Blog", href: "/blog" },
+                { label: "Press", href: "/press" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
+                    className="hover:text-emerald-600 transition-colors"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
               ))}
             </ul>
           </div>
@@ -185,21 +167,21 @@ export default function PartnerPage() {
             <ul className="space-y-2 text-sm text-slate-500">
               <li>Help & Support</li>
               <li>Partner Support</li>
-              <li>info@blinkitclone.com</li>
+              <li>info@zep-it.com</li>
             </ul>
           </div>
           <div>
             <h4 className="font-bold text-slate-900 mb-4">Social</h4>
             <div className="flex gap-4">
-               {/* Social placeholders */}
-               <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-xs">IG</div>
-               <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-xs">TW</div>
-               <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-xs">LN</div>
+              {/* Social placeholders */}
+              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-xs">IG</div>
+              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-xs">TW</div>
+              <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 text-xs">LN</div>
             </div>
           </div>
         </div>
         <div className="text-center text-slate-400 text-sm border-t border-emerald-100/50 pt-8">
-          © 2026 Blinkit Clone. All rights reserved.
+          © 2026 Zep-It. All rights reserved.
         </div>
       </footer>
     </div>
