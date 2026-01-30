@@ -5,44 +5,12 @@ import { ArrowRight, Menu, Heart, Users, Activity, Smile } from 'lucide-react';
 
 export default function EternalCareers() {
   return (
-    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black">
+    <div className="min-h-screen bg-black text-white font-sans selection:bg-white selection:text-black -mt-24">
       
-      {/* --- Navigation --- */}
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-          {/* Logo */}
-          <div className="text-2xl font-medium tracking-tight">
-            Eternal
-          </div>
-          
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-400">
-            {['Home', 'Culture', 'Careers', 'Investors', 'Blog'].map((item) => (
-              <Link 
-                key={item} 
-                href="#" 
-                className={`transition-colors hover:text-white ${item === 'Careers' ? 'text-white' : ''}`}
-              >
-                {item}
-              </Link>
-            ))}
-            <Link 
-              href="#" 
-              className="ml-4 px-5 py-2 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all duration-300"
-            >
-              Contact
-            </Link>
-          </div>
-
-          {/* Mobile Menu */}
-          <button className="md:hidden text-white">
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </nav>
+      
 
       {/* --- Hero Section --- */}
-      <main className="pt-40 pb-20 px-6">
+      <main className="pt-40 pb-20 px-6   pt-32">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-medium leading-tight mb-12 tracking-tight">
             Hiring is the most <br />

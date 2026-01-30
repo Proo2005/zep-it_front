@@ -82,7 +82,7 @@ const posts: BlogPost[] = [
 
 export default function BlinkitBlog() {
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-green-100 selection:text-green-800">
+    <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-emerald-100 -mt-24 selection:text-green-800">
 
       {/* --- Navigation --- */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
@@ -96,10 +96,10 @@ export default function BlinkitBlog() {
             
             {/* Desktop Links */}
             <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
-              <Link href="#" className="hover:text-green-600 transition-colors">Home</Link>
-              <Link href="#" className="hover:text-green-600 transition-colors">About</Link>
-              <Link href="#" className="hover:text-green-600 transition-colors">Careers</Link>
-              <Link href="#" className="hover:text-green-600 transition-colors">Partner</Link>
+              <Link href="/" className="hover:text-green-600 transition-colors">Home</Link>
+              <Link href="/footitems/about-us" className="hover:text-green-600 transition-colors">About</Link>
+              <Link href="/footitems/external/careers" className="hover:text-green-600 transition-colors">Careers</Link>
+              <Link href="/footitems/partners" className="hover:text-green-600 transition-colors">Partner</Link>
             </div>
           </div>
 
