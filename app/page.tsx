@@ -335,7 +335,7 @@ export default function HomePage() {
                 if (!categoryItems.length) return null;
 
                 return (
-                  <section key={cat.key} className="mb-14">
+                  <section key={cat.key} className="mb-14 dark:bg-zinc-900 dark:text-white">
                     <div className="flex justify-between items-center mb-4">
                       <h2 className="text-2xl font-bold text-black">
                         {cat.label}
