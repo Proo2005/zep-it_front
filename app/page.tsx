@@ -351,88 +351,92 @@ export default function HomePage() {
                       )}
                     </div>
 
-                    <div className="grid gap-3 sm:gap-6 grid-cols-3 sm:grid-cols-4 lg:grid-cols-3">
+                    {/*===  ITEMS ===*/}
 
-                      {visible.map((item, idx) => (
-                        <div
-                          key={item._id}
-                          className="relative bg-white rounded-xl sm:rounded-2xl 
+                    <div className="h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-[#0C831F] scrollbar-track-gray-100">
+                      <div className="grid gap-3 sm:gap-6 grid-cols-3 sm:grid-cols-4 lg:grid-cols-3">
+
+                        {visible.map((item, idx) => (
+                          <div
+                            key={item._id}
+                            className="relative bg-white rounded-xl sm:rounded-2xl 
              p-2 sm:p-4 shadow-sm flex flex-col"
-                        >
-                          <span className="absolute top-2 right-2 text-[9px] sm:text-[10px]
+                          >
+                            <span className="absolute top-2 right-2 text-[9px] sm:text-[10px]
                    bg-black/80 text-white px-1.5 py-0.5 rounded-full">
-                            Popular
-                          </span>
+                              Popular
+                            </span>
 
-                          {/* IMAGE */}
-                          <div className="w-full aspect-square sm:h-36 
+                            {/* IMAGE */}
+                            <div className="w-full aspect-square sm:h-36 
                   bg-[#F1F5F9] rounded-xl mb-2 overflow-hidden">
-                            <img
-                              src={`https://loremflickr.com/320/320/${encodeURIComponent(
-                                item.itemName
-                              )}?random=${idx}`}
-                              alt={item.itemName}
-                              className="w-full h-full object-cover"
+                              <img
+                                src={`https://loremflickr.com/320/320/${encodeURIComponent(
+                                  item.itemName
+                                )}?random=${idx}`}
+                                alt={item.itemName}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+
+                            {/* TITLE */}
+                            <h3 className="font-semibold text-[11px] sm:text-sm mb-1 line-clamp-2 text-black">
+                              {item.itemName}
+                            </h3>
+
+                            {/* PRICE */}
+                            <div className="flex justify-between items-center mb-2">
+                              <div className="flex flex-col">
+                                <span className="text-[10px] sm:text-sm text-gray-400 line-through">
+                                  ₹{Math.round(item.amount * 1.75)}
+                                </span>
+                                <span className="font-bold text-[#0C831F] text-sm sm:text-lg">
+                                  ₹{item.amount}
+                                </span>
+                              </div>
+
+                              <div className="flex flex-col items-end gap-0.5">
+                                <span className="text-[9px] sm:text-xs bg-[#0C831F] text-white px-1.5 py-0.5 rounded-full font-semibold">
+                                  75% OFF
+                                </span>
+                                <span className="text-[9px] sm:text-xs text-gray-500">
+                                  {item.quantity} left
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* QTY */}
+                            <input
+                              type="number"
+                              min={1}
+                              max={item.quantity}
+                              value={cartQty[item._id] || 1}
+                              onChange={(e) =>
+                                handleQtyChange(item._id, Number(e.target.value), item.quantity)
+                              }
+                              className="mb-2 px-2 py-1 border rounded-lg text-[11px] sm:text-sm text-black"
                             />
-                          </div>
 
-                          {/* TITLE */}
-                          <h3 className="font-semibold text-[11px] sm:text-sm mb-1 line-clamp-2 text-black">
-                            {item.itemName}
-                          </h3>
-
-                          {/* PRICE */}
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="flex flex-col">
-                              <span className="text-[10px] sm:text-sm text-gray-400 line-through">
-                                ₹{Math.round(item.amount * 1.75)}
-                              </span>
-                              <span className="font-bold text-[#0C831F] text-sm sm:text-lg">
-                                ₹{item.amount}
-                              </span>
-                            </div>
-
-                            <div className="flex flex-col items-end gap-0.5">
-                              <span className="text-[9px] sm:text-xs bg-[#0C831F] text-white px-1.5 py-0.5 rounded-full font-semibold">
-                                75% OFF
-                              </span>
-                              <span className="text-[9px] sm:text-xs text-gray-500">
-                                {item.quantity} left
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* QTY */}
-                          <input
-                            type="number"
-                            min={1}
-                            max={item.quantity}
-                            value={cartQty[item._id] || 1}
-                            onChange={(e) =>
-                              handleQtyChange(item._id, Number(e.target.value), item.quantity)
-                            }
-                            className="mb-2 px-2 py-1 border rounded-lg text-[11px] sm:text-sm text-black"
-                          />
-
-                          {/* ADD BUTTON */}
-                          <Button
-                            onClick={() => {
-                              addToCart(item);
-                              toast("Item added to cart", {
-                                description: "Item has been added to your cart.",
-                              });
-                            }}
-                            className="mt-auto w-full py-1.5 sm:py-2 
+                            {/* ADD BUTTON */}
+                            <Button
+                              onClick={() => {
+                                addToCart(item);
+                                toast("Item added to cart", {
+                                  description: "Item has been added to your cart.",
+                                });
+                              }}
+                              className="mt-auto w-full py-1.5 sm:py-2 
                rounded-lg sm:rounded-xl 
                text-xs sm:text-sm font-extrabold
                border border-[#0C831F] 
                text-[#0C831F] hover:bg-[#0C831F] hover:text-white transition"
-                          >
-                            ADD
-                          </Button>
-                        </div>
+                            >
+                              ADD
+                            </Button>
+                          </div>
 
-                      ))}
+                        ))}
+                      </div>
                     </div>
 
                     <Divider className="my-6" />
