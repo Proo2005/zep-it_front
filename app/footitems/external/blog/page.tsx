@@ -1,4 +1,4 @@
-import React from 'react';
+"use client";
 import Link from 'next/link';
 import { Search, Menu, Twitter, Linkedin, Facebook, Instagram, ChevronRight, Clock, User } from 'lucide-react';
 

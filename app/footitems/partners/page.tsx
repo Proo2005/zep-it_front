@@ -138,10 +138,10 @@ export default function PartnerPage() {
             <h4 className="font-bold text-slate-900 mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-slate-500">
               {[
-                { label: "About", href: "/footitems/about-us" },
-                { label: "Careers", href: "/careers" },
-                { label: "Blog", href: "/blog" },
-                { label: "Press", href: "/press" },
+                { label: "About", href: "/footitems/external/about-us" },
+                { label: "Careers", href: "/footitems/external/careers" },
+                { label: "Blog", href: "/footitems/external/blog" },
+                { label: "Press", href: "/footitems/external/press" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link

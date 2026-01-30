@@ -1,4 +1,4 @@
-import React from 'react';
+"use client";
 import Link from 'next/link';
 import { Download, ArrowRight, Mail, Calendar, ExternalLink, Menu, Search } from 'lucide-react';
 
