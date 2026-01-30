@@ -286,6 +286,49 @@ export default function HomePage() {
             {/* Controls (hidden on small screens) */}
 
           </Carousel>
+          <div className="bg-white rounded-3xl p-5 shadow-sm border">
+
+            <FieldGroup className="space-y-3 mb-6 text-black">
+              <p className="font-semibold text-sm mb-2">Categories</p>
+
+              {categories.map((cat) => (
+                <Field orientation="vertical" key={cat.key}>
+                  <Checkbox
+                    id={cat.key}
+                    checked={selectedCategories.includes(cat.key)}
+                    onCheckedChange={(checked) =>
+                      setSelectedCategories((prev) =>
+                        checked
+                          ? [...prev, cat.key]
+                          : prev.filter((c) => c !== cat.key)
+                      )
+                    }
+                  />
+                  <FieldContent>
+                    <FieldLabel htmlFor={cat.key}>{cat.label}</FieldLabel>
+                  </FieldContent>
+                </Field>
+              ))}
+            </FieldGroup>
+
+            <Divider className="my-5" />
+
+            <div>
+              <FieldTitle className="mb-2">Max Price: ₹{priceRange}</FieldTitle>
+              <input
+                type="range"
+                min={50}
+                max={2000}
+                step={50}
+                value={priceRange}
+                onChange={(e) => setPriceRange(Number(e.target.value))}
+                className="w-full accent-[#0C831F]"
+              />
+              <p className="text-xs text-gray-500 mt-2">
+                Items priced under ₹{priceRange}
+              </p>
+            </div>
+          </div>
 
 
           {/* ===== SKELETON BEFORE DATA LOADS ===== */}
