@@ -171,7 +171,7 @@ export default function ZepItPress() {
             <p className="text-sm text-slate-500 leading-relaxed mb-4">
               Zep-It is India's leading instant delivery service. We deliver everything from groceries to electronics in minutes. We are on a mission to empower local businesses and simplify daily life for millions of Indians.
             </p>
-            <Link href="/about" className="text-sm font-semibold text-emerald-600 hover:underline flex items-center gap-1">
+            <Link href="/footitems/about-us" className="text-sm font-semibold text-emerald-600 hover:underline flex items-center gap-1">
               Read full story <ArrowRight className="w-3 h-3" />
             </Link>
           </div>

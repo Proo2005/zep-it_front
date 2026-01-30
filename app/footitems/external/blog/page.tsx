@@ -185,9 +185,9 @@ export default function BlinkitBlog() {
               <h4 className="font-bold text-slate-900 mb-4">Company</h4>
               <ul className="space-y-3 text-slate-500">
                 <li><a href="/footitems/about-us" className="hover:text-green-600">About</a></li>
-                <li><a href="/footitems/eternal/careers" className="hover:text-green-600">Careers</a></li>
-                <li><a href="/footitems/eternal/blog" className="hover:text-green-600">Blog</a></li>
-                <li><a href="/footitems/eternal/press" className="hover:text-green-600">Press</a></li>
+                <li><a href="/footitems/external/about-us" className="hover:text-green-600">Careers</a></li>
+                <li><a href="/footitems/external/blog" className="hover:text-green-600">Blog</a></li>
+                <li><a href="/footitems/external/press" className="hover:text-green-600">Press</a></li>
               </ul>
             </div>
             <div>

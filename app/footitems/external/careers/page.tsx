@@ -127,14 +127,14 @@ export default function EternalCareers() {
               <ul className="space-y-3">
                 <li><a href="/footitems/about-us" className="hover:text-white transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Culture</a></li>
-                <li><a href="/footitems/eternal/careers" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="/footitems/external/careers" className="hover:text-white transition-colors">Careers</a></li>
                 <li><a href="" className="hover:text-white transition-colors">Investors</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white mb-4">Resources</h4>
               <ul className="space-y-3">
-                <li><a href="/footitems/eternal/blog" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="/footitems/external/blog" className="hover:text-white transition-colors">Blog</a></li>
                 <li><a href="/footitems/contact" className="hover:text-white transition-colors">Contact</a></li>
                 <li><a href="/footitems/account-privacy" className="hover:text-white transition-colors">Privacy</a></li>
                 <li><a href="/footitems/terms" className="hover:text-white transition-colors">Terms</a></li>
