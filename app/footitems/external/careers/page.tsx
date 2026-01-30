@@ -114,7 +114,7 @@ export default function EternalCareers() {
               <span className="text-xs uppercase tracking-widest font-semibold text-neutral-600">Our Businesses</span>
               <div className="flex flex-wrap gap-4 text-neutral-300">
                 <span className="hover:text-white cursor-pointer">Zomato</span>
-                <span className="hover:text-white cursor-pointer">Blinkit</span>
+                <span className="hover:text-white cursor-pointer">Zep-It</span>
                 <span className="hover:text-white cursor-pointer">District</span>
                 <span className="hover:text-white cursor-pointer">Hyperpure</span>
               </div>
@@ -125,19 +125,19 @@ export default function EternalCareers() {
             <div>
               <h4 className="text-white mb-4">Company</h4>
               <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="/footitems/about-us" className="hover:text-white transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Culture</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Investors</a></li>
+                <li><a href="/footitems/eternal/careers" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="" className="hover:text-white transition-colors">Investors</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white mb-4">Resources</h4>
               <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
+                <li><a href="/footitems/eternal/blog" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="/footitems/contact" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="/footitems/account-privacy" className="hover:text-white transition-colors">Privacy</a></li>
+                <li><a href="/footitems/terms" className="hover:text-white transition-colors">Terms</a></li>
               </ul>
             </div>
           </div>

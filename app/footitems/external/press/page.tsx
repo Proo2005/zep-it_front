@@ -22,7 +22,7 @@ interface BrandAsset {
 const releases: PressRelease[] = [
   {
     id: 1,
-    title: "Blinkit partners with Sony to deliver PlayStation 5 Slim in 10 minutes",
+    title: "Zep-It partners with Sony to deliver PlayStation 5 Slim in 10 minutes",
     source: "Economic Times",
     date: "April 05, 2024",
     link: "#",
@@ -38,7 +38,7 @@ const releases: PressRelease[] = [
   },
   {
     id: 3,
-    title: "Blinkit launches 'Print Store' for document printing delivered in minutes",
+    title: "Zep-It launches 'Print Store' for document printing delivered in minutes",
     source: "TechCrunch",
     date: "Jan 15, 2024",
     link: "#",
@@ -55,38 +55,18 @@ const releases: PressRelease[] = [
 ];
 
 const assets: BrandAsset[] = [
-  { title: "Blinkit Logo Pack (Primary & Monochrome)", format: "ZIP (SVG/PNG)", size: "2.4 MB" },
+  { title: "Zep-It Logo Pack (Primary & Monochrome)", format: "ZIP (SVG/PNG)", size: "2.4 MB" },
   { title: "Leadership Team Photos", format: "ZIP (JPG)", size: "15.8 MB" },
   { title: "B-Roll Footage (Warehouse & Delivery)", format: "MP4 (1080p)", size: "145 MB" },
 ];
 
-export default function BlinkitPress() {
+export default function ZepItPress() {
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-800">
+    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-emerald-100 selection:text-emerald-800 -mt-24">
       
-      {/* --- Navigation --- */}
-      <nav className="sticky top-0 z-50 bg-white border-b border-slate-200">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-extrabold tracking-tighter text-emerald-500">
-            blinkit<span className="text-slate-900">press</span>
-          </Link>
-          
-          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
-            <Link href="#" className="hover:text-emerald-600">News</Link>
-            <Link href="#" className="hover:text-emerald-600">Media Kit</Link>
-            <Link href="#" className="hover:text-emerald-600">Contact</Link>
-            <div className="h-4 w-px bg-slate-300"></div>
-            <Link href="/" className="text-emerald-600">Go to blinkit.com &rarr;</Link>
-          </div>
-          
-          <button className="md:hidden p-2 text-slate-600">
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </nav>
-
+      
       {/* --- Header / Hero --- */}
-      <header className="bg-white py-20 px-6 border-b border-slate-200">
+      <header className="bg-white py-20 px-6 border-b border-slate-200 pt-32">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
             Newsroom & Media Resources
@@ -160,7 +140,7 @@ export default function BlinkitPress() {
             </p>
             <a href="mailto:press@blinkit.com" className="flex items-center gap-3 text-emerald-700 font-bold hover:underline">
               <Mail className="w-5 h-5" />
-              press@blinkit.com
+              press@zepit.com
             </a>
           </div>
 
@@ -187,9 +167,9 @@ export default function BlinkitPress() {
 
           {/* About Blurb */}
           <div className="bg-white p-8 rounded-2xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900 mb-4">About Blinkit</h3>
+            <h3 className="text-lg font-bold text-slate-900 mb-4">About Zep-It</h3>
             <p className="text-sm text-slate-500 leading-relaxed mb-4">
-              Blinkit is India's leading instant delivery service. We deliver everything from groceries to electronics in minutes. We are on a mission to empower local businesses and simplify daily life for millions of Indians.
+              Zep-It is India's leading instant delivery service. We deliver everything from groceries to electronics in minutes. We are on a mission to empower local businesses and simplify daily life for millions of Indians.
             </p>
             <Link href="/about" className="text-sm font-semibold text-emerald-600 hover:underline flex items-center gap-1">
               Read full story <ArrowRight className="w-3 h-3" />
@@ -202,9 +182,9 @@ export default function BlinkitPress() {
       {/* --- Simple Footer --- */}
       <footer className="bg-white border-t border-slate-200 py-12">
         <div className="max-w-7xl mx-auto px-6 text-center">
-          <div className="text-2xl font-bold text-slate-300 mb-4">blinkit</div>
+          <div className="text-2xl font-bold text-slate-300 mb-4">Zep-It</div>
           <p className="text-slate-400 text-sm">
-            © 2026 Blink Commerce Private Limited. All rights reserved.
+            © 2026 Zep-It Commerce Private Limited. All rights reserved.
           </p>
         </div>
       </footer>

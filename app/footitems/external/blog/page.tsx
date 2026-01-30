@@ -15,14 +15,14 @@ interface BlogPost {
 }
 
 // --- Mock Data ---
-const categories = ["Everything", "Technology", "Culture", "Humans of Blinkit", "Newsroom", "Sustainability"];
+const categories = ["Everything", "Technology", "Culture", "Humans of Zep-It", "Newsroom", "Sustainability"];
 
 const posts: BlogPost[] = [
   {
     id: 1,
     title: "Data Warehouse Journey With dbt",
-    excerpt: "The data team has grown tremendously at Blinkit in the past 12 months; with increasing demands of optimisations, growth and efficiencies...",
-    author: "Team Blinkit",
+    excerpt: "The data team has grown tremendously at Zep-It in the past 12 months; with increasing demands of optimisations, growth and efficiencies...",
+    author: "Team Zep-It",
     date: "July 16, 2024",
     readTime: "6 mins read",
     category: "Technology",
@@ -31,7 +31,7 @@ const posts: BlogPost[] = [
   {
     id: 2,
     title: "Blinkit at WWDC 24: A Dream Come True",
-    excerpt: "When I told Tim Cook about the 10 minute iPhone delivery by Blinkit his reaction was, 'that's crazy', and all I could think about was...",
+    excerpt: "When I told Tim Cook about the 10 minute iPhone delivery by Zep-It his reaction was, 'that's crazy', and all I could think about was...",
     author: "Nupur Bharadwaj",
     date: "July 8, 2024",
     readTime: "5 mins read",
@@ -51,7 +51,7 @@ const posts: BlogPost[] = [
   {
     id: 4,
     title: "India's First Instant Print Delivery Store",
-    excerpt: "A geeky walk through on what made Blinkit's print services a reality, and how we set up our infrastructure to create this quick application.",
+    excerpt: "A geeky walk through on what made Zep-It's print services a reality, and how we set up our infrastructure to create this quick application.",
     author: "Ritik Harchani",
     date: "May 19, 2023",
     readTime: "5 mins read",
@@ -60,8 +60,8 @@ const posts: BlogPost[] = [
   },
   {
     id: 5,
-    title: "Meet Recipe Rover: Blinkit's generative AI engine",
-    excerpt: "Blinkit introduces Recipe Rover, an AI-powered feature that revolutionizes the culinary experience for customers by providing personalized...",
+    title: "Meet Recipe Rover: Zep-It's generative AI engine",
+    excerpt: "Zep-It introduces Recipe Rover, an AI-powered feature that revolutionizes the culinary experience for customers by providing personalized...",
     author: "Vaibhav Bhutani",
     date: "May 12, 2023",
     readTime: "5 mins read",
@@ -71,63 +71,29 @@ const posts: BlogPost[] = [
   {
     id: 6,
     title: "In Focus: Sumanth Reddy",
-    excerpt: "Sumanth Reddy is helping us build a resilient application platform at Blinkit. He currently works as a part of Software Resilience Engineering...",
-    author: "Team Blinkit",
+    excerpt: "Sumanth Reddy is helping us build a resilient application platform at Zep-It. He currently works as a part of Software Resilience Engineering...",
+    author: "Team Zep-It",
     date: "March 16, 2023",
     readTime: "4 mins read",
-    category: "Humans of Blinkit",
+    category: "Humans of Zep-It",
     imageUrl: "bg-slate-800"
   }
 ];
 
 export default function BlinkitBlog() {
   return (
-    <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-emerald-100 -mt-24 selection:text-green-800">
+    <div className="min-h-screen bg-white text-slate-800 font-sans - selection:bg-emerald-100 -mt-24 selection:text-green-800">
 
-      {/* --- Navigation --- */}
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-slate-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
-          
-          {/* Logo Area */}
-          <div className="flex items-center gap-12">
-            <Link href="/" className="text-3xl font-extrabold tracking-tighter text-yellow-400">
-              blinkit <span className="text-slate-400 font-light text-2xl">| blog</span>
-            </Link>
-            
-            {/* Desktop Links */}
-            <div className="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-500">
-              <Link href="/" className="hover:text-green-600 transition-colors">Home</Link>
-              <Link href="/footitems/about-us" className="hover:text-green-600 transition-colors">About</Link>
-              <Link href="/footitems/external/careers" className="hover:text-green-600 transition-colors">Careers</Link>
-              <Link href="/footitems/partners" className="hover:text-green-600 transition-colors">Partner</Link>
-            </div>
-          </div>
-
-          {/* Right Actions */}
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center bg-slate-100 rounded-lg px-3 py-2 w-64">
-              <Search className="w-4 h-4 text-slate-400 mr-2" />
-              <input 
-                type="text" 
-                placeholder="Search articles..." 
-                className="bg-transparent border-none outline-none text-sm w-full placeholder:text-slate-400"
-              />
-            </div>
-            <button className="md:hidden text-slate-600">
-              <Menu className="w-6 h-6" />
-            </button>
-          </div>
-        </div>
-      </nav>
+      
 
       {/* --- Hero Section --- */}
-      <section className="pt-16 pb-12 px-6 bg-white">
+      <section className="pt-32 pb-12 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <span className="text-green-600 font-bold tracking-widest text-sm uppercase mb-2 block">
             Lambda
           </span>
           <h1 className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
-            Learn about everything <br /> we do at Blinkit.
+            Learn about everything <br /> we do at Zep-It.
           </h1>
           
           {/* Categories Scrollable Bar */}
@@ -218,10 +184,10 @@ export default function BlinkitBlog() {
             <div>
               <h4 className="font-bold text-slate-900 mb-4">Company</h4>
               <ul className="space-y-3 text-slate-500">
-                <li><a href="#" className="hover:text-green-600">About</a></li>
-                <li><a href="#" className="hover:text-green-600">Careers</a></li>
-                <li><a href="#" className="hover:text-green-600">Blog</a></li>
-                <li><a href="#" className="hover:text-green-600">Press</a></li>
+                <li><a href="/footitems/about-us" className="hover:text-green-600">About</a></li>
+                <li><a href="/footitems/eternal/careers" className="hover:text-green-600">Careers</a></li>
+                <li><a href="/footitems/eternal/blog" className="hover:text-green-600">Blog</a></li>
+                <li><a href="/footitems/eternal/press" className="hover:text-green-600">Press</a></li>
               </ul>
             </div>
             <div>
@@ -236,8 +202,8 @@ export default function BlinkitBlog() {
             <div>
               <h4 className="font-bold text-slate-900 mb-4">Resources</h4>
               <ul className="space-y-3 text-slate-500">
-                <li><a href="#" className="hover:text-green-600">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-green-600">Terms of Use</a></li>
+                <li><a href="/footitems/account-privacy" className="hover:text-green-600">Privacy Policy</a></li>
+                <li><a href="/footitems/terms" className="hover:text-green-600">Terms of Use</a></li>
                 <li><a href="#" className="hover:text-green-600">Security</a></li>
               </ul>
             </div>
@@ -265,8 +231,8 @@ export default function BlinkitBlog() {
           </div>
           
           <div className="border-t border-slate-200 pt-8 flex flex-col md:flex-row justify-between items-center text-slate-400 text-xs">
-             <p>© 2026 Blink Commerce Private Limited</p>
-             <p className="mt-2 md:mt-0">“Blinkit” is owned & managed by "Blink Commerce Private Limited"</p>
+             <p>© 2026 Zep-It Commerce Private Limited</p>
+             <p className="mt-2 md:mt-0">“Zep-It” is owned & managed by "Blink Commerce Private Limited"</p>
           </div>
         </div>
       </footer>
