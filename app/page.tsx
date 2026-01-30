@@ -309,25 +309,7 @@ export default function HomePage() {
                   </FieldContent>
                 </Field>
               ))}
-            </FieldGroup>
-
-            <Divider className="my-5" />
-
-            <div>
-              <FieldTitle className="mb-2">Max Price: ₹{priceRange}</FieldTitle>
-              <input
-                type="range"
-                min={50}
-                max={2000}
-                step={50}
-                value={priceRange}
-                onChange={(e) => setPriceRange(Number(e.target.value))}
-                className="w-full accent-[#0C831F]"
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                Items priced under ₹{priceRange}
-              </p>
-            </div>
+            </FieldGroup>          
           </div>
 
 
