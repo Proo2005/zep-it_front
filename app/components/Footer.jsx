@@ -30,7 +30,7 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/navitems/partners" className="hover:text-[#0C831F]">
+              <Link href="/footitems/partners" className="hover:text-[#0C831F]">
                 Partners
               </Link>
             </li>
