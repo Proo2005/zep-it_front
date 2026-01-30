@@ -70,8 +70,8 @@ export default function AccountPrivacyPage() {
 
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB] px-6 py-12 -mt-24">
-      <div className="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-md pt-32">
+    <div className="min-h-screen bg-white text-slate-800 font-sans selection:bg-emerald-100 -mt-24">
+      <div className="pt-20 pb-24 px-6 text-center max-w-4xl mx-auto pt-32">
         <h1 className="text-3xl font-bold mb-6">Account Privacy</h1>
 
         {/* Account Info */}
