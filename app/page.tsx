@@ -108,26 +108,59 @@ export default function HomePage() {
     setCartQty((prev) => ({ ...prev, [id]: value }));
   };
 
-  const addToCart = (item: Item) => {
-    const selectedQty = cartQty[item._id] || 1;
-    if (selectedQty > item.quantity) return;
+  const addToCart = async (item: Item) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("Please login first");
+        return;
+      }
 
-    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existing = cart.find((c: any) => c.itemId === item._id);
+      const selectedQty = cartQty[item._id] || 1;
 
-    if (existing) {
-      existing.quantity += selectedQty;
-    } else {
-      cart.push({
-        itemId: item._id,
-        name: item.itemName,
-        price: item.amount,
-        quantity: selectedQty,
-      });
+      if (selectedQty > item.quantity) {
+        toast.error("Not enough stock");
+        return;
+      }
+
+      // ✅ REAL DB CALL
+      await axios.post(
+        "https://zep-it-back.onrender.com/api/cart/add",
+        {
+          itemId: item._id,
+          quantity: selectedQty,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // ✅ OPTIONAL localStorage sync (for faster UI)
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const existing = cart.find((c: any) => c.itemId === item._id);
+
+      if (existing) {
+        existing.quantity += selectedQty;
+      } else {
+        cart.push({
+          itemId: item._id,
+          name: item.itemName,
+          price: item.amount,
+          quantity: selectedQty,
+        });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      window.dispatchEvent(new Event("cartUpdated"));
+
+      toast.success("Item added to cart");
+
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add item");
     }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
-    window.dispatchEvent(new Event("cartUpdated"));
   };
 
   const toggleCategory = (key: string) =>
