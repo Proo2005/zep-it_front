@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import ShopAnalysisPage from "../analysis/page";
+import MonthlyAnalysisPage from "../admin/page";
 import API from "@/lib/api";
 
 export default function AdminPage() {
@@ -71,7 +71,7 @@ export default function AdminPage() {
 
           {/* Content */}
           <main className="col-span-4 bg-white rounded-2xl shadow-md p-6 overflow-y-auto max-h-[calc(100vh-128px)]">
-            <ShopAnalysisPage />
+            <MonthlyAnalysisPage />
           </main>
         </div>
       </div>
