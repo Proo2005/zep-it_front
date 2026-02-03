@@ -1,235 +1,104 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  FiTrendingUp,
-  FiShoppingCart,
-  FiDollarSign,
-  FiBox,
-} from "react-icons/fi";
-import PageTransition from "@/app/components/animations/PageTransition";
+import API from "@/lib/api";
 
-type Summary = {
-  totalRevenue: number;
-  totalOrders: number;
-  totalItemsSold: number;
-  avgOrderValue: number;
-};
-
-type Order = {
-  _id: string;
-  amount: number;
-  itemsCount: number;
-  status: string;
-  createdAt: string;
-};
-
-type TopItem = {
+type PaymentItem = {
   name: string;
   quantity: number;
+  price: number;
+  addedBy?: {
+    name: string;
+    email: string;
+  };
 };
 
-export default function ShopAnalysisPage() {
-  const [summary, setSummary] = useState<Summary | null>(null);
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [topItems, setTopItems] = useState<TopItem[]>([]);
+type Payment = {
+  _id: string;
+  amount: number;
+  items: PaymentItem[];
+  createdAt: string;
+  user: string;
+};
+
+export default function PaymentsPage() {
+  const [payments, setPayments] = useState<Payment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setError("Unauthorized access");
-      setLoading(false);
-      return;
-    }
-
-    const fetchAnalytics = async () => {
+    const fetchPayments = async () => {
       try {
-        const res = await fetch(
-          "https://zep-it-back.onrender.com/api/analysis/shop",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch analytics");
-        }
-
-        const data = await res.json();
-
-        setSummary(data.summary);
-        setOrders(data.orders || []);
-        setTopItems(data.topItems || []);
+        const res = await API.get("/payments/all");
+        setPayments(res.data);
       } catch (err) {
-        console.error("Analytics error:", err);
-        setError("Unable to load analytics");
+        console.error("Failed to fetch payments", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAnalytics();
+    fetchPayments();
   }, []);
 
   if (loading) {
     return (
-      <div className="p-8 text-center text-gray-600">
-        Loading analytics...
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-8 text-center text-red-500">
-        {error}
+      <div className="min-h-screen flex items-center justify-center">
+        Loading payments...
       </div>
     );
   }
 
   return (
-    <PageTransition>
-      <div className="min-h-screen bg-[#F4F6FB] px-6 py-10 text-black -mt-24">
-        <div className="max-w-7xl mx-auto space-y-8 pt-32">
-          <h1 className="text-3xl font-bold">Sales Analytics</h1>
+    <div className="min-h-screen bg-[#F7F9FC] px-6 py-10 text-black -mt-24">
+      <div className="max-w-7xl mx-auto pt-32 space-y-8">
+        <h1 className="text-3xl font-bold">Payment History</h1>
 
-          {/* SUMMARY */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <StatCard
-              title="Total Revenue"
-              value={`₹${summary?.totalRevenue ?? 0}`}
-              icon={<FiDollarSign />}
-            />
-            <StatCard
-              title="Total Orders"
-              value={summary?.totalOrders ?? 0}
-              icon={<FiShoppingCart />}
-            />
-            <StatCard
-              title="Items Sold"
-              value={summary?.totalItemsSold ?? 0}
-              icon={<FiBox />}
-            />
-            <StatCard
-              title="Avg Order Value"
-              value={`₹${summary?.avgOrderValue ?? 0}`}
-              icon={<FiTrendingUp />}
-            />
-          </div>
+        <div className="overflow-x-auto bg-white rounded-2xl shadow-md">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 border-b">
+              <tr>
+                <th className="px-4 py-3 text-left">Payment ID</th>
+                <th className="px-4 py-3 text-left">Items</th>
+                <th className="px-4 py-3 text-left">Total Amount</th>
+                <th className="px-4 py-3 text-left">Date</th>
+              </tr>
+            </thead>
 
-          {/* ORDERS */}
-          <div className="bg-white rounded-2xl shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">Recent Orders</h2>
+            <tbody>
+              {payments.map((payment) => (
+                <tr key={payment._id} className="border-b last:border-none">
+                  <td className="px-4 py-3 font-medium">
+                    {payment._id.slice(-6)}
+                  </td>
 
-            {orders.length === 0 ? (
-              <p className="text-gray-500 text-sm">
-                No orders found
-              </p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b text-left">
-                      <th className="py-2">Order ID</th>
-                      <th>Amount</th>
-                      <th>Items</th>
-                      <th>Status</th>
-                      <th>Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {orders.map((order) => (
-                      <tr
-                        key={order._id}
-                        className="border-b last:border-none"
-                      >
-                        <td className="py-2">
-                          #{order._id.slice(-6)}
-                        </td>
-                        <td>₹{order.amount}</td>
-                        <td>{order.itemsCount}</td>
-                        <td
-                          className={
-                            order.status === "success"
-                              ? "text-green-600"
-                              : "text-red-600"
-                          }
-                        >
-                          {order.status}
-                        </td>
-                        <td>
-                          {new Date(
-                            order.createdAt
-                          ).toLocaleDateString()}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+                  <td className="px-4 py-3">
+                    <ul className="space-y-1">
+                      {payment.items.map((item, i) => (
+                        <li key={i} className="text-gray-700">
+                          {item.name} × {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
 
-          {/* TOP ITEMS */}
-          <div className="bg-white rounded-2xl shadow-md p-6">
-            <h2 className="text-xl font-semibold mb-4">
-              Top Selling Items
-            </h2>
+                  <td className="px-4 py-3 font-semibold">
+                    ₹{payment.amount}
+                  </td>
 
-            {topItems.length === 0 ? (
-              <p className="text-gray-500 text-sm">
-                No item data available
-              </p>
-            ) : (
-              <ul className="space-y-3">
-                {topItems.map((item, idx) => (
-                  <li
-                    key={idx}
-                    className="flex justify-between border-b pb-2 last:border-none"
-                  >
-                    <span>{item.name}</span>
-                    <span className="font-semibold">
-                      {item.quantity} sold
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+                  <td className="px-4 py-3 text-gray-600">
+                    {new Date(payment.createdAt).toLocaleDateString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {payments.length === 0 && (
+            <p className="text-center py-6 text-gray-500">
+              No payments found
+            </p>
+          )}
         </div>
-      </div>
-    </PageTransition>
-  );
-}
-
-/* ---------- COMPONENT ---------- */
-
-function StatCard({
-  title,
-  value,
-  icon,
-}: {
-  title: string;
-  value: string | number;
-  icon: React.ReactNode;
-}) {
-  return (
-    <div className="bg-white rounded-2xl shadow-md p-6 flex items-center gap-4">
-      <div className="text-[#0C831F] text-2xl">
-        {icon}
-      </div>
-      <div>
-        <p className="text-gray-500 text-sm">
-          {title}
-        </p>
-        <p className="text-xl font-bold">
-          {value}
-        </p>
       </div>
     </div>
   );
