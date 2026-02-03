@@ -2,32 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import MonthlyAnalysisPage from "../admin/page";
+import MonthlyAnalysisPage from "../analysis/page";
 import API from "@/lib/api";
 
 export default function AdminPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
 
-  /* ------------------ Admin Verification ------------------ */
+  /* ------------------ Verify Admin ------------------ */
   useEffect(() => {
-    const verifyAdmin = async () => {
+    const checkAdmin = async () => {
       try {
         const res = await API.get("/user/me"); // must return req.user
-
         if (res.data.type !== "admin") {
           router.replace("/"); // or /unauthorized
-          return;
         }
       } catch (err) {
         router.replace("/login");
-        return;
       } finally {
         setLoading(false);
       }
     };
 
-    verifyAdmin();
+    checkAdmin();
   }, [router]);
 
   if (loading) {
