@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import MonthlyAnalysisPage from "../analysis/page";
+import PaymentHistoryPage from "../history/page"; // create this for payments
+import DriverPage from "@/app/essential/driver/page"; // if needed
+import ContactMessagesPage from "@/app/essential/contact-messages/page"; // if needed
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [accessGranted, setAccessGranted] = useState(false);
   const [error, setError] = useState("");
+  const [activeTab, setActiveTab] = useState("monthly"); // default tab
 
   /* ------------------ Admin Password ------------------ */
   const handleSubmit = (e: React.FormEvent) => {
@@ -61,29 +65,55 @@ export default function AdminPage() {
           <aside className="col-span-1 bg-white rounded-2xl shadow-md p-6 space-y-4 sticky top-32 h-[calc(100vh-128px)]">
             <h2 className="text-xl font-semibold mb-4">Tabs</h2>
             <ul className="space-y-2">
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50">
-                <a href="/essential/contact-messages">Contact</a>
+              <li
+                className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-green-50 ${
+                  activeTab === "monthly" ? "bg-green-100 font-semibold" : ""
+                }`}
+                onClick={() => setActiveTab("monthly")}
+              >
+                Monthly Analysis
               </li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50">
-                <a href="/essential/driver">Driver</a>
+              <li
+                className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-green-50 ${
+                  activeTab === "shop" ? "bg-green-100 font-semibold" : ""
+                }`}
+                onClick={() => setActiveTab("shop")}
+              >
+                Shop Analysis
               </li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50">
-                <a href="/essential/joincart">Join Cart</a>
+              <li
+                className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-green-50 ${
+                  activeTab === "payments" ? "bg-green-100 font-semibold" : ""
+                }`}
+                onClick={() => setActiveTab("payments")}
+              >
+                Payment History
               </li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50">
-                <a href="/essential/shop-items">Shop Items</a>
+              <li
+                className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-green-50 ${
+                  activeTab === "drivers" ? "bg-green-100 font-semibold" : ""
+                }`}
+                onClick={() => setActiveTab("drivers")}
+              >
+                Drivers
               </li>
-              <li className="px-3 py-2 rounded-xl hover:bg-green-50">
-                <a href="/essential/uploadblinkitlocation">
-                  Blinkit Locations
-                </a>
+              <li
+                className={`px-3 py-2 rounded-xl cursor-pointer hover:bg-green-50 ${
+                  activeTab === "contacts" ? "bg-green-100 font-semibold" : ""
+                }`}
+                onClick={() => setActiveTab("contacts")}
+              >
+                Contact Messages
               </li>
             </ul>
           </aside>
 
-          {/* Content */}
+          {/* Main Content */}
           <main className="col-span-4 bg-white rounded-2xl shadow-md p-6 overflow-y-auto max-h-[calc(100vh-128px)]">
-            <MonthlyAnalysisPage />
+            {activeTab === "monthly" && <MonthlyAnalysisPage />}
+            {activeTab === "payments" && <PaymentHistoryPage />}
+            {activeTab === "drivers" && <DriverPage />}
+            {activeTab === "contacts" && <ContactMessagesPage />}
           </main>
         </div>
       </div>
