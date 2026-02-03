@@ -2,104 +2,117 @@
 
 import { useEffect, useState } from "react";
 import API from "@/lib/api";
+import PageTransition from "@/app/components/animations/PageTransition";
 
-type PaymentItem = {
-  name: string;
-  quantity: number;
-  price: number;
-  addedBy?: {
-    name: string;
-    email: string;
-  };
+type MonthlyStat = {
+  month: string;
+  revenue: number;
+  orders: number;
+  itemsSold: number;
 };
 
-type Payment = {
-  _id: string;
-  amount: number;
-  items: PaymentItem[];
-  createdAt: string;
-  user: string;
-};
-
-export default function PaymentsPage() {
-  const [payments, setPayments] = useState<Payment[]>([]);
+export default function MonthlyAnalysisPage() {
+  const [data, setData] = useState<MonthlyStat[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchPayments = async () => {
+    const fetchMonthly = async () => {
       try {
-        const res = await API.get("/payments/all");
-        setPayments(res.data);
+        const res = await API.get("/analysis/monthly");
+        setData(res.data);
       } catch (err) {
-        console.error("Failed to fetch payments", err);
+        console.error("Monthly analysis failed", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPayments();
+    fetchMonthly();
   }, []);
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        Loading payments...
+        Loading monthly analysis...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F7F9FC] px-6 py-10 text-black -mt-24">
-      <div className="max-w-7xl mx-auto pt-32 space-y-8">
-        <h1 className="text-3xl font-bold">Payment History</h1>
+    <PageTransition>
+      <div className="min-h-screen bg-[#F4F6FB] px-6 py-10 text-black -mt-24">
+        <div className="max-w-7xl mx-auto pt-32 space-y-8">
+          <h1 className="text-3xl font-bold">Monthly Sales Analysis</h1>
 
-        <div className="overflow-x-auto bg-white rounded-2xl shadow-md">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-4 py-3 text-left">Payment ID</th>
-                <th className="px-4 py-3 text-left">Items</th>
-                <th className="px-4 py-3 text-left">Total Amount</th>
-                <th className="px-4 py-3 text-left">Date</th>
-              </tr>
-            </thead>
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <StatCard
+              title="Total Revenue"
+              value={`₹${data.reduce((a, b) => a + b.revenue, 0)}`}
+            />
+            <StatCard
+              title="Total Orders"
+              value={data.reduce((a, b) => a + b.orders, 0)}
+            />
+            <StatCard
+              title="Items Sold"
+              value={data.reduce((a, b) => a + b.itemsSold, 0)}
+            />
+          </div>
 
-            <tbody>
-              {payments.map((payment) => (
-                <tr key={payment._id} className="border-b last:border-none">
-                  <td className="px-4 py-3 font-medium">
-                    {payment._id.slice(-6)}
-                  </td>
+          {/* Monthly Table */}
+          <div className="bg-white rounded-2xl shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-4">
+              Month-wise Breakdown
+            </h2>
 
-                  <td className="px-4 py-3">
-                    <ul className="space-y-1">
-                      {payment.items.map((item, i) => (
-                        <li key={i} className="text-gray-700">
-                          {item.name} × {item.quantity}
-                        </li>
-                      ))}
-                    </ul>
-                  </td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left">
+                    <th className="py-2">Month</th>
+                    <th>Revenue</th>
+                    <th>Orders</th>
+                    <th>Items Sold</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((m) => (
+                    <tr key={m.month} className="border-b last:border-none">
+                      <td className="py-2 font-medium">
+                        {new Date(`${m.month}-01`).toLocaleString("default", {
+                          month: "long",
+                          year: "numeric",
+                        })}
+                      </td>
+                      <td>₹{m.revenue}</td>
+                      <td>{m.orders}</td>
+                      <td>{m.itemsSold}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
 
-                  <td className="px-4 py-3 font-semibold">
-                    ₹{payment.amount}
-                  </td>
-
-                  <td className="px-4 py-3 text-gray-600">
-                    {new Date(payment.createdAt).toLocaleDateString()}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-
-          {payments.length === 0 && (
-            <p className="text-center py-6 text-gray-500">
-              No payments found
-            </p>
-          )}
+              {data.length === 0 && (
+                <p className="text-center text-gray-500 py-6">
+                  No data available
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
+    </PageTransition>
+  );
+}
+
+/* ---------- UI ---------- */
+
+function StatCard({ title, value }: any) {
+  return (
+    <div className="bg-white rounded-2xl shadow-md p-6">
+      <p className="text-gray-500 text-sm">{title}</p>
+      <p className="text-2xl font-bold mt-1">{value}</p>
     </div>
   );
 }
