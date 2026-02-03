@@ -1,58 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import ShopAnalysisPage from "../analysis/page";
+import API from "@/lib/api";
 
 export default function AdminPage() {
-  const [password, setPassword] = useState("");
-  const [accessGranted, setAccessGranted] = useState(false);
-  const [error, setError] = useState("");
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-  /* ------------------ Admin Password ------------------ */
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  /* ------------------ Admin Verification ------------------ */
+  useEffect(() => {
+    const verifyAdmin = async () => {
+      try {
+        const res = await API.get("/user/me"); // must return req.user
 
-    if (password === "123456789") {
-      setAccessGranted(true);
-      setError("");
-    } else {
-      setError("Incorrect password. Try again!");
-    }
-  };
+        if (res.data.type !== "admin") {
+          router.replace("/"); // or /unauthorized
+          return;
+        }
+      } catch (err) {
+        router.replace("/login");
+        return;
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  /* ------------------ Login Screen ------------------ */
-  if (!accessGranted) {
+    verifyAdmin();
+  }, [router]);
+
+  if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] px-4 text-black -mt-24">
-        <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
-          <h1 className="text-2xl font-bold mb-4">Admin Login</h1>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="password"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-
-            {error && <p className="text-red-500 text-sm">{error}</p>}
-
-            <button
-              type="submit"
-              className="w-full bg-green-600 text-black py-2 rounded-xl font-bold hover:bg-green-500 transition"
-            >
-              Login
-            </button>
-          </form>
-        </div>
+      <div className="min-h-screen flex items-center justify-center text-black">
+        Loading admin dashboard...
       </div>
     );
   }
 
   /* ------------------ Admin Dashboard ------------------ */
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 relative -mt-24 text-black">
+    <div className="min-h-screen bg-gradient-to-b from-[#F7F9FC] to-[#EEF2F7] pb-16 px-4 -mt-24 text-black">
       <div className="max-w-7xl mx-auto pt-32">
         <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
