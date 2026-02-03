@@ -1,12 +1,38 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import ShopAnalysisPage from "../analysis/page";
+
+type Summary = {
+  totalRevenue: number;
+  totalOrders: number;
+  totalItemsSold: number;
+  avgOrderValue: number;
+};
+
+type Order = {
+  _id: string;
+  amount: number;
+  itemsCount: number;
+  status: string;
+  createdAt: string;
+};
+
+type TopItem = {
+  name: string;
+  quantity: number;
+};
 
 export default function AdminPage() {
   const [password, setPassword] = useState("");
   const [accessGranted, setAccessGranted] = useState(false);
   const [error, setError] = useState("");
   const [data, setData] = useState<any>(null);
+  const [summary, setSummary] = useState<Summary | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [topItems, setTopItems] = useState<TopItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
 
   /* ------------------ Admin Password ------------------ */
   const handleSubmit = (e: React.FormEvent) => {
@@ -22,23 +48,31 @@ export default function AdminPage() {
 
   /* ------------------ Fetch Shop Analysis ------------------ */
   useEffect(() => {
-    const fetchAnalysis = async () => {
+    const token = localStorage.getItem("token");
+
+    const fetchAnalytics = async () => {
       try {
-        const res = await fetch("https://zep-it-back.onrender.com/api/shop-analysis", {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await fetch(
+          "https://zep-it-back.onrender.com/api/analysis/shop",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         const data = await res.json();
-        setData(data);
+        setSummary(data.summary);
+        setOrders(data.orders);
+        setTopItems(data.topItems);
       } catch (err) {
-        console.error("Failed to load shop analysis", err);
+        console.error("Failed to load analytics", err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchAnalysis();
+    fetchAnalytics();
   }, []);
 
 
@@ -92,7 +126,7 @@ export default function AdminPage() {
             {!data ? (
               <p className="text-gray-600 text-center mt-10">Loading analytics…</p>
             ) : (
-              <ShopAnalysisContent data={data} />
+              <ShopAnalysisPage />
             )}
           </div>
         </div>
