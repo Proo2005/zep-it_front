@@ -69,7 +69,7 @@ export default function HomePage() {
       setTimeout(() => {
         setShowBikeIntro(false);
         localStorage.setItem("deliveryBikeIntroPlayed", "true");
-      }, 2200); // match bike animation duration
+      }, 2200); // match bike animation duration and syn  with login flow
     }
   }, []);
   useEffect(() => {
