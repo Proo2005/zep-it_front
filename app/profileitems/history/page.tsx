@@ -30,7 +30,7 @@ export default function PaymentHistoryPage() {
       const token = localStorage.getItem("token");
 
       const res = await fetch(
-        "https://zep-it-back.onrender.com/api/payment/history",
+        "https://zep-it-back.onrender.com/api/payments/history",
         {
           headers: {
             Authorization: `Bearer ${token}`,
