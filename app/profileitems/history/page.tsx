@@ -6,7 +6,7 @@ type Payment = {
   _id: string;
   amount: number;
   currency: string;
-  status: "success" | "failed";
+  status: "success" | "pending" | "failed";
   razorpay_order_id: string;
   razorpay_payment_id: string;
   createdAt: string;
